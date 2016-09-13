@@ -84,6 +84,6 @@ var TSOS;
             // TODO: Handle scrolling. (iProject 1)
         };
         return Console;
-    })();
+    }());
     TSOS.Console = Console;
 })(TSOS || (TSOS = {}));

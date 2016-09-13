@@ -49,6 +49,15 @@ var TSOS;
             // prompt <string>
             sc = new TSOS.ShellCommand(this.shellPrompt, "prompt", "<string> - Sets the prompt.");
             this.commandList[this.commandList.length] = sc;
+            // date
+            sc = new TSOS.ShellCommand(this.shellDate, "date", "- Displays the current date.");
+            this.commandList[this.commandList.length] = sc;
+            // whereami
+            sc = new TSOS.ShellCommand(this.shellWhereami, "whereami", "- Displays your current location.");
+            this.commandList[this.commandList.length] = sc;
+            // 
+            sc = new TSOS.ShellCommand(this.shellOneup, "oneup", "<number> - Always tries to one-up you.");
+            this.commandList[this.commandList.length] = sc;
             // ps  - list the running processes and their IDs
             // kill <id> - kills the specified process id.
             //
@@ -195,6 +204,36 @@ var TSOS;
                     case "help":
                         _StdOut.putText("Help displays a list of (hopefully) valid commands.");
                         break;
+                    case "ver":
+                        _StdOut.putText("Ver displays information on the current OS version.");
+                        break;
+                    case "shutdown":
+                        _StdOut.putText("Shutdown stops the virtual OS but leaves the underlying hardware running.");
+                        break;
+                    case "man":
+                        _StdOut.putText("That's this command! How meta.");
+                        break;
+                    case "cls":
+                        _StdOut.putText("CLS clears the screen and resets the cursor position.");
+                        break;
+                    case "trace":
+                        _StdOut.putText("Trace turns the OS trace on or off (trace <on | off>).");
+                        break;
+                    case "rot13":
+                        _StdOut.putText("Rot13 does a rot13 obfuscation on a string argument.");
+                        break;
+                    case "prompt":
+                        _StdOut.putText("Prompt sets the prompt for the OS.");
+                        break;
+                    case "date":
+                        _StdOut.putText("Date displays the current date.");
+                        break;
+                    case "whereami":
+                        _StdOut.putText("Whereami displays your current location.");
+                        break;
+                    case "oneup":
+                        _StdOut.putText("Oneup will always try and outdo you.");
+                        break;
                     // TODO: Make descriptive MANual page entries for the the rest of the shell commands here.
                     default:
                         _StdOut.putText("No manual entry for " + args[0] + ".");
@@ -246,7 +285,25 @@ var TSOS;
                 _StdOut.putText("Usage: prompt <string>  Please supply a string.");
             }
         };
+        Shell.prototype.shellDate = function (args) {
+            var utc = new Date().toJSON().slice(0, 10);
+            _StdOut.putText("Today is: " + utc);
+        };
+        Shell.prototype.shellWhereami = function (args) {
+            _StdOut.putText("Earth, presumably. Unless something drastic has happened.");
+        };
+        Shell.prototype.shellOneup = function (args) {
+            if (args.length > 0) {
+                var oneup = Number(args[0]) + 1;
+                _StdOut.putText(String(oneup));
+                _StdOut.advanceLine();
+                _StdOut.putText("Beat that!");
+            }
+            else {
+                _StdOut.putText("You didn't put anything! Too easy.");
+            }
+        };
         return Shell;
-    })();
+    }());
     TSOS.Shell = Shell;
 })(TSOS || (TSOS = {}));
