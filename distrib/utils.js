@@ -8,8 +8,10 @@ var TSOS;
     var Utils = (function () {
         function Utils() {
         }
-        Utils.getDate = function () {
-            return "";
+        Utils.getDateTime = function () {
+            // Get today's date
+            var utc = new Date().toJSON();
+            return utc;
         };
         Utils.trim = function (str) {
             // Use a regular expression to remove leading and trailing spaces.

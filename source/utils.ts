@@ -8,10 +8,11 @@ module TSOS {
 
     export class Utils {
 
-        public static getDate(): string {
-            
+        public static getDateTime(): string {
+            // Get today's date
+            var utc = new Date().toJSON(); 
 
-            return "";
+            return utc;
         }
 
         public static trim(str): string {

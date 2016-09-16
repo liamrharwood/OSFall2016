@@ -55,8 +55,11 @@ var TSOS;
             // whereami
             sc = new TSOS.ShellCommand(this.shellWhereami, "whereami", "- Displays your current location.");
             this.commandList[this.commandList.length] = sc;
-            // 
+            // oneup
             sc = new TSOS.ShellCommand(this.shellOneup, "oneup", "<number> - Always tries to one-up you.");
+            this.commandList[this.commandList.length] = sc;
+            // status
+            sc = new TSOS.ShellCommand(this.shellStatus, "status", "<string> - Sets the task bar status.");
             this.commandList[this.commandList.length] = sc;
             // ps  - list the running processes and their IDs
             // kill <id> - kills the specified process id.
@@ -286,8 +289,7 @@ var TSOS;
             }
         };
         Shell.prototype.shellDate = function (args) {
-            var utc = new Date().toJSON().slice(0, 10);
-            _StdOut.putText("Today is: " + utc);
+            _StdOut.putText("Today is: " + TSOS.Utils.getDateTime().slice(0, 10));
         };
         Shell.prototype.shellWhereami = function (args) {
             _StdOut.putText("Earth, presumably. Unless something drastic has happened.");
@@ -301,6 +303,20 @@ var TSOS;
             }
             else {
                 _StdOut.putText("You didn't put anything! Too easy.");
+            }
+        };
+        Shell.prototype.shellStatus = function (args) {
+            if (args.length > 0) {
+                _SystemStatus = "";
+                for (var i = 0; i < args.length; i++) {
+                    if (i !== 0)
+                        _SystemStatus += " ";
+                    _SystemStatus += args[i];
+                }
+                _StdOut.putText("Status set to: '" + _SystemStatus + "'.");
+            }
+            else {
+                _StdOut.putText("Please specify a status.");
             }
         };
         return Shell;

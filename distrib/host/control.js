@@ -1,4 +1,5 @@
 ///<reference path="../globals.ts" />
+///<reference path="../utils.ts" />
 ///<reference path="../os/canvastext.ts" />
 /* ------------
      Control.ts
@@ -60,7 +61,14 @@ var TSOS;
             // Update the log console.
             var taLog = document.getElementById("taHostLog");
             taLog.value = str + taLog.value;
+            this.hostTaskBarUpdate();
             // TODO in the future: Optionally update a log database or some streaming service.
+        };
+        Control.hostTaskBarUpdate = function () {
+            var utc = TSOS.Utils.getDateTime();
+            var date = utc.slice(0, 10);
+            var time = utc.slice(11, 19);
+            document.getElementById("divTaskBar").innerHTML = "Status: " + _SystemStatus + "  ---  " + date + " " + time;
         };
         //
         // Host Events

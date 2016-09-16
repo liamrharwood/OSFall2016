@@ -91,10 +91,16 @@ module TSOS {
                                   "- Displays your current location.");
             this.commandList[this.commandList.length] = sc;
 
-            // 
+            // oneup
             sc = new ShellCommand(this.shellOneup,
                                   "oneup",
                                   "<number> - Always tries to one-up you.");
+            this.commandList[this.commandList.length] = sc;
+
+            // status
+            sc = new ShellCommand(this.shellStatus,
+                                  "status",
+                                  "<string> - Sets the task bar status.");
             this.commandList[this.commandList.length] = sc;
             
             // ps  - list the running processes and their IDs
@@ -336,9 +342,9 @@ module TSOS {
         }
 
         public shellDate(args) {
-            var utc = new Date().toJSON().slice(0,10);
+            
 
-            _StdOut.putText("Today is: " + utc);
+            _StdOut.putText("Today is: " + Utils.getDateTime().slice(0,10));
 
         }
 
@@ -355,6 +361,20 @@ module TSOS {
             } else {
                 _StdOut.putText("You didn't put anything! Too easy.");
             }
+        }
+
+        public shellStatus(args) {
+            if(args.length > 0) {
+                _SystemStatus = "";
+                for(var i=0; i < args.length; i++) {
+                    if(i !== 0) _SystemStatus += " ";
+                    _SystemStatus += args[i];
+                }
+                _StdOut.putText("Status set to: '" + _SystemStatus + "'.");
+            } else {
+                _StdOut.putText("Please specify a status.");
+            }
+            
         }
 
     }
