@@ -73,6 +73,7 @@ var TSOS;
             document.getElementById("btnReset").disabled = false;
             // .. set focus on the OS console display ...
             document.getElementById("display").focus();
+            document.getElementById("display").style.border = "2px solid green";
             // ... Create and initialize the CPU (because it's part of the hardware)  ...
             _CPU = new TSOS.Cpu(); // Note: We could simulate multi-core systems by instantiating more than one instance of the CPU here.
             _CPU.init(); //       There's more to do, like dealing with scheduling and such, but this would be a start. Pretty cool.
@@ -89,7 +90,8 @@ var TSOS;
             _Kernel.krnShutdown();
             // Stop the interval that's simulating our clock pulse.
             clearInterval(_hardwareClockID);
-            // TODO: Is there anything else we need to do here?
+            // TODO: Is there anything else we need to do here?   
+            document.getElementById("display").style.border = "2px solid red";
         };
         Control.hostBtnReset_click = function (btn) {
             // The easiest and most thorough way to do this is to reload (not refresh) the document.

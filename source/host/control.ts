@@ -88,6 +88,7 @@ module TSOS {
 
             // .. set focus on the OS console display ...
             document.getElementById("display").focus();
+            document.getElementById("display").style.border = "2px solid green";
 
             // ... Create and initialize the CPU (because it's part of the hardware)  ...
             _CPU = new Cpu();  // Note: We could simulate multi-core systems by instantiating more than one instance of the CPU here.
@@ -107,7 +108,8 @@ module TSOS {
             _Kernel.krnShutdown();
             // Stop the interval that's simulating our clock pulse.
             clearInterval(_hardwareClockID);
-            // TODO: Is there anything else we need to do here?
+            // TODO: Is there anything else we need to do here?   
+            document.getElementById("display").style.border = "2px solid red";
         }
 
         public static hostBtnReset_click(btn): void {
