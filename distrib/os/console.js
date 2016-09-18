@@ -54,12 +54,62 @@ var TSOS;
                     // Update buffer
                     this.buffer = this.buffer.slice(0, -1);
                 }
+                else if (chr === String.fromCharCode(9)) {
+                    // Get list of shell commands
+                    var commands = [];
+                    for (var i = 0; i < _OsShell.commandList.length; i++) {
+                        commands.push(_OsShell.commandList[i].command);
+                    }
+                    // Find best autocomplete candidate
+                    var complete = this.autoComplete(this.buffer, commands);
+                    if (complete) {
+                        // Print it and update the buffer
+                        this.putText(complete);
+                        this.buffer += complete;
+                    }
+                }
                 else {
                     // This is a "normal" character, so ...
                     // ... draw it on the screen...
                     this.putText(chr);
                     // ... and add it to our buffer.
                     this.buffer += chr;
+                }
+            }
+        };
+        Console.prototype.autoComplete = function (text, data) {
+            var candidates = [];
+            // Filter data to find only strings that start with existing value
+            for (var i = 0; i < data.length; i++) {
+                if (data[i].indexOf(text) == 0 && data[i].length > text.length)
+                    candidates.push(data[i]);
+            }
+            if (candidates.length > 0) {
+                // Some candidates for autocompletion are found
+                // If only one candidate, return the rest of the command
+                if (candidates.length == 1) {
+                    return candidates[0].slice(text.length, candidates[0].length);
+                }
+                else {
+                    // If multiple candidates are found, find longest common substring to find best candidate
+                    var index = text.length;
+                    var j;
+                    var ch;
+                    var memo;
+                    do {
+                        memo = null;
+                        for (j = 0; j < candidates.length; j++) {
+                            ch = candidates[j].charAt(index);
+                            if (!ch)
+                                break;
+                            if (!memo)
+                                memo = ch;
+                            else if (ch != memo)
+                                break;
+                        }
+                    } while (j == candidates.length && index++);
+                    // Return the rest of the command based on best candidate
+                    return candidates[0].slice(text.length, index);
                 }
             }
         };
