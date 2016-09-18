@@ -45,6 +45,15 @@ var TSOS;
                     // ... and reset our buffer.
                     this.buffer = "";
                 }
+                else if (chr === String.fromCharCode(8)) {
+                    // Move back one character
+                    var offset = _DrawingContext.measureText(this.currentFont, this.currentFontSize, this.buffer.slice(-1));
+                    this.currentXPosition -= offset;
+                    // Clear the last character typed
+                    _DrawingContext.clearRect(this.currentXPosition, this.currentYPosition - this.currentFontSize, offset, 100);
+                    // Update buffer
+                    this.buffer = this.buffer.slice(0, -1);
+                }
                 else {
                     // This is a "normal" character, so ...
                     // ... draw it on the screen...
