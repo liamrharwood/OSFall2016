@@ -292,7 +292,7 @@ var TSOS;
             _StdOut.putText("Today is: " + TSOS.Utils.getDateTime().slice(0, 10));
         };
         Shell.prototype.shellWhereami = function (args) {
-            _StdOut.putText("Earth, presumably. Unless something drastic has happened.");
+            _StdOut.putText("Cyberspace, man. You're in your element.");
         };
         Shell.prototype.shellOneup = function (args) {
             if (args.length > 0) {

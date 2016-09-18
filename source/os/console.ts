@@ -45,8 +45,12 @@ module TSOS {
                     // The enter key marks the end of a console command, so ...
                     // ... tell the shell ...
                     _OsShell.handleInput(this.buffer);
+
+                    // Put the executed command in the command history (if it wasn't just used)
                     if(this.buffer != "") {
-                        this.commandHistory.push(this.buffer);
+                        if(this.commandHistory[this.commandHistory.length-1] != this.buffer){
+                            this.commandHistory.push(this.buffer);
+                        }
                         this.historyIndex = this.commandHistory.length;
                     }
                     // ... and reset our buffer.
@@ -73,9 +77,8 @@ module TSOS {
                         this.buffer += complete;
                     }
                 } else if(chr === 'up') {
+                    // Move up through the command history
                     if(this.historyIndex > 0) this.historyIndex--;
-                    console.log(this.commandHistory);
-                    console.log(this.historyIndex);
                     if (this.buffer != "") this.clearLine();
                     var command = this.commandHistory[this.historyIndex];
                     if(command) {
@@ -83,9 +86,8 @@ module TSOS {
                         this.buffer = command; 
                     }
                 } else if(chr === 'down') {
+                    // Move down through the command history
                     if(this.historyIndex < this.commandHistory.length-1) this.historyIndex++; 
-                    console.log(this.commandHistory);
-                    console.log(this.historyIndex);
                     if (this.buffer != "") this.clearLine();
                     var command = this.commandHistory[this.historyIndex];
                     if(command) {
