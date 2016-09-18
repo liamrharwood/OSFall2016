@@ -52,6 +52,91 @@ module TSOS {
             } else if (((keyCode >= 48) && (keyCode <= 57)) ||   // digits
                         (keyCode == 32)                     ||   // space
                         (keyCode == 13)) {                       // enter
+                if(isShifted) {
+                    switch (keyCode) {
+                        case 48:
+                            keyCode = 41; // )
+                            break;
+                        case 49:
+                            keyCode = 33; // !
+                            break;
+                        case 50:
+                            keyCode = 64; // @
+                            break;
+                        case 51:
+                            keyCode = 35; // #
+                            break;
+                        case 52:
+                            keyCode = 36; // $
+                            break;
+                        case 53:
+                            keyCode = 37; // %
+                            break;
+                        case 54:
+                            keyCode = 94; // ^
+                            break;
+                        case 55:
+                            keyCode = 38; // &
+                            break;
+                        case 56:
+                            keyCode = 42; // *
+                            break;
+                        case 57:
+                            keyCode = 40; // (
+                            break;
+                    }
+                }
+                chr = String.fromCharCode(keyCode);
+                _KernelInputQueue.enqueue(chr);
+            } else if(((keyCode >= 186) && (keyCode <= 192)) || // punctuation keys
+                      ((keyCode >= 219) && (keyCode <= 222)))  {
+                switch (keyCode) {
+                    case 186:
+                        keyCode = 59; // ;
+                        if(isShifted) keyCode = 58; // :
+                        break;
+                    case 187:
+                        keyCode = 61; // =
+                        if(isShifted) keyCode = 43; // +
+                        break;
+                    case 188:
+                        keyCode = 44; // ,
+                        if(isShifted) keyCode = 60; // <
+                        break;
+                    case 189:
+                        keyCode = 45; // -
+                        if(isShifted) keyCode = 95; // _
+                        break;
+                    case 190:
+                        keyCode = 46; // .
+                        if(isShifted) keyCode = 62; // >
+                        break;
+                    case 191:
+                        keyCode = 47; // /
+                        if(isShifted) keyCode = 63; // ?
+                        break;
+                    case 192:
+                        keyCode = 96; // `
+                        if(isShifted) keyCode = 126; // ~
+                        break;
+                    case 219:
+                        keyCode = 91; // [
+                        if(isShifted) keyCode = 123; // {
+                        break;
+                    case 220:
+                        keyCode = 92; // \
+                        if(isShifted) keyCode = 124; // |
+                        break;
+                    case 221:
+                        keyCode = 93; // ]
+                        if(isShifted) keyCode = 125; // }
+                        break;
+                    case 222:
+                        keyCode = 39; // '
+                        if(isShifted) keyCode = 34; // "
+                        break;
+                    
+                }
                 chr = String.fromCharCode(keyCode);
                 _KernelInputQueue.enqueue(chr);
             }
