@@ -17,7 +17,9 @@ module TSOS {
                     public currentFontSize = _DefaultFontSize,
                     public currentXPosition = 0,
                     public currentYPosition = _DefaultFontSize,
-                    public buffer = "") {
+                    public buffer = "",
+                    public commandHistory = [],
+                    public historyIndex = 0) {
         }
 
         public init(): void {
@@ -43,6 +45,10 @@ module TSOS {
                     // The enter key marks the end of a console command, so ...
                     // ... tell the shell ...
                     _OsShell.handleInput(this.buffer);
+                    if(this.buffer != "") {
+                        this.commandHistory.push(this.buffer);
+                        this.historyIndex = this.commandHistory.length;
+                    }
                     // ... and reset our buffer.
                     this.buffer = "";
                 } else if (chr === String.fromCharCode(8)) { // Backspace key
@@ -50,7 +56,7 @@ module TSOS {
                     var offset = _DrawingContext.measureText(this.currentFont, this.currentFontSize, this.buffer.slice(-1));
                     this.currentXPosition -= offset;
                     // Clear the last character typed
-                    _DrawingContext.clearRect(this.currentXPosition, this.currentYPosition - this.currentFontSize, offset, 100);
+                    _DrawingContext.clearRect(this.currentXPosition, this.currentYPosition - this.currentFontSize, offset, this.currentFontSize+10);
                     // Update buffer
                     this.buffer = this.buffer.slice(0, -1);
                 } else if(chr === String.fromCharCode(9)) { // Tab key
@@ -65,6 +71,26 @@ module TSOS {
                         // Print it and update the buffer
                         this.putText(complete);
                         this.buffer += complete;
+                    }
+                } else if(chr === 'up') {
+                    if(this.historyIndex > 0) this.historyIndex--;
+                    console.log(this.commandHistory);
+                    console.log(this.historyIndex);
+                    if (this.buffer != "") this.clearLine();
+                    var command = this.commandHistory[this.historyIndex];
+                    if(command) {
+                        this.putText(command);
+                        this.buffer = command; 
+                    }
+                } else if(chr === 'down') {
+                    if(this.historyIndex < this.commandHistory.length-1) this.historyIndex++; 
+                    console.log(this.commandHistory);
+                    console.log(this.historyIndex);
+                    if (this.buffer != "") this.clearLine();
+                    var command = this.commandHistory[this.historyIndex];
+                    if(command) {
+                        this.putText(command);
+                        this.buffer = command;
                     }
                 } else {
                     // This is a "normal" character, so ...
@@ -148,6 +174,15 @@ module TSOS {
                 _DrawingContext.putImageData(imageData, 0, -offset);
                 this.currentYPosition -= offset;
             }
+        }
+
+        public clearLine(): void {
+            // Get length of line and move back
+            var offset = _DrawingContext.measureText(this.currentFont, this.currentFontSize, this.buffer);
+            this.currentXPosition -= offset;
+            // Clear the line
+            _DrawingContext.clearRect(this.currentXPosition, this.currentYPosition - this.currentFontSize, offset, this.currentFontSize+10);
+            this.buffer = "";
         }
     }
  }

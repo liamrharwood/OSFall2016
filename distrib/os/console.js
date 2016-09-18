@@ -10,17 +10,21 @@
 var TSOS;
 (function (TSOS) {
     var Console = (function () {
-        function Console(currentFont, currentFontSize, currentXPosition, currentYPosition, buffer) {
+        function Console(currentFont, currentFontSize, currentXPosition, currentYPosition, buffer, commandHistory, historyIndex) {
             if (currentFont === void 0) { currentFont = _DefaultFontFamily; }
             if (currentFontSize === void 0) { currentFontSize = _DefaultFontSize; }
             if (currentXPosition === void 0) { currentXPosition = 0; }
             if (currentYPosition === void 0) { currentYPosition = _DefaultFontSize; }
             if (buffer === void 0) { buffer = ""; }
+            if (commandHistory === void 0) { commandHistory = []; }
+            if (historyIndex === void 0) { historyIndex = 0; }
             this.currentFont = currentFont;
             this.currentFontSize = currentFontSize;
             this.currentXPosition = currentXPosition;
             this.currentYPosition = currentYPosition;
             this.buffer = buffer;
+            this.commandHistory = commandHistory;
+            this.historyIndex = historyIndex;
         }
         Console.prototype.init = function () {
             this.clearScreen();
@@ -42,6 +46,10 @@ var TSOS;
                     // The enter key marks the end of a console command, so ...
                     // ... tell the shell ...
                     _OsShell.handleInput(this.buffer);
+                    if (this.buffer != "") {
+                        this.commandHistory.push(this.buffer);
+                        this.historyIndex = this.commandHistory.length;
+                    }
                     // ... and reset our buffer.
                     this.buffer = "";
                 }
@@ -50,7 +58,7 @@ var TSOS;
                     var offset = _DrawingContext.measureText(this.currentFont, this.currentFontSize, this.buffer.slice(-1));
                     this.currentXPosition -= offset;
                     // Clear the last character typed
-                    _DrawingContext.clearRect(this.currentXPosition, this.currentYPosition - this.currentFontSize, offset, 100);
+                    _DrawingContext.clearRect(this.currentXPosition, this.currentYPosition - this.currentFontSize, offset, this.currentFontSize + 10);
                     // Update buffer
                     this.buffer = this.buffer.slice(0, -1);
                 }
@@ -66,6 +74,32 @@ var TSOS;
                         // Print it and update the buffer
                         this.putText(complete);
                         this.buffer += complete;
+                    }
+                }
+                else if (chr === 'up') {
+                    if (this.historyIndex > 0)
+                        this.historyIndex--;
+                    console.log(this.commandHistory);
+                    console.log(this.historyIndex);
+                    if (this.buffer != "")
+                        this.clearLine();
+                    var command = this.commandHistory[this.historyIndex];
+                    if (command) {
+                        this.putText(command);
+                        this.buffer = command;
+                    }
+                }
+                else if (chr === 'down') {
+                    if (this.historyIndex < this.commandHistory.length - 1)
+                        this.historyIndex++;
+                    console.log(this.commandHistory);
+                    console.log(this.historyIndex);
+                    if (this.buffer != "")
+                        this.clearLine();
+                    var command = this.commandHistory[this.historyIndex];
+                    if (command) {
+                        this.putText(command);
+                        this.buffer = command;
                     }
                 }
                 else {
@@ -148,6 +182,14 @@ var TSOS;
                 _DrawingContext.putImageData(imageData, 0, -offset);
                 this.currentYPosition -= offset;
             }
+        };
+        Console.prototype.clearLine = function () {
+            // Get length of line and move back
+            var offset = _DrawingContext.measureText(this.currentFont, this.currentFontSize, this.buffer);
+            this.currentXPosition -= offset;
+            // Clear the line
+            _DrawingContext.clearRect(this.currentXPosition, this.currentYPosition - this.currentFontSize, offset, this.currentFontSize + 10);
+            this.buffer = "";
         };
         return Console;
     }());

@@ -54,9 +54,7 @@ var TSOS;
                 (keyCode == 32) ||
                 (keyCode == 13) ||
                 (keyCode == 8) ||
-                (keyCode == 9) ||
-                (keyCode == 38) ||
-                (keyCode == 40)) {
+                (keyCode == 9)) {
                 if (isShifted) {
                     switch (keyCode) {
                         case 48:
@@ -155,6 +153,13 @@ var TSOS;
                 }
                 chr = String.fromCharCode(keyCode);
                 _KernelInputQueue.enqueue(chr);
+            }
+            else if (keyCode == 38 ||
+                keyCode == 40) {
+                if (keyCode == 38)
+                    _KernelInputQueue.enqueue('up');
+                else
+                    _KernelInputQueue.enqueue('down');
             }
         };
         return DeviceDriverKeyboard;

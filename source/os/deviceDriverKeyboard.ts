@@ -53,9 +53,7 @@ module TSOS {
                         (keyCode == 32)                     ||   // space
                         (keyCode == 13)                     ||   // enter
                         (keyCode == 8 )                     ||   // backspace
-                        (keyCode == 9 )                     ||   // tab
-                        (keyCode == 38)                     ||   // up arrow
-                        (keyCode == 40)) {                       // down arrow
+                        (keyCode == 9 )) {                       // tab key
                 if(isShifted) {
                     switch (keyCode) {
                         case 48:
@@ -143,6 +141,12 @@ module TSOS {
                 }
                 chr = String.fromCharCode(keyCode);
                 _KernelInputQueue.enqueue(chr);
+            } else if (keyCode == 38 || // up arrow
+                       keyCode == 40) { // down arrow
+                if (keyCode == 38)
+                    _KernelInputQueue.enqueue('up');
+                else 
+                    _KernelInputQueue.enqueue('down');
             }
         }
     }
