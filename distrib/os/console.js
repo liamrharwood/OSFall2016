@@ -177,10 +177,10 @@ var TSOS;
                 _FontHeightMargin;
             this.currentYPosition += offset;
             // Scrolls CLI once text reaches the bottom
-            if (this.currentYPosition > 500) {
-                var imageData = _DrawingContext.getImageData(0, 0, 500, 500);
-                _DrawingContext.clearRect(0, 0, 500, 500);
-                _DrawingContext.putImageData(imageData, 0, -offset);
+            if (this.currentYPosition > _Canvas.height) {
+                var imageData = _DrawingContext.getImageData(0, 0, _Canvas.width, _Canvas.height);
+                _DrawingContext.clearRect(0, 0, _Canvas.width, _Canvas.height);
+                _DrawingContext.putImageData(imageData, 0, -1 * offset);
                 this.currentYPosition -= offset;
             }
         };

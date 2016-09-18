@@ -102,6 +102,12 @@ module TSOS {
                                   "status",
                                   "<string> - Sets the task bar status.");
             this.commandList[this.commandList.length] = sc;
+
+            // bsod
+            sc = new ShellCommand(this.shellBsod,
+                                  "bsod",
+                                  "- Blow it all to kingdom come.");
+            this.commandList[this.commandList.length] = sc;
             
             // ps  - list the running processes and their IDs
             // kill <id> - kills the specified process id.
@@ -291,6 +297,12 @@ module TSOS {
                     case "oneup":
                         _StdOut.putText("Oneup will always try and outdo you.");
                         break;
+                    case "status":
+                        _StdOut.putText("Status sets the status message.");
+                        break;
+                    case "bsod":
+                        _StdOut.putText("BSOD simulates trapping a kernel error.");
+                        break;
                     // TODO: Make descriptive MANual page entries for the the rest of the shell commands here.
                     default:
                         _StdOut.putText("No manual entry for " + args[0] + ".");
@@ -375,6 +387,10 @@ module TSOS {
                 _StdOut.putText("Please specify a status.");
             }
             
+        }
+
+        public shellBsod(args) {
+            _Kernel.krnTrapError("SELF DESTRUCT");
         }
 
     }

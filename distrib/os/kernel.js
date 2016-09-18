@@ -154,7 +154,20 @@ var TSOS;
         };
         Kernel.prototype.krnTrapError = function (msg) {
             TSOS.Control.hostLog("OS ERROR - TRAP: " + msg);
-            // TODO: Display error on console, perhaps in some sort of colored screen. (Maybe blue?)
+            _DrawingContext.clearRect(0, 0, _Canvas.width, _Canvas.height);
+            _DrawingContext.fillStyle = "blue";
+            _DrawingContext.fillRect(0, 0, _Canvas.width, _Canvas.height);
+            _DrawingContext.fillStyle = "white";
+            _DrawingContext.font = "30px Courier New";
+            _DrawingContext.fillText(">>> CRITICAL SYSTEM ERROR", 20, 100);
+            _DrawingContext.font = "16px Courier New";
+            _DrawingContext.fillText(">>> 4c 61 73 63 69 61 74 65 20", 20, 250);
+            _DrawingContext.fillText(">>> 6f 67 6e 65 20 73 70 65 72", 20, 265);
+            _DrawingContext.fillText(">>> 61 6e 7a 61 2c 20 76 6f 69", 20, 280);
+            _DrawingContext.fillText(">>> 20 63 68 27 69 6e 74 72 61", 20, 295);
+            _DrawingContext.fillText(">>> 74 65 ERROR ERROR ERROR ERROR", 20, 310);
+            _SystemStatus = "OFFLINE";
+            _OsShell.promptStr = "";
             this.krnShutdown();
         };
         return Kernel;
