@@ -57,13 +57,7 @@ var TSOS;
                     this.buffer = "";
                 }
                 else if (chr === String.fromCharCode(8)) {
-                    // Move back one character
-                    var offset = _DrawingContext.measureText(this.currentFont, this.currentFontSize, this.buffer.slice(-1));
-                    this.currentXPosition -= offset;
-                    // Clear the last character typed
-                    _DrawingContext.clearRect(this.currentXPosition, this.currentYPosition - this.currentFontSize, offset, this.currentFontSize + 10);
-                    // Update buffer
-                    this.buffer = this.buffer.slice(0, -1);
+                    this.backspace();
                 }
                 else if (chr === String.fromCharCode(9)) {
                     // Get list of shell commands
@@ -84,7 +78,7 @@ var TSOS;
                     if (this.historyIndex > 0)
                         this.historyIndex--;
                     if (this.buffer != "")
-                        this.clearLine();
+                        this.clearConsole();
                     var command = this.commandHistory[this.historyIndex];
                     if (command) {
                         this.putText(command);
@@ -96,7 +90,7 @@ var TSOS;
                     if (this.historyIndex < this.commandHistory.length - 1)
                         this.historyIndex++;
                     if (this.buffer != "")
-                        this.clearLine();
+                        this.clearConsole();
                     var command = this.commandHistory[this.historyIndex];
                     if (command) {
                         this.putText(command);
@@ -148,6 +142,23 @@ var TSOS;
                 }
             }
         };
+        Console.prototype.backspace = function () {
+            var offsetX = _DrawingContext.measureText(this.currentFont, this.currentFontSize, this.buffer.slice(-1));
+            var offsetY = _DefaultFontSize +
+                _DrawingContext.fontDescent(this.currentFont, this.currentFontSize) +
+                _FontHeightMargin;
+            var promptSize = _DrawingContext.measureText(this.currentFont, this.currentFontSize, _OsShell.promptStr);
+            // Clear the last character typed
+            _DrawingContext.clearRect(this.currentXPosition - offsetX, this.currentYPosition - offsetY + 5, offsetX, offsetY + 10);
+            this.currentXPosition -= offsetX;
+            if (this.currentXPosition <= 0) {
+                console.log(this.buffer);
+                this.currentXPosition = _DrawingContext.measureText(this.currentFont, this.currentFontSize, this.buffer.slice(0, -1)) + promptSize;
+                this.currentYPosition -= offsetY;
+            }
+            // Update buffer
+            this.buffer = this.buffer.slice(0, -1);
+        };
         Console.prototype.putText = function (text) {
             // My first inclination here was to write two functions: putChar() and putString().
             // Then I remembered that JavaScript is (sadly) untyped and it won't differentiate
@@ -158,11 +169,18 @@ var TSOS;
             // UPDATE: Even though we are now working in TypeScript, char and string remain undistinguished.
             //         Consider fixing that.
             if (text !== "") {
-                // Draw the text at the current X and Y coordinates.
-                _DrawingContext.drawText(this.currentFont, this.currentFontSize, this.currentXPosition, this.currentYPosition, text);
-                // Move the current X position.
-                var offset = _DrawingContext.measureText(this.currentFont, this.currentFontSize, text);
-                this.currentXPosition = this.currentXPosition + offset;
+                for (var i = 0; i < text.length; i++) {
+                    var offset = _DrawingContext.measureText(this.currentFont, this.currentFontSize, text[i]);
+                    if (this.currentXPosition + offset > 500) {
+                        this.advanceLine();
+                        _DrawingContext.drawText(this.currentFont, this.currentFontSize, this.currentXPosition, this.currentYPosition, text[i]);
+                        this.currentXPosition += offset;
+                    }
+                    else {
+                        _DrawingContext.drawText(this.currentFont, this.currentFontSize, this.currentXPosition, this.currentYPosition, text[i]);
+                        this.currentXPosition += offset;
+                    }
+                }
             }
         };
         Console.prototype.advanceLine = function () {
@@ -184,13 +202,10 @@ var TSOS;
                 this.currentYPosition -= offset;
             }
         };
-        Console.prototype.clearLine = function () {
-            // Get length of line and move back
-            var offset = _DrawingContext.measureText(this.currentFont, this.currentFontSize, this.buffer);
-            this.currentXPosition -= offset;
-            // Clear the line
-            _DrawingContext.clearRect(this.currentXPosition, this.currentYPosition - this.currentFontSize, offset, this.currentFontSize + 10);
-            this.buffer = "";
+        Console.prototype.clearConsole = function () {
+            while (this.buffer != "") {
+                this.backspace();
+            }
         };
         return Console;
     }());
