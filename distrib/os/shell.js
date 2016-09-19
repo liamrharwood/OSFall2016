@@ -298,7 +298,8 @@ var TSOS;
             }
         };
         Shell.prototype.shellDate = function (args) {
-            _StdOut.putText("Today is: " + TSOS.Utils.getDateTime().slice(0, 10));
+            var date = TSOS.Utils.getDateTime();
+            _StdOut.putText("Today is: " + date.month + "/" + date.day + "/" + date.year);
         };
         Shell.prototype.shellWhereami = function (args) {
             _StdOut.putText("Cyberspace, man. You're in your element.");

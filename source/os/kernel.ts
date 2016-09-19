@@ -174,6 +174,7 @@ module TSOS {
         public krnTrapError(msg) {
             Control.hostLog("OS ERROR - TRAP: " + msg);
             
+            // BSOD
             _DrawingContext.clearRect(0, 0, _Canvas.width, _Canvas.height);
             _DrawingContext.fillStyle = "blue";
             _DrawingContext.fillRect(0, 0, _Canvas.width, _Canvas.height);
@@ -189,7 +190,7 @@ module TSOS {
 
             _SystemStatus = "OFFLINE";
             _OsShell.promptStr = "";
-
+            document.getElementById("display").style.border = "2px solid red";
 
             this.krnShutdown();
         }

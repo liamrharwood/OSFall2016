@@ -8,11 +8,29 @@ module TSOS {
 
     export class Utils {
 
-        public static getDateTime(): string {
+        public static getDateTime() {
             // Get today's date
-            var utc = new Date().toJSON(); 
+            var date = new Date();
+            var month = date.getMonth() + 1;
+            var day = date.getDate();
+            var year = date.getFullYear();
 
-            return utc;
+            var hour = date.getHours();
+            var ampm = "am";
+            if (hour > 12) { 
+                hour -= 12;
+                ampm = "pm";
+            }
+            var minute = date.getMinutes();
+
+            return {
+                month: month,
+                day: day,
+                year: year,
+                hour: hour,
+                minute: minute,
+                ampm: ampm
+            };
         }
 
         public static trim(str): string {

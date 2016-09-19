@@ -354,9 +354,9 @@ module TSOS {
         }
 
         public shellDate(args) {
-            
+            var date = Utils.getDateTime();
 
-            _StdOut.putText("Today is: " + Utils.getDateTime().slice(0,10));
+            _StdOut.putText("Today is: " + date.month + "/" + date.day + "/" + date.year);
 
         }
 

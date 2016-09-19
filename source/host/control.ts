@@ -77,11 +77,14 @@ module TSOS {
         }
 
         public static hostTaskBarUpdate(): void {
-            var utc : string = Utils.getDateTime();
-            var date : string = utc.slice(0,10);
-            var time : string = utc.slice(11, 19);
+            var date = Utils.getDateTime();
 
-            document.getElementById("divTaskBar").innerHTML = "Status: " + _SystemStatus + "  ---  " + date + " " + time;
+            document.getElementById("divTaskBar").innerHTML = "Status: " + _SystemStatus + "  ---  " + date.month  + "/" 
+                                                                                                     + date.day    + "/" 
+                                                                                                     + date.year   + " " 
+                                                                                                     + date.hour   + ":" 
+                                                                                                     + date.minute + " " 
+                                                                                                     + date.ampm;
         }
 
         //

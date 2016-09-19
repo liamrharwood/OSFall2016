@@ -65,10 +65,13 @@ var TSOS;
             // TODO in the future: Optionally update a log database or some streaming service.
         };
         Control.hostTaskBarUpdate = function () {
-            var utc = TSOS.Utils.getDateTime();
-            var date = utc.slice(0, 10);
-            var time = utc.slice(11, 19);
-            document.getElementById("divTaskBar").innerHTML = "Status: " + _SystemStatus + "  ---  " + date + " " + time;
+            var date = TSOS.Utils.getDateTime();
+            document.getElementById("divTaskBar").innerHTML = "Status: " + _SystemStatus + "  ---  " + date.month + "/"
+                + date.day + "/"
+                + date.year + " "
+                + date.hour + ":"
+                + date.minute + " "
+                + date.ampm;
         };
         //
         // Host Events
