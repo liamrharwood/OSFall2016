@@ -64,6 +64,9 @@ var TSOS;
             // bsod
             sc = new TSOS.ShellCommand(this.shellBsod, "bsod", "- Blow it all to kingdom come.");
             this.commandList[this.commandList.length] = sc;
+            // load
+            sc = new TSOS.ShellCommand(this.shellLoad, "load", "- Validates the user code.");
+            this.commandList[this.commandList.length] = sc;
             // ps  - list the running processes and their IDs
             // kill <id> - kills the specified process id.
             //
@@ -246,6 +249,9 @@ var TSOS;
                     case "bsod":
                         _StdOut.putText("BSOD simulates trapping a kernel error.");
                         break;
+                    case "load":
+                        _StdOut.putText("Load checks to see if user code is valid.");
+                        break;
                     // TODO: Make descriptive MANual page entries for the the rest of the shell commands here.
                     default:
                         _StdOut.putText("No manual entry for " + args[0] + ".");
@@ -331,6 +337,35 @@ var TSOS;
         };
         Shell.prototype.shellBsod = function (args) {
             _Kernel.krnTrapError("SELF DESTRUCT");
+        };
+        Shell.prototype.shellLoad = function (args) {
+            // Get typed-in code
+            var userCode = document.getElementById("taProgramInput").value;
+            // Split individual op codes
+            var codeArr = userCode.split(" ");
+            // Regex for op code
+            var regexp = /[A-F0-9][A-F0-9]\s*|\s+/g;
+            var isInvalid = false;
+            for (var i = 0; i < codeArr.length; i++) {
+                // Get rid of pesky newlines
+                codeArr[i].replace(/\n|\r/g, "");
+                var matches = codeArr[i].match(regexp);
+                // If there's a valid op code...
+                if (matches) {
+                    if (matches.length != 1) {
+                        isInvalid = true;
+                    }
+                }
+                else {
+                    isInvalid = true; // No valid op code, not valid
+                }
+            }
+            if (isInvalid) {
+                _StdOut.putText("Invalid user code.");
+            }
+            else {
+                _StdOut.putText("User code is valid!");
+            }
         };
         return Shell;
     }());
