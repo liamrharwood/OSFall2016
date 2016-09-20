@@ -19,7 +19,8 @@ module TSOS {
                     public currentYPosition = _DefaultFontSize,
                     public buffer = "",
                     public commandHistory = [],
-                    public historyIndex = 0) {
+                    public historyIndex = 0,
+                    public lastXCoords = []) {
         }
 
         public init(): void {
@@ -55,6 +56,7 @@ module TSOS {
                     }
                     // ... and reset our buffer.
                     this.buffer = "";
+                    this.lastXCoords = [];
                 } else if (chr === String.fromCharCode(8)) { // Backspace key
                     this.backspace();
                 } else if(chr === String.fromCharCode(9)) { // Tab key
@@ -76,6 +78,7 @@ module TSOS {
                     if (this.buffer != "") this.clearConsole();
                     var command = this.commandHistory[this.historyIndex];
                     if(command) {
+                        this.lastXCoords = [];
                         this.putText(command);
                         this.buffer = command; 
                     }
@@ -85,6 +88,7 @@ module TSOS {
                     if (this.buffer != "") this.clearConsole();
                     var command = this.commandHistory[this.historyIndex];
                     if(command) {
+                        this.lastXCoords = [];
                         this.putText(command);
                         this.buffer = command;
                     }
@@ -139,15 +143,25 @@ module TSOS {
             var offsetY = _DefaultFontSize + 
                           _DrawingContext.fontDescent(this.currentFont, this.currentFontSize) +
                           _FontHeightMargin;
-            var promptSize = _DrawingContext.measureText(this.currentFont, this.currentFontSize, _OsShell.promptStr);
+            // var promptSize = _DrawingContext.measureText(this.currentFont, this.currentFontSize, _OsShell.promptStr);
             
             // Clear the last character typed
-            _DrawingContext.clearRect(this.currentXPosition-offsetX, this.currentYPosition-offsetY+5, offsetX, offsetY+10);
+            /*.clearRect(this.currentXPosition-offsetX, this.currentYPosition-offsetY+5, offsetX, offsetY+10);
             this.currentXPosition -= offsetX;
             if(this.currentXPosition <= 0) {
-                console.log(this.buffer);
-                this.currentXPosition = _DrawingContext.measureText(this.currentFont, this.currentFontSize, this.buffer.slice(0,-1)) + promptSize;
+                
+                this.currentXPosition = this.lastXCoords.pop();
                 this.currentYPosition -= offsetY;
+            } */
+
+            if(this.currentXPosition <= 0) {
+                this.currentXPosition = this.lastXCoords.pop();
+                this.currentYPosition -= offsetY;
+                _DrawingContext.clearRect(this.currentXPosition-offsetX, this.currentYPosition-offsetY+5, offsetX, offsetY+10);
+                this.currentXPosition -= offsetX;
+            } else {
+                _DrawingContext.clearRect(this.currentXPosition-offsetX, this.currentYPosition-offsetY+5, offsetX, offsetY+10);
+                this.currentXPosition -= offsetX;
             }
               
             // Update buffer
@@ -169,6 +183,8 @@ module TSOS {
                     
                     var offset = _DrawingContext.measureText(this.currentFont, this.currentFontSize, text[i]);
                     if(this.currentXPosition + offset > 500) {
+                        this.lastXCoords.push(this.currentXPosition);
+                        console.log(this.lastXCoords);
                         this.advanceLine();
                         _DrawingContext.drawText(this.currentFont, this.currentFontSize, this.currentXPosition, this.currentYPosition, text[i]);
                         this.currentXPosition += offset;
@@ -205,6 +221,7 @@ module TSOS {
         public clearConsole(): void {
             while(this.buffer != ""){
                 this.backspace();
+                // console.log(this.buffer);
             }
         }
     }

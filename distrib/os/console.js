@@ -10,7 +10,7 @@
 var TSOS;
 (function (TSOS) {
     var Console = (function () {
-        function Console(currentFont, currentFontSize, currentXPosition, currentYPosition, buffer, commandHistory, historyIndex) {
+        function Console(currentFont, currentFontSize, currentXPosition, currentYPosition, buffer, commandHistory, historyIndex, lastXCoords) {
             if (currentFont === void 0) { currentFont = _DefaultFontFamily; }
             if (currentFontSize === void 0) { currentFontSize = _DefaultFontSize; }
             if (currentXPosition === void 0) { currentXPosition = 0; }
@@ -18,6 +18,7 @@ var TSOS;
             if (buffer === void 0) { buffer = ""; }
             if (commandHistory === void 0) { commandHistory = []; }
             if (historyIndex === void 0) { historyIndex = 0; }
+            if (lastXCoords === void 0) { lastXCoords = []; }
             this.currentFont = currentFont;
             this.currentFontSize = currentFontSize;
             this.currentXPosition = currentXPosition;
@@ -25,6 +26,7 @@ var TSOS;
             this.buffer = buffer;
             this.commandHistory = commandHistory;
             this.historyIndex = historyIndex;
+            this.lastXCoords = lastXCoords;
         }
         Console.prototype.init = function () {
             this.clearScreen();
@@ -55,6 +57,7 @@ var TSOS;
                     }
                     // ... and reset our buffer.
                     this.buffer = "";
+                    this.lastXCoords = [];
                 }
                 else if (chr === String.fromCharCode(8)) {
                     this.backspace();
@@ -81,6 +84,7 @@ var TSOS;
                         this.clearConsole();
                     var command = this.commandHistory[this.historyIndex];
                     if (command) {
+                        this.lastXCoords = [];
                         this.putText(command);
                         this.buffer = command;
                     }
@@ -93,6 +97,7 @@ var TSOS;
                         this.clearConsole();
                     var command = this.commandHistory[this.historyIndex];
                     if (command) {
+                        this.lastXCoords = [];
                         this.putText(command);
                         this.buffer = command;
                     }
@@ -147,14 +152,24 @@ var TSOS;
             var offsetY = _DefaultFontSize +
                 _DrawingContext.fontDescent(this.currentFont, this.currentFontSize) +
                 _FontHeightMargin;
-            var promptSize = _DrawingContext.measureText(this.currentFont, this.currentFontSize, _OsShell.promptStr);
+            // var promptSize = _DrawingContext.measureText(this.currentFont, this.currentFontSize, _OsShell.promptStr);
             // Clear the last character typed
-            _DrawingContext.clearRect(this.currentXPosition - offsetX, this.currentYPosition - offsetY + 5, offsetX, offsetY + 10);
+            /*.clearRect(this.currentXPosition-offsetX, this.currentYPosition-offsetY+5, offsetX, offsetY+10);
             this.currentXPosition -= offsetX;
-            if (this.currentXPosition <= 0) {
-                console.log(this.buffer);
-                this.currentXPosition = _DrawingContext.measureText(this.currentFont, this.currentFontSize, this.buffer.slice(0, -1)) + promptSize;
+            if(this.currentXPosition <= 0) {
+                
+                this.currentXPosition = this.lastXCoords.pop();
                 this.currentYPosition -= offsetY;
+            } */
+            if (this.currentXPosition <= 0) {
+                this.currentXPosition = this.lastXCoords.pop();
+                this.currentYPosition -= offsetY;
+                _DrawingContext.clearRect(this.currentXPosition - offsetX, this.currentYPosition - offsetY + 5, offsetX, offsetY + 10);
+                this.currentXPosition -= offsetX;
+            }
+            else {
+                _DrawingContext.clearRect(this.currentXPosition - offsetX, this.currentYPosition - offsetY + 5, offsetX, offsetY + 10);
+                this.currentXPosition -= offsetX;
             }
             // Update buffer
             this.buffer = this.buffer.slice(0, -1);
@@ -172,6 +187,8 @@ var TSOS;
                 for (var i = 0; i < text.length; i++) {
                     var offset = _DrawingContext.measureText(this.currentFont, this.currentFontSize, text[i]);
                     if (this.currentXPosition + offset > 500) {
+                        this.lastXCoords.push(this.currentXPosition);
+                        console.log(this.lastXCoords);
                         this.advanceLine();
                         _DrawingContext.drawText(this.currentFont, this.currentFontSize, this.currentXPosition, this.currentYPosition, text[i]);
                         this.currentXPosition += offset;
