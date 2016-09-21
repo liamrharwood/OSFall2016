@@ -148,22 +148,17 @@ var TSOS;
             }
         };
         Console.prototype.backspace = function () {
+            // Offsets for moving back and up
             var offsetX = _DrawingContext.measureText(this.currentFont, this.currentFontSize, this.buffer.slice(-1));
             var offsetY = _DefaultFontSize +
                 _DrawingContext.fontDescent(this.currentFont, this.currentFontSize) +
                 _FontHeightMargin;
-            // var promptSize = _DrawingContext.measureText(this.currentFont, this.currentFontSize, _OsShell.promptStr);
-            // Clear the last character typed
-            /*.clearRect(this.currentXPosition-offsetX, this.currentYPosition-offsetY+5, offsetX, offsetY+10);
-            this.currentXPosition -= offsetX;
-            if(this.currentXPosition <= 0) {
-                
-                this.currentXPosition = this.lastXCoords.pop();
-                this.currentYPosition -= offsetY;
-            } */
+            // If too far left, go back up one line
             if (this.currentXPosition <= 0) {
+                // Move to the ending X Coord of the line above
                 this.currentXPosition = this.lastXCoords.pop();
                 this.currentYPosition -= offsetY;
+                // Clear last character
                 _DrawingContext.clearRect(this.currentXPosition - offsetX, this.currentYPosition - offsetY + 5, offsetX, offsetY + 10);
                 this.currentXPosition -= offsetX;
             }
@@ -184,16 +179,20 @@ var TSOS;
             // UPDATE: Even though we are now working in TypeScript, char and string remain undistinguished.
             //         Consider fixing that.
             if (text !== "") {
+                // Put each character individually
                 for (var i = 0; i < text.length; i++) {
                     var offset = _DrawingContext.measureText(this.currentFont, this.currentFontSize, text[i]);
+                    // If too far right, wrap the line
                     if (this.currentXPosition + offset > 500) {
+                        // Store the ending X Coord of the line
                         this.lastXCoords.push(this.currentXPosition);
-                        console.log(this.lastXCoords);
                         this.advanceLine();
+                        // Draw the character
                         _DrawingContext.drawText(this.currentFont, this.currentFontSize, this.currentXPosition, this.currentYPosition, text[i]);
                         this.currentXPosition += offset;
                     }
                     else {
+                        // Draw the character
                         _DrawingContext.drawText(this.currentFont, this.currentFontSize, this.currentXPosition, this.currentYPosition, text[i]);
                         this.currentXPosition += offset;
                     }
@@ -220,6 +219,7 @@ var TSOS;
             }
         };
         Console.prototype.clearConsole = function () {
+            // To clear all input, backspace until the buffer is empty
             while (this.buffer != "") {
                 this.backspace();
             }
