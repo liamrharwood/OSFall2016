@@ -20,6 +20,14 @@ module TSOS {
         		_Memory.memArr[i] = userCode[i];
         	}
         	Control.updateMemoryDisplay();
-        } 
+        }
+
+        public read(address : number): string {
+            return _Memory.memArr[address];
+        }
+
+        public write(address : number, value: string): void {
+            _Memory.memArr[address] = value;
+        }
     }
 }

@@ -16,19 +16,21 @@
 var TSOS;
 (function (TSOS) {
     var Cpu = (function () {
-        function Cpu(PC, Acc, Xreg, Yreg, Zflag, isExecuting) {
+        function Cpu(PC, Acc, Xreg, Yreg, Zflag, isExecuting, instruction) {
             if (PC === void 0) { PC = 0; }
             if (Acc === void 0) { Acc = 0; }
             if (Xreg === void 0) { Xreg = 0; }
             if (Yreg === void 0) { Yreg = 0; }
             if (Zflag === void 0) { Zflag = 0; }
             if (isExecuting === void 0) { isExecuting = false; }
+            if (instruction === void 0) { instruction = ""; }
             this.PC = PC;
             this.Acc = Acc;
             this.Xreg = Xreg;
             this.Yreg = Yreg;
             this.Zflag = Zflag;
             this.isExecuting = isExecuting;
+            this.instruction = instruction;
         }
         Cpu.prototype.init = function () {
             this.PC = 0;
@@ -37,16 +39,107 @@ var TSOS;
             this.Yreg = 0;
             this.Zflag = 0;
             this.isExecuting = false;
+            TSOS.Control.updateCPUDisplay();
         };
         Cpu.prototype.cycle = function () {
             _Kernel.krnTrace('CPU cycle');
             // TODO: Accumulate CPU usage and profiling statistics here.
             // Do the real work here. Be sure to set this.isExecuting appropriately.
-            if (this.isExecuting) {
-                this.executeProgram(_CurrentPCB);
-            }
+            TSOS.Control.updateCPUDisplay();
+            TSOS.Control.updateMemoryDisplay();
+            this.executeProgram(_CurrentPCB);
         };
         Cpu.prototype.executeProgram = function (pcb) {
+            this.instruction = _Memory.memArr[this.PC];
+            switch (this.instruction) {
+                case 'A9':
+                    this.loadAccFromConstant();
+                    break;
+                case 'AD':
+                    this.loadAccFromMemory();
+                    break;
+                case '8D':
+                    this.storeAccInMemory();
+                    break;
+                case '6D':
+                    this.addWithCarry();
+                    break;
+                case 'A2':
+                    this.loadXWithConstant();
+                    break;
+                case 'AE':
+                    this.loadXFromMemory();
+                    break;
+                case 'A0':
+                    this.loadYWithConstant();
+                    break;
+                case 'AC':
+                    this.loadYFromMemory();
+                    break;
+                case 'EC':
+                    this.compareByteToX();
+                    break;
+                case 'D0':
+                    this.branch();
+                    break;
+                case 'EE':
+                    this.incrementByte();
+                    break;
+                case 'FF':
+                    this.sysCall();
+                    break;
+                case 'EA':
+                    this.PC++;
+                    break;
+                case '00':
+                    break;
+                default:
+                    _StdOut.putText("");
+            }
+        };
+        Cpu.prototype.loadAccFromConstant = function () {
+            this.PC++;
+            this.Acc = parseInt(_MemoryManager.read(this.PC), 16);
+            this.PC++;
+        };
+        Cpu.prototype.loadAccFromMemory = function () {
+            this.PC++;
+            var addrString = _MemoryManager.read(this.PC);
+            this.PC++;
+            addrString = _MemoryManager.read(this.PC) + addrString;
+            var address = parseInt(addrString, 16);
+            this.Acc = parseInt(_MemoryManager.read(address), 16);
+            this.PC++;
+        };
+        Cpu.prototype.storeAccInMemory = function () {
+            this.PC++;
+            var addrString = _MemoryManager.read(this.PC);
+            this.PC++;
+            addrString = _MemoryManager.read(this.PC) + addrString;
+            var address = parseInt(addrString, 16);
+            var val = this.Acc.toString(16);
+            if (val.length < 2)
+                val = "0" + val;
+            _MemoryManager.write(address, val);
+            this.PC++;
+        };
+        Cpu.prototype.addWithCarry = function () {
+        };
+        Cpu.prototype.loadXWithConstant = function () {
+        };
+        Cpu.prototype.loadXFromMemory = function () {
+        };
+        Cpu.prototype.loadYWithConstant = function () {
+        };
+        Cpu.prototype.loadYFromMemory = function () {
+        };
+        Cpu.prototype.compareByteToX = function () {
+        };
+        Cpu.prototype.branch = function () {
+        };
+        Cpu.prototype.incrementByte = function () {
+        };
+        Cpu.prototype.sysCall = function () {
         };
         return Cpu;
     }());

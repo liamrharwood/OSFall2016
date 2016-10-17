@@ -15,6 +15,12 @@ var TSOS;
             }
             TSOS.Control.updateMemoryDisplay();
         };
+        MemoryManager.prototype.read = function (address) {
+            return _Memory.memArr[address];
+        };
+        MemoryManager.prototype.write = function (address, value) {
+            _Memory.memArr[address] = value;
+        };
         return MemoryManager;
     }());
     TSOS.MemoryManager = MemoryManager;

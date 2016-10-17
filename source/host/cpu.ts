@@ -24,7 +24,8 @@ module TSOS {
                     public Xreg: number = 0,
                     public Yreg: number = 0,
                     public Zflag: number = 0,
-                    public isExecuting: boolean = false) {
+                    public isExecuting: boolean = false,
+                    public instruction: string = "") {
 
         }
 
@@ -35,20 +36,132 @@ module TSOS {
             this.Yreg = 0;
             this.Zflag = 0;
             this.isExecuting = false;
+            Control.updateCPUDisplay();
         }
 
         public cycle(): void {
             _Kernel.krnTrace('CPU cycle');
             // TODO: Accumulate CPU usage and profiling statistics here.
             // Do the real work here. Be sure to set this.isExecuting appropriately.
-
-            if(this.isExecuting) {
-                this.executeProgram(_CurrentPCB);
-            }
+            Control.updateCPUDisplay();
+            Control.updateMemoryDisplay();
+            this.executeProgram(_CurrentPCB);
         }
 
         public executeProgram(pcb: TSOS.PCB) {
-            
+            this.instruction = _Memory.memArr[this.PC];
+
+            switch (this.instruction) {
+                case 'A9':
+                    this.loadAccFromConstant();
+                    break;
+                case 'AD':
+                    this.loadAccFromMemory();
+                    break;
+                case '8D':
+                    this.storeAccInMemory();
+                    break;
+                case '6D':
+                    this.addWithCarry();
+                    break;
+                case 'A2':
+                    this.loadXWithConstant();
+                    break;
+                case 'AE':
+                    this.loadXFromMemory();
+                    break;
+                case 'A0':
+                    this.loadYWithConstant();
+                    break;
+                case 'AC':
+                    this.loadYFromMemory();
+                    break;
+                case 'EC':
+                    this.compareByteToX();
+                    break;
+                case 'D0':
+                    this.branch();
+                    break;
+                case 'EE':
+                    this.incrementByte();
+                    break;
+                case 'FF':
+                    this.sysCall();
+                    break;
+                case 'EA':
+                    this.PC++;
+                    break;
+                case '00':
+                    
+                    break;
+                default:
+                    _StdOut.putText("");
+
+            }
+        }
+
+        public loadAccFromConstant() {
+            this.PC++;
+            this.Acc = parseInt(_MemoryManager.read(this.PC), 16);
+            this.PC++;
+        }
+
+        public loadAccFromMemory() {
+            this.PC++;
+            var addrString: string = _MemoryManager.read(this.PC);
+            this.PC++;
+            addrString = _MemoryManager.read(this.PC) + addrString;
+            var address: number = parseInt(addrString, 16);
+            this.Acc = parseInt(_MemoryManager.read(address), 16);
+            this.PC++;
+        }
+
+        public storeAccInMemory() {
+            this.PC++;
+            var addrString: string = _MemoryManager.read(this.PC);
+            this.PC++;
+            addrString = _MemoryManager.read(this.PC) + addrString;
+            var address: number = parseInt(addrString, 16);
+            var val: string = this.Acc.toString(16);
+            if(val.length < 2) val = "0" + val;
+            _MemoryManager.write(address, val);
+            this.PC++;            
+        }
+
+        public addWithCarry() {
+
+        }
+
+        public loadXWithConstant() {
+
+        }
+
+        public loadXFromMemory() {
+
+        }
+
+        public loadYWithConstant() {
+
+        }
+
+        public loadYFromMemory() {
+
+        }
+
+        public compareByteToX() {
+
+        }
+
+        public branch() {
+
+        }
+
+        public incrementByte() {
+
+        }
+
+        public sysCall() {
+
         }
 
 

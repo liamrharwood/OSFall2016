@@ -372,15 +372,18 @@ var TSOS;
                 _StdOut.putText("Program loaded. PID: " + pcb.pid);
             }
             else {
-                _StdOut.putText("Invalid user code.");
+                _StdOut.putText("Invalid program input.");
             }
         };
         Shell.prototype.shellRun = function (args) {
             if (args.length > 0) {
-                if (_CurrentPCB.pid === parseInt(args[0]))
+                if (_CurrentPCB.pid === parseInt(args[0])) {
                     _StdOut.putText("Running PID " + _CurrentPCB.pid);
-                else
+                    _CPU.isExecuting = true;
+                }
+                else {
                     _StdOut.putText("Specified PID does not exist.");
+                }
             }
             else {
                 _StdOut.putText("Please specify a PID.");

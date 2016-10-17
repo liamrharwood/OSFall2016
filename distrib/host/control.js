@@ -64,6 +64,17 @@ var TSOS;
             this.updateHostTaskBar();
             // TODO in the future: Optionally update a log database or some streaming service.
         };
+        Control.updateCPUDisplay = function () {
+            var tableHTML = "<tr>";
+            tableHTML += "<td>" + _CPU.instruction + "</td>";
+            tableHTML += "<td>" + _CPU.PC + "</td>";
+            tableHTML += "<td>" + _CPU.Acc + "</td>";
+            tableHTML += "<td>" + _CPU.Xreg + "</td>";
+            tableHTML += "<td>" + _CPU.Yreg + "</td>";
+            tableHTML += "<td>" + _CPU.Zflag + "</td>";
+            tableHTML += "</tr>";
+            document.getElementById("CPUTableInfo").innerHTML = tableHTML;
+        };
         Control.updateMemoryDisplay = function () {
             var tableHTML = "";
             for (var i = 0; i < _MemorySize / 8; i++) {

@@ -45,6 +45,17 @@ h3 {
   text-align: center;
 }
 
+#CPUTable thead tr th {
+  border: 1px solid white;
+  padding: 5px;
+  font-weight: bold;
+}
+
+#CPUTable tbody tr td {
+  border: 1px solid white;
+  padding: 5px;
+}
+
 #divMemoryDisplay {
   height: 500px;
   overflow: scroll;
