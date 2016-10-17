@@ -434,6 +434,7 @@ module TSOS {
             }
 
             if(isValid) {
+                _MemoryManager.clearAllMemory();
                 _MemoryManager.loadUserCode(codeArr);
                 var pcb = new PCB();
                 _CurrentPCB = pcb;
@@ -447,7 +448,6 @@ module TSOS {
         public shellRun(args) {
             if(args.length > 0) {
                 if (_CurrentPCB.pid === parseInt(args[0])) {
-                    _StdOut.putText("Running PID " + _CurrentPCB.pid);
                     _CPU.isExecuting = true; 
                 }
                 else {

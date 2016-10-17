@@ -12,10 +12,13 @@ var TSOS;
             this.memArr = memArr;
         }
         Memory.prototype.init = function () {
+            this.clearAll();
+            TSOS.Control.updateMemoryDisplay();
+        };
+        Memory.prototype.clearAll = function () {
             for (var i = 0; i < this.size; i++) {
                 this.memArr[i] = "00";
             }
-            TSOS.Control.updateMemoryDisplay();
         };
         return Memory;
     }());

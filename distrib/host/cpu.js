@@ -21,7 +21,7 @@ var TSOS;
             if (Acc === void 0) { Acc = 0; }
             if (Xreg === void 0) { Xreg = 0; }
             if (Yreg === void 0) { Yreg = 0; }
-            if (Zflag === void 0) { Zflag = 1; }
+            if (Zflag === void 0) { Zflag = 0; }
             if (isExecuting === void 0) { isExecuting = false; }
             if (instruction === void 0) { instruction = ""; }
             this.PC = PC;
@@ -37,7 +37,7 @@ var TSOS;
             this.Acc = 0;
             this.Xreg = 0;
             this.Yreg = 0;
-            this.Zflag = 1;
+            this.Zflag = 0;
             this.isExecuting = false;
             TSOS.Control.updateCPUDisplay();
         };
@@ -170,7 +170,10 @@ var TSOS;
             this.PC++;
             addrString = _MemoryManager.read(this.PC) + addrString;
             var address = parseInt(addrString, 16);
-            this.Zflag = parseInt(_MemoryManager.read(address), 16) === this.Xreg ? 0 : 1;
+            if (parseInt(_MemoryManager.read(address), 16) === this.Xreg)
+                this.Zflag = 1;
+            else
+                this.Zflag = 0;
             this.PC++;
         };
         Cpu.prototype.branch = function () {
@@ -178,7 +181,13 @@ var TSOS;
             if (this.Zflag === 0) {
                 var numBytes = parseInt(_MemoryManager.read(this.PC), 16);
                 this.PC++;
-                this.PC += numBytes;
+                var newPC = this.PC + numBytes;
+                if (newPC > _SegmentSize) {
+                    this.PC = newPC - _SegmentSize;
+                }
+                else {
+                    this.PC = newPC;
+                }
             }
             else {
                 this.PC++;
@@ -191,6 +200,7 @@ var TSOS;
             addrString = _MemoryManager.read(this.PC) + addrString;
             var address = parseInt(addrString, 16);
             var val = parseInt(_MemoryManager.read(address), 16);
+            val++;
             var hex = val.toString().toUpperCase();
             if (hex.length < 2)
                 hex = "0" + hex;

@@ -21,6 +21,9 @@ var TSOS;
         MemoryManager.prototype.write = function (address, value) {
             _Memory.memArr[address] = value;
         };
+        MemoryManager.prototype.clearAllMemory = function () {
+            _Memory.clearAll();
+        };
         return MemoryManager;
     }());
     TSOS.MemoryManager = MemoryManager;

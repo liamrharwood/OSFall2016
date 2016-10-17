@@ -23,7 +23,7 @@ module TSOS {
                     public Acc: number = 0,
                     public Xreg: number = 0,
                     public Yreg: number = 0,
-                    public Zflag: number = 1,
+                    public Zflag: number = 0,
                     public isExecuting: boolean = false,
                     public instruction: string = "") {
 
@@ -34,7 +34,7 @@ module TSOS {
             this.Acc = 0;
             this.Xreg = 0;
             this.Yreg = 0;
-            this.Zflag = 1;
+            this.Zflag = 0;
             this.isExecuting = false;
             Control.updateCPUDisplay();
         }
@@ -180,7 +180,10 @@ module TSOS {
             this.PC++;
             addrString = _MemoryManager.read(this.PC) + addrString;
             var address: number = parseInt(addrString, 16);
-            this.Zflag = parseInt(_MemoryManager.read(address), 16) === this.Xreg ? 0 : 1;
+            if(parseInt(_MemoryManager.read(address), 16) === this.Xreg)
+                this.Zflag = 1;
+            else
+                this.Zflag = 0;
             this.PC++;            
         }
 
@@ -189,7 +192,12 @@ module TSOS {
             if (this.Zflag === 0) {
                 var numBytes = parseInt(_MemoryManager.read(this.PC), 16);
                 this.PC++;
-                this.PC += numBytes;
+                var newPC = this.PC + numBytes;
+                if(newPC > _SegmentSize) {
+                    this.PC = newPC - _SegmentSize;
+                } else {
+                    this.PC = newPC;
+                }
             } else {
                 this.PC++;
             }
@@ -202,8 +210,10 @@ module TSOS {
             addrString = _MemoryManager.read(this.PC) + addrString;
             var address: number = parseInt(addrString, 16);
             var val: number = parseInt(_MemoryManager.read(address), 16);
+            val++;
             var hex: string = val.toString().toUpperCase();
-            if(hex.length < 2) hex = "0" + hex;
+            if(hex.length < 2) 
+                hex = "0" + hex;
             _MemoryManager.write(address, hex);
             this.PC++; 
         }

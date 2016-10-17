@@ -71,6 +71,10 @@ h3 {
   width: 100px;
 }
 
+#btnSingleStepMode {
+  width: 200px;
+}
+
 .footerText {
   color: black;
   font-family: Arial, Helvetica, sans-serif;

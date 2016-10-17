@@ -29,5 +29,9 @@ module TSOS {
         public write(address : number, value: string): void {
             _Memory.memArr[address] = value;
         }
+
+        public clearAllMemory(): void {
+            _Memory.clearAll();
+        }
     }
 }

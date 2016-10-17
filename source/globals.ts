@@ -29,6 +29,7 @@ var _CPU: TSOS.Cpu;  // Utilize TypeScript's type annotation system to ensure th
 
 var _Memory: TSOS.Memory;
 var _MemorySize: number = 768; // 768 bytes, 3 segments of 256 bytes
+var _SegmentSize: number = 256;
 
 var _OSclock: number = 0;  // Page 23.
 

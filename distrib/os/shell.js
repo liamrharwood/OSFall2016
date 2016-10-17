@@ -366,6 +366,7 @@ var TSOS;
                 }
             }
             if (isValid) {
+                _MemoryManager.clearAllMemory();
                 _MemoryManager.loadUserCode(codeArr);
                 var pcb = new TSOS.PCB();
                 _CurrentPCB = pcb;
@@ -378,7 +379,6 @@ var TSOS;
         Shell.prototype.shellRun = function (args) {
             if (args.length > 0) {
                 if (_CurrentPCB.pid === parseInt(args[0])) {
-                    _StdOut.putText("Running PID " + _CurrentPCB.pid);
                     _CPU.isExecuting = true;
                 }
                 else {

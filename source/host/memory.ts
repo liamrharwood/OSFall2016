@@ -14,11 +14,14 @@ module TSOS {
         }
 
         public init(): void {
-        	for(var i = 0; i < this.size; i++) {
-        		this.memArr[i] = "00";
-        	}
+        	this.clearAll();
         	Control.updateMemoryDisplay();
         }
 
+        public clearAll(): void {
+            for(var i = 0; i < this.size; i++) {
+                this.memArr[i] = "00";
+            }
+        }
     }
 }
