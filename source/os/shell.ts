@@ -439,6 +439,7 @@ module TSOS {
                 var pcb = new PCB();
                 _CurrentPCB = pcb;
                 _StdOut.putText("Program loaded. PID: " + pcb.pid);
+                Control.updatePCBDisplay();
             } else {
                 _StdOut.putText("Invalid program input.");
             }

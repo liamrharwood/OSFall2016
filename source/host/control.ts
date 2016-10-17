@@ -76,6 +76,18 @@ module TSOS {
             // TODO in the future: Optionally update a log database or some streaming service.
         }
 
+        public static updatePCBDisplay(): void {
+            var tableHTML = "<tr>";
+            tableHTML += "<td>" + _CurrentPCB.instruction + "</td>"
+            tableHTML += "<td>" + _CurrentPCB.PC + "</td>"
+            tableHTML += "<td>" + _CurrentPCB.Acc + "</td>"
+            tableHTML += "<td>" + _CurrentPCB.Xreg + "</td>"
+            tableHTML += "<td>" + _CurrentPCB.Yreg + "</td>"
+            tableHTML += "<td>" + _CurrentPCB.Zflag + "</td>"
+            tableHTML += "</tr>";
+            document.getElementById("PCBTableInfo").innerHTML = tableHTML;
+        }
+
         public static updateCPUDisplay(): void {
             var tableHTML = "<tr>";
             tableHTML += "<td>" + _CPU.instruction + "</td>"

@@ -56,6 +56,17 @@ h3 {
   padding: 5px;
 }
 
+#PCBTable thead tr th {
+  border: 1px solid white;
+  padding: 5px;
+  font-weight: bold;
+}
+
+#PCBTable tbody tr td {
+  border: 1px solid white;
+  padding: 5px;
+}
+
 #divMemoryDisplay {
   height: 500px;
   width: 500px;
