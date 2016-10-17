@@ -67,6 +67,9 @@ var TSOS;
             // load
             sc = new TSOS.ShellCommand(this.shellLoad, "load", "- Validates the user code.");
             this.commandList[this.commandList.length] = sc;
+            // run
+            sc = new TSOS.ShellCommand(this.shellRun, "run", "<pid> - Runs the specified process.");
+            this.commandList[this.commandList.length] = sc;
             // ps  - list the running processes and their IDs
             // kill <id> - kills the specified process id.
             //
@@ -252,6 +255,8 @@ var TSOS;
                     case "load":
                         _StdOut.putText("Load checks to see if user code is valid.");
                         break;
+                    case "run":
+                        _StdOut.putText("Run runs the process specified by PID.");
                     // TODO: Make descriptive MANual page entries for the the rest of the shell commands here.
                     default:
                         _StdOut.putText("No manual entry for " + args[0] + ".");
@@ -363,10 +368,22 @@ var TSOS;
             if (isValid) {
                 _MemoryManager.loadUserCode(codeArr);
                 var pcb = new TSOS.PCB();
+                _CurrentPCB = pcb;
                 _StdOut.putText("Program loaded. PID: " + pcb.pid);
             }
             else {
                 _StdOut.putText("Invalid user code.");
+            }
+        };
+        Shell.prototype.shellRun = function (args) {
+            if (args.length > 0) {
+                if (_CurrentPCB.pid === parseInt(args[0]))
+                    _StdOut.putText("Running PID " + _CurrentPCB.pid);
+                else
+                    _StdOut.putText("Specified PID does not exist.");
+            }
+            else {
+                _StdOut.putText("Please specify a PID.");
             }
         };
         return Shell;
