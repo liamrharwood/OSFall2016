@@ -345,7 +345,7 @@ var TSOS;
             var codeArr = userCode.split(" ");
             // Regex for op code
             var regexp = /[A-F0-9][A-F0-9]\s*|\s+/g;
-            var isInvalid = false;
+            var isValid = true;
             for (var i = 0; i < codeArr.length; i++) {
                 // Get rid of pesky newlines
                 codeArr[i].replace(/\n|\r/g, "");
@@ -353,18 +353,19 @@ var TSOS;
                 // If there's a valid op code...
                 if (matches) {
                     if (matches.length != 1) {
-                        isInvalid = true;
+                        isValid = false;
                     }
                 }
                 else {
-                    isInvalid = true; // No valid op code, not valid
+                    isValid = false; // No valid op code, not valid
                 }
             }
-            if (isInvalid) {
-                _StdOut.putText("Invalid user code.");
+            if (isValid) {
+                _StdOut.putText("User code is valid!");
+                _MemoryManager.loadUserCode(codeArr);
             }
             else {
-                _StdOut.putText("User code is valid!");
+                _StdOut.putText("Invalid user code.");
             }
         };
         return Shell;

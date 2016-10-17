@@ -72,11 +72,23 @@ module TSOS {
             var taLog = <HTMLInputElement> document.getElementById("taHostLog");
             taLog.value = str + taLog.value;
 
-            this.hostTaskBarUpdate();
+            this.updateHostTaskBar();
             // TODO in the future: Optionally update a log database or some streaming service.
         }
 
-        public static hostTaskBarUpdate(): void {
+        public static updateMemoryDisplay(): void {
+            var tableHTML = "";
+            for(var i=0; i < _MemorySize / 8; i++) {
+                tableHTML += "<tr>";
+                for(var j=0; j < 8; j++) {
+                    tableHTML += "<td>" + _Memory.memArr[i * 8 + j] + "</td>";
+                }
+                tableHTML += "</tr>";
+            }
+            document.getElementById("memoryTable").innerHTML = tableHTML;
+        }
+
+        public static updateHostTaskBar(): void {
             var date = Utils.getDateTime();
 
             document.getElementById("divTaskBar").innerHTML = "Status: " + _SystemStatus + "  ---  " + date.month  + "/" 
@@ -105,6 +117,9 @@ module TSOS {
             // ... Create and initialize the CPU (because it's part of the hardware)  ...
             _CPU = new Cpu();  // Note: We could simulate multi-core systems by instantiating more than one instance of the CPU here.
             _CPU.init();       //       There's more to do, like dealing with scheduling and such, but this would be a start. Pretty cool.
+
+            _Memory = new Memory();
+            _Memory.init();
 
             // ... then set the host clock pulse ...
             _hardwareClockID = setInterval(Devices.hostClockPulse, CPU_CLOCK_INTERVAL);

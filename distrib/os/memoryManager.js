@@ -1,0 +1,21 @@
+///<reference path="../globals.ts" />
+/* ------------
+     MemoryManager.ts
+     ------------ */
+var TSOS;
+(function (TSOS) {
+    var MemoryManager = (function () {
+        function MemoryManager() {
+        }
+        MemoryManager.prototype.init = function () {
+        };
+        MemoryManager.prototype.loadUserCode = function (userCode) {
+            for (var i = 0; i < userCode.length; i++) {
+                _Memory.memArr[i] = userCode[i];
+            }
+            TSOS.Control.updateMemoryDisplay();
+        };
+        return MemoryManager;
+    }());
+    TSOS.MemoryManager = MemoryManager;
+})(TSOS || (TSOS = {}));

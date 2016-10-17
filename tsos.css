@@ -45,6 +45,15 @@ h3 {
   text-align: center;
 }
 
+#divMemoryDisplay {
+  height: 500px;
+  overflow: scroll;
+}
+
+#memoryTable tr td {
+  border: 1px solid white;
+}
+
 .normal_button {
   width: 100px;
 }

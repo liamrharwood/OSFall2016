@@ -410,7 +410,7 @@ module TSOS {
             // Regex for op code
             var regexp = /[A-F0-9][A-F0-9]\s*|\s+/g;
 
-            var isInvalid = false;
+            var isValid = true;
             for(var i=0; i < codeArr.length; i++) {
                 // Get rid of pesky newlines
                 codeArr[i].replace(/\n|\r/g, "");
@@ -418,17 +418,18 @@ module TSOS {
                 // If there's a valid op code...
                 if(matches) {
                     if(matches.length != 1) { // ...But if there are multiple for some reason, it's invalid (b/c need spaces between op codes?)
-                        isInvalid = true;
+                        isValid = false;
                     }
                 } else {
-                    isInvalid = true; // No valid op code, not valid
+                    isValid = false; // No valid op code, not valid
                 }
             }
 
-            if(isInvalid) {
-                _StdOut.putText("Invalid user code.");
-            } else {
+            if(isValid) {
                 _StdOut.putText("User code is valid!");
+                _MemoryManager.loadUserCode(codeArr);
+            } else {
+                _StdOut.putText("Invalid user code.");
             }
 
         }

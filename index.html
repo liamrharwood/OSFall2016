@@ -16,8 +16,10 @@
    <script type="text/javascript" src="distrib/host/control.js"></script>
    <script type="text/javascript" src="distrib/host/devices.js"></script>
    <script type="text/javascript" src="distrib/host/cpu.js"></script>
+   <script type="text/javascript" src="distrib/host/memory.js"></script>
 
    <!-- Virtual OS Routines: Make sure Kernel code is last, since it needs those above it. -->
+   <script type="text/javascript" src="distrib/os/memoryManager.js"></script>
    <script type="text/javascript" src="distrib/os/interrupt.js"></script>
    <script type="text/javascript" src="distrib/os/canvastext.js"></script>
    <script type="text/javascript" src="distrib/os/console.js"></script>
@@ -40,7 +42,7 @@
 
 <div id="divMain" style="width:100%;">
 
-   <div class="col-xs-12 col-md-4">
+   <div class="col-xs-12 col-md-6">
      <div id="divButtonBar" style="margin:4px;">
         <input type="button"
                id = "btnStartOS"
@@ -76,9 +78,17 @@
                 tabindex="3">
         </canvas>
      </div>
+     <div id="divMemoryDisplay">
+     <label style="color: white;">
+        Memory
+        <div id="divMemoryTable">
+        <table id="memoryTable"></table>
+        </div>
+      </label>
+     </div>
    </div>
 
-   <div class="col-xs-12 col-md-8">
+   <div class="col-xs-12 col-md-6">
      <div>
         <div id="divTaskBar" style="width:500px"> </div>
      </div>
