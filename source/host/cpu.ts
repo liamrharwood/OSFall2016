@@ -23,7 +23,7 @@ module TSOS {
                     public Acc: number = 0,
                     public Xreg: number = 0,
                     public Yreg: number = 0,
-                    public Zflag: number = 0,
+                    public Zflag: number = 1,
                     public isExecuting: boolean = false,
                     public instruction: string = "") {
 
@@ -34,7 +34,7 @@ module TSOS {
             this.Acc = 0;
             this.Xreg = 0;
             this.Yreg = 0;
-            this.Zflag = 0;
+            this.Zflag = 1;
             this.isExecuting = false;
             Control.updateCPUDisplay();
         }
@@ -46,6 +46,8 @@ module TSOS {
             Control.updateCPUDisplay();
             Control.updateMemoryDisplay();
             this.executeProgram(_CurrentPCB);
+            if(_SingleStepMode) 
+                this.isExecuting = false;
         }
 
         public executeProgram(pcb: TSOS.PCB) {
@@ -92,12 +94,14 @@ module TSOS {
                     this.PC++;
                     break;
                 case '00':
-                    
+                    this.breakProgram();
                     break;
                 default:
-                    _StdOut.putText("");
+                    _StdOut.putText("ERROR: Invalid op code.");
 
             }
+
+            this.updatePCB(pcb);
         }
 
         public loadAccFromConstant() {
@@ -122,46 +126,116 @@ module TSOS {
             this.PC++;
             addrString = _MemoryManager.read(this.PC) + addrString;
             var address: number = parseInt(addrString, 16);
-            var val: string = this.Acc.toString(16);
+            var val: string = this.Acc.toString(16).toUpperCase();
             if(val.length < 2) val = "0" + val;
             _MemoryManager.write(address, val);
             this.PC++;            
         }
 
         public addWithCarry() {
-
+            this.PC++;
+            var addrString: string = _MemoryManager.read(this.PC);
+            this.PC++;
+            addrString = _MemoryManager.read(this.PC) + addrString;
+            var address: number = parseInt(addrString, 16);
+            this.Acc += parseInt(_MemoryManager.read(address), 16);
+            this.PC++;
         }
 
         public loadXWithConstant() {
-
+            this.PC++;
+            this.Xreg = parseInt(_MemoryManager.read(this.PC), 16);
+            this.PC++;
         }
 
         public loadXFromMemory() {
-
+            this.PC++;
+            var addrString: string = _MemoryManager.read(this.PC);
+            this.PC++;
+            addrString = _MemoryManager.read(this.PC) + addrString;
+            var address: number = parseInt(addrString, 16);
+            this.Xreg = parseInt(_MemoryManager.read(address), 16);
+            this.PC++;
         }
 
         public loadYWithConstant() {
-
+            this.PC++;
+            this.Yreg = parseInt(_MemoryManager.read(this.PC), 16);
+            this.PC++;
         }
 
         public loadYFromMemory() {
-
+            this.PC++;
+            var addrString: string = _MemoryManager.read(this.PC);
+            this.PC++;
+            addrString = _MemoryManager.read(this.PC) + addrString;
+            var address: number = parseInt(addrString, 16);
+            this.Yreg = parseInt(_MemoryManager.read(address), 16);
+            this.PC++;
         }
 
         public compareByteToX() {
-
+            this.PC++;
+            var addrString: string = _MemoryManager.read(this.PC);
+            this.PC++;
+            addrString = _MemoryManager.read(this.PC) + addrString;
+            var address: number = parseInt(addrString, 16);
+            this.Zflag = parseInt(_MemoryManager.read(address), 16) === this.Xreg ? 0 : 1;
+            this.PC++;            
         }
 
         public branch() {
-
+            this.PC++;
+            if (this.Zflag === 0) {
+                var numBytes = parseInt(_MemoryManager.read(this.PC), 16);
+                this.PC++;
+                this.PC += numBytes;
+            } else {
+                this.PC++;
+            }
         }
 
         public incrementByte() {
-
+            this.PC++;
+            var addrString: string = _MemoryManager.read(this.PC);
+            this.PC++;
+            addrString = _MemoryManager.read(this.PC) + addrString;
+            var address: number = parseInt(addrString, 16);
+            var val: number = parseInt(_MemoryManager.read(address), 16);
+            var hex: string = val.toString().toUpperCase();
+            if(hex.length < 2) hex = "0" + hex;
+            _MemoryManager.write(address, hex);
+            this.PC++; 
         }
 
         public sysCall() {
+            if(this.Xreg === 1) {
+                _StdOut.putText(this.Yreg.toString());
+            } else if(this. Xreg === 2) {
+                var address: number = this.Yreg;
+                var str: string = "";
+                var code: number = parseInt(_MemoryManager.read(address), 16);
+                while(code !== 0) {
+                    str += String.fromCharCode(code);
+                    address++;
+                    code = parseInt(_MemoryManager.read(address), 16);
+                }
+                _StdOut.putText(str);
+            }
+            this.PC++;
+        }
 
+        public breakProgram() {
+            this.isExecuting = false;
+        }
+
+        public updatePCB(pcb: TSOS.PCB) {
+            pcb.instruction = this.instruction;
+            pcb.Acc = this.Acc;
+            pcb.PC = this.PC;
+            pcb.Xreg = this.Xreg;
+            pcb.Yreg = this.Yreg;
+            pcb.Zflag = this.Zflag;
         }
 
 

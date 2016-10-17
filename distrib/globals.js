@@ -38,6 +38,7 @@ var _KernelInputQueue = null; // Is this better? I don't like uninitialized vari
 var _KernelBuffers = null; // when clearly 'any' is not what we want. There is likely a better way, but what is it?
 var _MemoryManager;
 var _CurrentPCB;
+var _SingleStepMode = false;
 // Standard input and output
 var _StdIn; // Same "to null or not to null" issue as above.
 var _StdOut;

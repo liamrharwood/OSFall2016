@@ -70,6 +70,24 @@
                value="Reset"
                tabindex="2"
                onclick="TSOS.Control.hostBtnReset_click(this);">
+
+        <input type="button"
+               id = "btnSingleStepMode"
+               name="btnSingleStepMode"
+               class="normal_button"
+               disabled="disabled"
+               value="Toggle Single Step Mode"
+               tabindex="3"
+               onclick="TSOS.Control.hostBtnSingleStep_toggle(this);">
+
+        <input type="button"
+               id = "btnStep"
+               name="btnStep"
+               class="normal_button"
+               disabled="disabled"
+               value=">"
+               tabindex="4"
+               onclick="TSOS.Control.hostBtnStep_click(this);">
      </div>
    
      <div id="divConsole" style="margin:4px; width:500px; height:500px;">
@@ -78,14 +96,6 @@
                 height="500px"
                 tabindex="3">
         </canvas>
-     </div>
-     <div id="divMemoryDisplay">
-     <label style="color: white;">
-        Memory
-        <div id="divMemoryTable">
-        <table id="memoryTable"></table>
-        </div>
-      </label>
      </div>
      <div id="divCPUDisplay">
      <label style="color: white;">
@@ -109,6 +119,15 @@
         </div>
       </label>
      </div>
+     <div id="divMemoryDisplay">
+     <label style="color: white;">
+        Memory
+        <div id="divMemoryTable">
+        <table id="memoryTable"></table>
+        </div>
+      </label>
+     </div>
+     
 
    </div>
 

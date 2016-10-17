@@ -51,6 +51,8 @@ var _KernelBuffers: any[] = null;   // when clearly 'any' is not what we want. T
 var _MemoryManager: TSOS.MemoryManager;
 var _CurrentPCB: TSOS.PCB;
 
+var _SingleStepMode: boolean = false;
+
 // Standard input and output
 var _StdIn;    // Same "to null or not to null" issue as above.
 var _StdOut;

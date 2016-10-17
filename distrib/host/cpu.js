@@ -21,7 +21,7 @@ var TSOS;
             if (Acc === void 0) { Acc = 0; }
             if (Xreg === void 0) { Xreg = 0; }
             if (Yreg === void 0) { Yreg = 0; }
-            if (Zflag === void 0) { Zflag = 0; }
+            if (Zflag === void 0) { Zflag = 1; }
             if (isExecuting === void 0) { isExecuting = false; }
             if (instruction === void 0) { instruction = ""; }
             this.PC = PC;
@@ -37,7 +37,7 @@ var TSOS;
             this.Acc = 0;
             this.Xreg = 0;
             this.Yreg = 0;
-            this.Zflag = 0;
+            this.Zflag = 1;
             this.isExecuting = false;
             TSOS.Control.updateCPUDisplay();
         };
@@ -48,6 +48,8 @@ var TSOS;
             TSOS.Control.updateCPUDisplay();
             TSOS.Control.updateMemoryDisplay();
             this.executeProgram(_CurrentPCB);
+            if (_SingleStepMode)
+                this.isExecuting = false;
         };
         Cpu.prototype.executeProgram = function (pcb) {
             this.instruction = _Memory.memArr[this.PC];
@@ -92,10 +94,12 @@ var TSOS;
                     this.PC++;
                     break;
                 case '00':
+                    this.breakProgram();
                     break;
                 default:
-                    _StdOut.putText("");
+                    _StdOut.putText("ERROR: Invalid op code.");
             }
+            this.updatePCB(pcb);
         };
         Cpu.prototype.loadAccFromConstant = function () {
             this.PC++;
@@ -117,29 +121,109 @@ var TSOS;
             this.PC++;
             addrString = _MemoryManager.read(this.PC) + addrString;
             var address = parseInt(addrString, 16);
-            var val = this.Acc.toString(16);
+            var val = this.Acc.toString(16).toUpperCase();
             if (val.length < 2)
                 val = "0" + val;
             _MemoryManager.write(address, val);
             this.PC++;
         };
         Cpu.prototype.addWithCarry = function () {
+            this.PC++;
+            var addrString = _MemoryManager.read(this.PC);
+            this.PC++;
+            addrString = _MemoryManager.read(this.PC) + addrString;
+            var address = parseInt(addrString, 16);
+            this.Acc += parseInt(_MemoryManager.read(address), 16);
+            this.PC++;
         };
         Cpu.prototype.loadXWithConstant = function () {
+            this.PC++;
+            this.Xreg = parseInt(_MemoryManager.read(this.PC), 16);
+            this.PC++;
         };
         Cpu.prototype.loadXFromMemory = function () {
+            this.PC++;
+            var addrString = _MemoryManager.read(this.PC);
+            this.PC++;
+            addrString = _MemoryManager.read(this.PC) + addrString;
+            var address = parseInt(addrString, 16);
+            this.Xreg = parseInt(_MemoryManager.read(address), 16);
+            this.PC++;
         };
         Cpu.prototype.loadYWithConstant = function () {
+            this.PC++;
+            this.Yreg = parseInt(_MemoryManager.read(this.PC), 16);
+            this.PC++;
         };
         Cpu.prototype.loadYFromMemory = function () {
+            this.PC++;
+            var addrString = _MemoryManager.read(this.PC);
+            this.PC++;
+            addrString = _MemoryManager.read(this.PC) + addrString;
+            var address = parseInt(addrString, 16);
+            this.Yreg = parseInt(_MemoryManager.read(address), 16);
+            this.PC++;
         };
         Cpu.prototype.compareByteToX = function () {
+            this.PC++;
+            var addrString = _MemoryManager.read(this.PC);
+            this.PC++;
+            addrString = _MemoryManager.read(this.PC) + addrString;
+            var address = parseInt(addrString, 16);
+            this.Zflag = parseInt(_MemoryManager.read(address), 16) === this.Xreg ? 0 : 1;
+            this.PC++;
         };
         Cpu.prototype.branch = function () {
+            this.PC++;
+            if (this.Zflag === 0) {
+                var numBytes = parseInt(_MemoryManager.read(this.PC), 16);
+                this.PC++;
+                this.PC += numBytes;
+            }
+            else {
+                this.PC++;
+            }
         };
         Cpu.prototype.incrementByte = function () {
+            this.PC++;
+            var addrString = _MemoryManager.read(this.PC);
+            this.PC++;
+            addrString = _MemoryManager.read(this.PC) + addrString;
+            var address = parseInt(addrString, 16);
+            var val = parseInt(_MemoryManager.read(address), 16);
+            var hex = val.toString().toUpperCase();
+            if (hex.length < 2)
+                hex = "0" + hex;
+            _MemoryManager.write(address, hex);
+            this.PC++;
         };
         Cpu.prototype.sysCall = function () {
+            if (this.Xreg === 1) {
+                _StdOut.putText(this.Yreg.toString());
+            }
+            else if (this.Xreg === 2) {
+                var address = this.Yreg;
+                var str = "";
+                var code = parseInt(_MemoryManager.read(address), 16);
+                while (code !== 0) {
+                    str += String.fromCharCode(code);
+                    address++;
+                    code = parseInt(_MemoryManager.read(address), 16);
+                }
+                _StdOut.putText(str);
+            }
+            this.PC++;
+        };
+        Cpu.prototype.breakProgram = function () {
+            this.isExecuting = false;
+        };
+        Cpu.prototype.updatePCB = function (pcb) {
+            pcb.instruction = this.instruction;
+            pcb.Acc = this.Acc;
+            pcb.PC = this.PC;
+            pcb.Xreg = this.Xreg;
+            pcb.Yreg = this.Yreg;
+            pcb.Zflag = this.Zflag;
         };
         return Cpu;
     }());
