@@ -19,6 +19,7 @@
    <script type="text/javascript" src="distrib/host/memory.js"></script>
 
    <!-- Virtual OS Routines: Make sure Kernel code is last, since it needs those above it. -->
+   <script type="text/javascript" src="distrib/os/pcb.js"></script>
    <script type="text/javascript" src="distrib/os/memoryManager.js"></script>
    <script type="text/javascript" src="distrib/os/interrupt.js"></script>
    <script type="text/javascript" src="distrib/os/canvastext.js"></script>
@@ -71,7 +72,7 @@
                onclick="TSOS.Control.hostBtnReset_click(this);">
      </div>
    
-     <div id="divConsole" style="margin:4px; width:500px; height:500px; float:left;">
+     <div id="divConsole" style="margin:4px; width:500px; height:500px;">
         <canvas id="display"
                 width="500px"
                 height="500px"

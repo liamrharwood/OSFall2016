@@ -67,7 +67,12 @@ var TSOS;
         Control.updateMemoryDisplay = function () {
             var tableHTML = "";
             for (var i = 0; i < _MemorySize / 8; i++) {
-                tableHTML += "<tr>";
+                var rowNumber = i * 8;
+                var rowAddress = rowNumber.toString(16).toUpperCase(); // Get hex address values
+                while (rowAddress.length < 3) {
+                    rowAddress = "0" + rowAddress;
+                }
+                tableHTML += "<tr><td>0x" + rowAddress + "</td>";
                 for (var j = 0; j < 8; j++) {
                     tableHTML += "<td>" + _Memory.memArr[i * 8 + j] + "</td>";
                 }

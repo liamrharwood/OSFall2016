@@ -6,9 +6,10 @@ var TSOS;
 (function (TSOS) {
     var PCB = (function () {
         function PCB() {
+            this.pid = PCB.pidCount;
+            PCB.pidCount++;
         }
-        PCB.prototype.init = function () {
-        };
+        PCB.pidCount = 0;
         return PCB;
     }());
     TSOS.PCB = PCB;

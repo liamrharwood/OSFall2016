@@ -52,6 +52,7 @@ h3 {
 
 #memoryTable tr td {
   border: 1px solid white;
+  padding: 5px;
 }
 
 .normal_button {

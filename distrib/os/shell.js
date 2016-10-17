@@ -361,8 +361,9 @@ var TSOS;
                 }
             }
             if (isValid) {
-                _StdOut.putText("User code is valid!");
                 _MemoryManager.loadUserCode(codeArr);
+                var pcb = new TSOS.PCB();
+                _StdOut.putText("Program loaded. PID: " + pcb.pid);
             }
             else {
                 _StdOut.putText("Invalid user code.");
