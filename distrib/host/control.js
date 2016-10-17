@@ -147,6 +147,16 @@ var TSOS;
         };
         Control.hostBtnSingleStep_toggle = function (btn) {
             _SingleStepMode = !_SingleStepMode;
+            if (_SingleStepMode) {
+                btn.value = "Single Step Mode: On";
+                btn.style = "background-color: green;";
+                document.getElementById("btnStep").disabled = false;
+            }
+            else {
+                btn.value = "Single Step Mode: Off";
+                btn.style = "background-color: red;";
+                document.getElementById("btnStep").disabled = true;
+            }
         };
         Control.hostBtnStep_click = function (btn) {
             if (_SingleStepMode)

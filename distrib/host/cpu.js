@@ -208,6 +208,7 @@ var TSOS;
             this.PC++;
         };
         Cpu.prototype.sysCall = function () {
+            this.PC++;
             if (this.Xreg === 1) {
                 _StdOut.putText(this.Yreg.toString());
             }
@@ -222,9 +223,9 @@ var TSOS;
                 }
                 _StdOut.putText(str);
             }
-            this.PC++;
         };
         Cpu.prototype.breakProgram = function () {
+            this.PC++;
             this.isExecuting = false;
         };
         Cpu.prototype.updatePCB = function (pcb) {

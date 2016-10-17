@@ -171,6 +171,16 @@ module TSOS {
 
         public static hostBtnSingleStep_toggle(btn): void {
             _SingleStepMode = !_SingleStepMode;
+            if(_SingleStepMode) {
+                btn.value = "Single Step Mode: On";
+                btn.style = "background-color: green;";
+                (<HTMLButtonElement>document.getElementById("btnStep")).disabled = false;
+            } else {
+                btn.value = "Single Step Mode: Off";
+                btn.style = "background-color: red;";
+                (<HTMLButtonElement>document.getElementById("btnStep")).disabled = true;
+
+            }
         }
 
         public static hostBtnStep_click(btn): void {

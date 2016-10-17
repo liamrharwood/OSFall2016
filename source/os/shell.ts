@@ -449,6 +449,7 @@ module TSOS {
             if(args.length > 0) {
                 if (_CurrentPCB.pid === parseInt(args[0])) {
                     _CPU.isExecuting = true; 
+                    _CPU.PC = 0;
                 }
                 else {
                     _StdOut.putText("Specified PID does not exist.")

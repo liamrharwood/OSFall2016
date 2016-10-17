@@ -219,6 +219,7 @@ module TSOS {
         }
 
         public sysCall() {
+            this.PC++;
             if(this.Xreg === 1) {
                 _StdOut.putText(this.Yreg.toString());
             } else if(this. Xreg === 2) {
@@ -232,10 +233,10 @@ module TSOS {
                 }
                 _StdOut.putText(str);
             }
-            this.PC++;
         }
 
         public breakProgram() {
+            this.PC++;
             this.isExecuting = false;
         }
 
