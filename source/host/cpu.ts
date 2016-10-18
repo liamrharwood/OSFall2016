@@ -43,10 +43,14 @@ module TSOS {
             _Kernel.krnTrace('CPU cycle');
             // TODO: Accumulate CPU usage and profiling statistics here.
             // Do the real work here. Be sure to set this.isExecuting appropriately.
+
             Control.updateCPUDisplay();
             Control.updatePCBDisplay();
             Control.updateMemoryDisplay();
+
+            // Execute instructions
             this.executeProgram(_CurrentPCB);
+            // Stop after one instruction if Single Stepping
             if(_SingleStepMode) 
                 this.isExecuting = false;
         }
@@ -105,6 +109,13 @@ module TSOS {
             this.updatePCB(pcb);
         }
 
+
+        //
+        // OP CODE FUNCTIONS
+        // (Can get messy due to converting between base 10 and base 16, and between strings and numbers.)
+        //
+
+
         public loadAccFromConstant() {
             this.PC++;
             this.Acc = parseInt(_MemoryManager.read(this.PC), 16);
@@ -128,7 +139,8 @@ module TSOS {
             addrString = _MemoryManager.read(this.PC) + addrString;
             var address: number = parseInt(addrString, 16);
             var val: string = this.Acc.toString(16).toUpperCase();
-            if(val.length < 2) val = "0" + val;
+            if(val.length < 2) 
+                val = "0" + val; // Format hex for display
             _MemoryManager.write(address, val);
             this.PC++;            
         }
@@ -195,6 +207,9 @@ module TSOS {
                 this.PC++;
                 var newPC = this.PC + numBytes;
                 if(newPC > _SegmentSize) {
+                    // If the program tries to branch outside the allotted segment, 
+                    // loop back to the beginning and branch the difference from the beginning again
+                    // (THIS IS HOW LOOPS WORK :D)
                     this.PC = newPC - _SegmentSize;
                 } else {
                     this.PC = newPC;
@@ -214,7 +229,7 @@ module TSOS {
             val++;
             var hex: string = val.toString().toUpperCase();
             if(hex.length < 2) 
-                hex = "0" + hex;
+                hex = "0" + hex; // Format hex for display
             _MemoryManager.write(address, hex);
             this.PC++; 
         }

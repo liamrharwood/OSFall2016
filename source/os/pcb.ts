@@ -18,7 +18,7 @@ module TSOS {
                     public Zflag: number = 0,
                     public instruction: string = "") {
         	this.pid = PCB.pidCount;
-        	PCB.pidCount++;
+        	PCB.pidCount++; // Keeps running count of PIDs as they're created
         }
 
 

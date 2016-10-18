@@ -434,7 +434,7 @@ module TSOS {
             }
 
             if(isValid) {
-                _MemoryManager.clearAllMemory();
+                _MemoryManager.clearAllMemory(); // Temporary, since we only need one process for iProject 2
                 _MemoryManager.loadUserCode(codeArr);
                 var pcb = new PCB();
                 _CurrentPCB = pcb;
@@ -448,7 +448,7 @@ module TSOS {
 
         public shellRun(args) {
             if(args.length > 0) {
-                if (_CurrentPCB.pid === parseInt(args[0])) {
+                if (_CurrentPCB.pid === parseInt(args[0])) { // Temporary, since we only need one process for iProject 2
                     _CPU.isExecuting = true; 
                     _CPU.PC = 0;
                 }

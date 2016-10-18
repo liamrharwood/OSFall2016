@@ -48,7 +48,9 @@ var TSOS;
             TSOS.Control.updateCPUDisplay();
             TSOS.Control.updatePCBDisplay();
             TSOS.Control.updateMemoryDisplay();
+            // Execute instructions
             this.executeProgram(_CurrentPCB);
+            // Stop after one instruction if Single Stepping
             if (_SingleStepMode)
                 this.isExecuting = false;
         };
@@ -102,6 +104,10 @@ var TSOS;
             }
             this.updatePCB(pcb);
         };
+        //
+        // OP CODE FUNCTIONS
+        // (Can get messy due to converting between base 10 and base 16, and between strings and numbers.)
+        //
         Cpu.prototype.loadAccFromConstant = function () {
             this.PC++;
             this.Acc = parseInt(_MemoryManager.read(this.PC), 16);
@@ -124,7 +130,7 @@ var TSOS;
             var address = parseInt(addrString, 16);
             var val = this.Acc.toString(16).toUpperCase();
             if (val.length < 2)
-                val = "0" + val;
+                val = "0" + val; // Format hex for display
             _MemoryManager.write(address, val);
             this.PC++;
         };
@@ -184,6 +190,9 @@ var TSOS;
                 this.PC++;
                 var newPC = this.PC + numBytes;
                 if (newPC > _SegmentSize) {
+                    // If the program tries to branch outside the allotted segment, 
+                    // loop back to the beginning and branch the difference from the beginning again
+                    // (THIS IS HOW LOOPS WORK :D)
                     this.PC = newPC - _SegmentSize;
                 }
                 else {
@@ -204,7 +213,7 @@ var TSOS;
             val++;
             var hex = val.toString().toUpperCase();
             if (hex.length < 2)
-                hex = "0" + hex;
+                hex = "0" + hex; // Format hex for display
             _MemoryManager.write(address, hex);
             this.PC++;
         };

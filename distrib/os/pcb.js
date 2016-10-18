@@ -19,7 +19,7 @@ var TSOS;
             this.Zflag = Zflag;
             this.instruction = instruction;
             this.pid = PCB.pidCount;
-            PCB.pidCount++;
+            PCB.pidCount++; // Keeps running count of PIDs as they're created
         }
         PCB.pidCount = 0;
         return PCB;

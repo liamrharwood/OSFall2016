@@ -366,7 +366,7 @@ var TSOS;
                 }
             }
             if (isValid) {
-                _MemoryManager.clearAllMemory();
+                _MemoryManager.clearAllMemory(); // Temporary, since we only need one process for iProject 2
                 _MemoryManager.loadUserCode(codeArr);
                 var pcb = new TSOS.PCB();
                 _CurrentPCB = pcb;
