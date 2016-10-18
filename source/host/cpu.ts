@@ -206,7 +206,7 @@ module TSOS {
                 var numBytes = parseInt(_MemoryManager.read(this.PC), 16);
                 this.PC++;
                 var newPC = this.PC + numBytes;
-                if(newPC > _SegmentSize) {
+                if(newPC > _SegmentSize - 1) {
                     // If the program tries to branch outside the allotted segment, 
                     // loop back to the beginning and branch the difference from the beginning again
                     // (THIS IS HOW LOOPS WORK :D)
