@@ -70,6 +70,9 @@ var TSOS;
             // run
             sc = new TSOS.ShellCommand(this.shellRun, "run", "<pid> - Runs the specified process.");
             this.commandList[this.commandList.length] = sc;
+            // clearmem
+            sc = new TSOS.ShellCommand(this.shellClearmem, "clearmem", "- Clears all memory partitions.");
+            this.commandList[this.commandList.length] = sc;
             // ps  - list the running processes and their IDs
             // kill <id> - kills the specified process id.
             //
@@ -257,6 +260,10 @@ var TSOS;
                         break;
                     case "run":
                         _StdOut.putText("Run runs the process specified by PID.");
+                        break;
+                    case "clearmem":
+                        _StdOut.putText("Clearmem clears all memory partitions.");
+                        break;
                     // TODO: Make descriptive MANual page entries for the the rest of the shell commands here.
                     default:
                         _StdOut.putText("No manual entry for " + args[0] + ".");
@@ -390,6 +397,10 @@ var TSOS;
             else {
                 _StdOut.putText("Please specify a PID.");
             }
+        };
+        Shell.prototype.shellClearmem = function (args) {
+            _MemoryManager.clearAllMemory();
+            _StdOut.putText("Memory cleared.");
         };
         return Shell;
     }());

@@ -19,6 +19,7 @@ var TSOS;
             for (var i = 0; i < this.size; i++) {
                 this.memArr[i] = "00";
             }
+            TSOS.Control.updateMemoryDisplay();
         };
         return Memory;
     }());
