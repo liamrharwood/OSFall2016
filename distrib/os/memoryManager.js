@@ -10,34 +10,39 @@ var TSOS;
             this.isFreePartition = isFreePartition;
         }
         MemoryManager.prototype.loadProgram = function (userCode, pcb) {
-            for (var i = 0; i < this.isFreePartition.length; i++) {
-                // Look for free partition
-                if (this.isFreePartition[i]) {
-                    // Set base and limit registers
-                    var base = i * _SegmentSize;
-                    var limit = base + _SegmentSize - 1;
-                    pcb.baseRegister = base;
-                    pcb.limitRegister = limit;
-                    // Fill partition with user code
-                    for (var j = base; j <= limit; j++) {
-                        if (userCode.length > 0) {
-                            _Memory.memArr[j] = userCode.shift();
+            if (userCode.length <= _SegmentSize) {
+                for (var i = 0; i < this.isFreePartition.length; i++) {
+                    // Look for free partition
+                    if (this.isFreePartition[i]) {
+                        // Set base and limit registers
+                        var base = i * _SegmentSize;
+                        var limit = base + _SegmentSize - 1;
+                        pcb.baseRegister = base;
+                        pcb.limitRegister = limit;
+                        // Fill partition with user code
+                        for (var j = base; j <= limit; j++) {
+                            if (userCode.length > 0) {
+                                _Memory.memArr[j] = userCode.shift();
+                            }
+                            else {
+                                break;
+                            }
                         }
-                        else {
-                            break;
-                        }
+                        _ProcessManager.residentList.push(pcb);
+                        TSOS.Control.updateProcessDisplay();
+                        _StdOut.putText("Program loaded. PID: " + pcb.pid);
+                        this.isFreePartition[i] = false;
+                        TSOS.Control.updateMemoryDisplay();
+                        break;
                     }
-                    _ProcessManager.residentList.push(pcb);
-                    TSOS.Control.updateProcessDisplay();
-                    _StdOut.putText("Program loaded. PID: " + pcb.pid);
-                    this.isFreePartition[i] = false;
-                    TSOS.Control.updateMemoryDisplay();
-                    break;
+                    // Give error if there are no free partitions
+                    if (i >= 2) {
+                        _StdOut.putText("There are no free memory partitions.");
+                    }
                 }
-                // Give error if there are no free partitions
-                if (i >= 2) {
-                    _StdOut.putText("There are no free memory partitions.");
-                }
+            }
+            else {
+                _StdOut.putText("Program is too big. Maximum size allowed: " + _SegmentSize + " bytes");
             }
         };
         MemoryManager.prototype.read = function (address) {
