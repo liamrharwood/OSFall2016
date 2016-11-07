@@ -13,7 +13,17 @@ var TSOS;
         }
         ProcessManager.prototype.runProcess = function (pcb) {
             _CurrentPCB = pcb;
-            _CPU.PC = 0;
+            _CPU.PC = pcb.PC;
+            _CPU.isExecuting = true;
+        };
+        ProcessManager.prototype.runAll = function () {
+            for (var i = 0; i < this.residentList.length; i++) {
+                var pcb = this.residentList[i];
+                if (pcb.processState === _ProcessStates.new) {
+                    pcb.processState = _ProcessStates.ready;
+                    this.readyQueue.enqueue(pcb);
+                }
+            }
             _CPU.isExecuting = true;
         };
         ProcessManager.prototype.getPCB = function (pid) {
@@ -33,6 +43,9 @@ var TSOS;
                     break;
                 }
             }
+        };
+        ProcessManager.prototype.contextSwitch = function (pcb) {
+            _CurrentPCB = pcb;
         };
         return ProcessManager;
     }());

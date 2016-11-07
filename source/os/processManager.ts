@@ -15,7 +15,18 @@ module TSOS {
 
         public runProcess(pcb : TSOS.PCB) : void {
             _CurrentPCB = pcb;
-            _CPU.PC = 0;
+            _CPU.PC = pcb.PC;
+            _CPU.isExecuting = true;
+        }
+
+        public runAll() : void {
+            for (var i=0; i < this.residentList.length; i++) {
+                var pcb = this.residentList[i];
+                if (pcb.processState === _ProcessStates.new) {
+                    pcb.processState = _ProcessStates.ready;
+                    this.readyQueue.enqueue(pcb);
+                }
+            }
             _CPU.isExecuting = true;
         }
 
@@ -37,6 +48,10 @@ module TSOS {
                     break;
                 }
             }
+        }
+
+        public contextSwitch(pcb : TSOS.PCB) : void {
+            _CurrentPCB = pcb;
         }
     }
 }

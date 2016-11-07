@@ -255,7 +255,12 @@ module TSOS {
             this.PC++;
             _MemoryManager.deallocateMemory(_CurrentPCB.baseRegister);
             _ProcessManager.removeFromResident(_CurrentPCB.pid);
-            this.isExecuting = false;
+
+            if(_ProcessManager.readyQueue.isEmpty()) {
+                this.isExecuting = false;
+            } else {
+                _Scheduler.contextSwitch();
+            }
         }
 
         public updatePCB(pcb: TSOS.PCB) {

@@ -32,6 +32,8 @@ var TSOS;
             _MemoryManager = new TSOS.MemoryManager();
             // Initialize the process manager.
             _ProcessManager = new TSOS.ProcessManager();
+            // Initialize the CPU scheduler
+            _Scheduler = new TSOS.Scheduler();
             // Initialize standard input and output to the _Console.
             _StdIn = _Console;
             _StdOut = _Console;
@@ -81,6 +83,7 @@ var TSOS;
             }
             else if (_CPU.isExecuting) {
                 _CPU.cycle();
+                _Scheduler.schedule();
             }
             else {
                 this.krnTrace("Idle");
@@ -114,6 +117,9 @@ var TSOS;
                 case KEYBOARD_IRQ:
                     _krnKeyboardDriver.isr(params); // Kernel mode device driver
                     _StdIn.handleInput();
+                    break;
+                case CONTEXT_SWITCH_IRQ:
+                    _Scheduler.contextSwitch();
                     break;
                 default:
                     this.krnTrapError("Invalid Interrupt Request. irq=" + irq + " params=[" + params + "]");

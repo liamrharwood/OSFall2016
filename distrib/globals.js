@@ -16,6 +16,7 @@ var CPU_CLOCK_INTERVAL = 100; // This is in ms (milliseconds) so 1000 = 1 second
 var TIMER_IRQ = 0; // Pages 23 (timer), 9 (interrupts), and 561 (interrupt priority).
 // NOTE: The timer is different from hardware/host clock pulses. Don't confuse these.
 var KEYBOARD_IRQ = 1;
+var CONTEXT_SWITCH_IRQ = 2;
 //
 // Global Variables
 // TODO: Make a global object and use that instead of the "_" naming convention in the global namespace.
@@ -39,6 +40,7 @@ var _KernelInputQueue = null; // Is this better? I don't like uninitialized vari
 var _KernelBuffers = null; // when clearly 'any' is not what we want. There is likely a better way, but what is it?
 var _MemoryManager;
 var _ProcessManager;
+var _Scheduler;
 var _CurrentPCB; // Keeps track of PCB associated with currently executing process
 var _ProcessStates = {
     "new": "New",

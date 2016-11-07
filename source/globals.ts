@@ -19,6 +19,7 @@ const CPU_CLOCK_INTERVAL: number = 100;   // This is in ms (milliseconds) so 100
 const TIMER_IRQ: number = 0;  // Pages 23 (timer), 9 (interrupts), and 561 (interrupt priority).
                               // NOTE: The timer is different from hardware/host clock pulses. Don't confuse these.
 const KEYBOARD_IRQ: number = 1;
+const CONTEXT_SWITCH_IRQ: number = 2;
 
 
 //
@@ -51,6 +52,8 @@ var _KernelBuffers: any[] = null;   // when clearly 'any' is not what we want. T
 
 var _MemoryManager: TSOS.MemoryManager;
 var _ProcessManager: TSOS.ProcessManager;
+
+var _Scheduler : TSOS.Scheduler;
 var _CurrentPCB: TSOS.PCB; // Keeps track of PCB associated with currently executing process
 
 var _ProcessStates = {
