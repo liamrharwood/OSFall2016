@@ -17,7 +17,7 @@ module TSOS {
 
             var hour = date.getHours();
             var ampm = "am";
-            if (hour > 12) { 
+            if (hour >= 12) { 
                 hour -= 12;
                 ampm = "pm";
             }

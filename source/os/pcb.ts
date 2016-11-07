@@ -16,7 +16,10 @@ module TSOS {
                     public Xreg: number = 0,
                     public Yreg: number = 0,
                     public Zflag: number = 0,
-                    public instruction: string = "") {
+                    public instruction: string = "",
+                    public baseRegister : number = -1,
+                    public limitRegister : number = -1,
+                    public processState : number = _ProcessStates.New) {
         	this.pid = PCB.pidCount;
         	PCB.pidCount++; // Keeps running count of PIDs as they're created
         }

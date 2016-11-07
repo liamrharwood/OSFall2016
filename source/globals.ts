@@ -52,6 +52,13 @@ var _KernelBuffers: any[] = null;   // when clearly 'any' is not what we want. T
 var _MemoryManager: TSOS.MemoryManager;
 var _CurrentPCB: TSOS.PCB; // Keeps track of PCB associated with currently executing process
 
+var _ProcessStates = {
+	New : 0,
+	Ready : 1,
+	Running : 2,
+	Terminated : 3
+}
+
 var _SingleStepMode: boolean = false; 
 
 // Standard input and output
