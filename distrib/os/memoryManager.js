@@ -45,11 +45,18 @@ var TSOS;
                 _StdOut.putText("Program is too big. Maximum size allowed: " + _SegmentSize + " bytes");
             }
         };
-        MemoryManager.prototype.read = function (address) {
-            return _Memory.memArr[address];
+        MemoryManager.prototype.read = function (pcb, address) {
+            return _Memory.memArr[pcb.baseRegister + address];
         };
-        MemoryManager.prototype.write = function (address, value) {
-            _Memory.memArr[address] = value;
+        MemoryManager.prototype.write = function (pcb, address, value) {
+            _Memory.memArr[pcb.baseRegister + address] = value;
+        };
+        MemoryManager.prototype.deallocateMemory = function (base) {
+            var limit = base + _SegmentSize - 1;
+            for (var i = base; i <= limit; i++) {
+                _Memory.memArr[i] = "00";
+            }
+            TSOS.Control.updateMemoryDisplay();
         };
         MemoryManager.prototype.clearAllMemory = function () {
             _Memory.clearAll();

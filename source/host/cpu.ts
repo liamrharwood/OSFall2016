@@ -56,7 +56,7 @@ module TSOS {
         }
 
         public executeProgram(pcb: TSOS.PCB) {
-            this.instruction = _Memory.memArr[this.PC];
+            this.instruction = _MemoryManager.read(pcb, this.PC);
 
             switch (this.instruction) {
                 case 'A9':
@@ -118,82 +118,82 @@ module TSOS {
 
         public loadAccFromConstant() {
             this.PC++;
-            this.Acc = parseInt(_MemoryManager.read(this.PC), 16);
+            this.Acc = parseInt(_MemoryManager.read(_CurrentPCB, this.PC), 16);
             this.PC++;
         }
 
         public loadAccFromMemory() {
             this.PC++;
-            var addrString: string = _MemoryManager.read(this.PC);
+            var addrString: string = _MemoryManager.read(_CurrentPCB, this.PC);
             this.PC++;
-            addrString = _MemoryManager.read(this.PC) + addrString;
+            addrString = _MemoryManager.read(_CurrentPCB, this.PC) + addrString;
             var address: number = parseInt(addrString, 16);
-            this.Acc = parseInt(_MemoryManager.read(address), 16);
+            this.Acc = parseInt(_MemoryManager.read(_CurrentPCB, address), 16);
             this.PC++;
         }
 
         public storeAccInMemory() {
             this.PC++;
-            var addrString: string = _MemoryManager.read(this.PC);
+            var addrString: string = _MemoryManager.read(_CurrentPCB, this.PC);
             this.PC++;
-            addrString = _MemoryManager.read(this.PC) + addrString;
+            addrString = _MemoryManager.read(_CurrentPCB, this.PC) + addrString;
             var address: number = parseInt(addrString, 16);
             var val: string = this.Acc.toString(16).toUpperCase();
             if(val.length < 2) 
                 val = "0" + val; // Format hex for display
-            _MemoryManager.write(address, val);
+            _MemoryManager.write(_CurrentPCB, address, val);
             this.PC++;            
         }
 
         public addWithCarry() {
             this.PC++;
-            var addrString: string = _MemoryManager.read(this.PC);
+            var addrString: string = _MemoryManager.read(_CurrentPCB, this.PC);
             this.PC++;
-            addrString = _MemoryManager.read(this.PC) + addrString;
+            addrString = _MemoryManager.read(_CurrentPCB, this.PC) + addrString;
             var address: number = parseInt(addrString, 16);
-            this.Acc += parseInt(_MemoryManager.read(address), 16);
+            this.Acc += parseInt(_MemoryManager.read(_CurrentPCB, address), 16);
             this.PC++;
         }
 
         public loadXWithConstant() {
             this.PC++;
-            this.Xreg = parseInt(_MemoryManager.read(this.PC), 16);
+            this.Xreg = parseInt(_MemoryManager.read(_CurrentPCB, this.PC), 16);
             this.PC++;
         }
 
         public loadXFromMemory() {
             this.PC++;
-            var addrString: string = _MemoryManager.read(this.PC);
+            var addrString: string = _MemoryManager.read(_CurrentPCB, this.PC);
             this.PC++;
-            addrString = _MemoryManager.read(this.PC) + addrString;
+            addrString = _MemoryManager.read(_CurrentPCB, this.PC) + addrString;
             var address: number = parseInt(addrString, 16);
-            this.Xreg = parseInt(_MemoryManager.read(address), 16);
+            this.Xreg = parseInt(_MemoryManager.read(_CurrentPCB, address), 16);
             this.PC++;
         }
 
         public loadYWithConstant() {
             this.PC++;
-            this.Yreg = parseInt(_MemoryManager.read(this.PC), 16);
+            this.Yreg = parseInt(_MemoryManager.read(_CurrentPCB, this.PC), 16);
             this.PC++;
         }
 
         public loadYFromMemory() {
             this.PC++;
-            var addrString: string = _MemoryManager.read(this.PC);
+            var addrString: string = _MemoryManager.read(_CurrentPCB, this.PC);
             this.PC++;
-            addrString = _MemoryManager.read(this.PC) + addrString;
+            addrString = _MemoryManager.read(_CurrentPCB, this.PC) + addrString;
             var address: number = parseInt(addrString, 16);
-            this.Yreg = parseInt(_MemoryManager.read(address), 16);
+            this.Yreg = parseInt(_MemoryManager.read(_CurrentPCB, address), 16);
             this.PC++;
         }
 
         public compareByteToX() {
             this.PC++;
-            var addrString: string = _MemoryManager.read(this.PC);
+            var addrString: string = _MemoryManager.read(_CurrentPCB, this.PC);
             this.PC++;
-            addrString = _MemoryManager.read(this.PC) + addrString;
+            addrString = _MemoryManager.read(_CurrentPCB, this.PC) + addrString;
             var address: number = parseInt(addrString, 16);
-            if(parseInt(_MemoryManager.read(address), 16) === this.Xreg)
+            if(parseInt(_MemoryManager.read(_CurrentPCB, address), 16) === this.Xreg)
                 this.Zflag = 1;
             else
                 this.Zflag = 0;
@@ -203,7 +203,7 @@ module TSOS {
         public branch() {
             this.PC++;
             if (this.Zflag === 0) {
-                var numBytes = parseInt(_MemoryManager.read(this.PC), 16);
+                var numBytes = parseInt(_MemoryManager.read(_CurrentPCB, this.PC), 16);
                 this.PC++;
                 var newPC = this.PC + numBytes;
                 if(newPC > _SegmentSize - 1) {
@@ -221,16 +221,16 @@ module TSOS {
 
         public incrementByte() {
             this.PC++;
-            var addrString: string = _MemoryManager.read(this.PC);
+            var addrString: string = _MemoryManager.read(_CurrentPCB, this.PC);
             this.PC++;
-            addrString = _MemoryManager.read(this.PC) + addrString;
+            addrString = _MemoryManager.read(_CurrentPCB, this.PC) + addrString;
             var address: number = parseInt(addrString, 16);
-            var val: number = parseInt(_MemoryManager.read(address), 16);
+            var val: number = parseInt(_MemoryManager.read(_CurrentPCB, address), 16);
             val++;
             var hex: string = val.toString().toUpperCase();
             if(hex.length < 2) 
                 hex = "0" + hex; // Format hex for display
-            _MemoryManager.write(address, hex);
+            _MemoryManager.write(_CurrentPCB, address, hex);
             this.PC++; 
         }
 
@@ -241,11 +241,11 @@ module TSOS {
             } else if(this. Xreg === 2) {
                 var address: number = this.Yreg;
                 var str: string = "";
-                var code: number = parseInt(_MemoryManager.read(address), 16);
+                var code: number = parseInt(_MemoryManager.read(_CurrentPCB, address), 16);
                 while(code !== 0) {
                     str += String.fromCharCode(code);
                     address++;
-                    code = parseInt(_MemoryManager.read(address), 16);
+                    code = parseInt(_MemoryManager.read(_CurrentPCB, address), 16);
                 }
                 _StdOut.putText(str);
             }
@@ -253,6 +253,8 @@ module TSOS {
 
         public breakProgram() {
             this.PC++;
+            _MemoryManager.deallocateMemory(_CurrentPCB.baseRegister);
+            _ProcessManager.removeFromResident(_CurrentPCB.pid);
             this.isExecuting = false;
         }
 

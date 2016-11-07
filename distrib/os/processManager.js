@@ -11,6 +11,29 @@ var TSOS;
             this.residentList = residentList;
             this.readyQueue = readyQueue;
         }
+        ProcessManager.prototype.runProcess = function (pcb) {
+            _CurrentPCB = pcb;
+            _CPU.PC = 0;
+            _CPU.isExecuting = true;
+        };
+        ProcessManager.prototype.getPCB = function (pid) {
+            for (var i = 0; i < this.residentList.length; i++) {
+                if (this.residentList[i].pid === pid) {
+                    return this.residentList[i];
+                }
+            }
+            // If pid doesn't exist...
+            return null;
+        };
+        ProcessManager.prototype.removeFromResident = function (pid) {
+            for (var i = 0; i < this.residentList.length; i++) {
+                if (this.residentList[i].pid === pid) {
+                    this.residentList.splice(i, 1);
+                    TSOS.Control.updateProcessDisplay();
+                    break;
+                }
+            }
+        };
         return ProcessManager;
     }());
     TSOS.ProcessManager = ProcessManager;

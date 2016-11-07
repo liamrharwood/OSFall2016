@@ -454,9 +454,9 @@ module TSOS {
 
         public shellRun(args) {
             if(args.length > 0) {
-                if (_CurrentPCB.pid === parseInt(args[0])) { // Temporary, since we only need one process for iProject 2
-                    _CPU.isExecuting = true; 
-                    _CPU.PC = 0;
+                var pcb = _ProcessManager.getPCB(parseInt(args[0]));
+                if (pcb) { // Temporary, since we only need one process for iProject 2
+                    _ProcessManager.runProcess(pcb);
                 }
                 else {
                     _StdOut.putText("Specified PID does not exist.")

@@ -55,7 +55,7 @@ var TSOS;
                 this.isExecuting = false;
         };
         Cpu.prototype.executeProgram = function (pcb) {
-            this.instruction = _Memory.memArr[this.PC];
+            this.instruction = _MemoryManager.read(pcb, this.PC);
             switch (this.instruction) {
                 case 'A9':
                     this.loadAccFromConstant();
@@ -110,74 +110,74 @@ var TSOS;
         //
         Cpu.prototype.loadAccFromConstant = function () {
             this.PC++;
-            this.Acc = parseInt(_MemoryManager.read(this.PC), 16);
+            this.Acc = parseInt(_MemoryManager.read(_CurrentPCB, this.PC), 16);
             this.PC++;
         };
         Cpu.prototype.loadAccFromMemory = function () {
             this.PC++;
-            var addrString = _MemoryManager.read(this.PC);
+            var addrString = _MemoryManager.read(_CurrentPCB, this.PC);
             this.PC++;
-            addrString = _MemoryManager.read(this.PC) + addrString;
+            addrString = _MemoryManager.read(_CurrentPCB, this.PC) + addrString;
             var address = parseInt(addrString, 16);
-            this.Acc = parseInt(_MemoryManager.read(address), 16);
+            this.Acc = parseInt(_MemoryManager.read(_CurrentPCB, address), 16);
             this.PC++;
         };
         Cpu.prototype.storeAccInMemory = function () {
             this.PC++;
-            var addrString = _MemoryManager.read(this.PC);
+            var addrString = _MemoryManager.read(_CurrentPCB, this.PC);
             this.PC++;
-            addrString = _MemoryManager.read(this.PC) + addrString;
+            addrString = _MemoryManager.read(_CurrentPCB, this.PC) + addrString;
             var address = parseInt(addrString, 16);
             var val = this.Acc.toString(16).toUpperCase();
             if (val.length < 2)
                 val = "0" + val; // Format hex for display
-            _MemoryManager.write(address, val);
+            _MemoryManager.write(_CurrentPCB, address, val);
             this.PC++;
         };
         Cpu.prototype.addWithCarry = function () {
             this.PC++;
-            var addrString = _MemoryManager.read(this.PC);
+            var addrString = _MemoryManager.read(_CurrentPCB, this.PC);
             this.PC++;
-            addrString = _MemoryManager.read(this.PC) + addrString;
+            addrString = _MemoryManager.read(_CurrentPCB, this.PC) + addrString;
             var address = parseInt(addrString, 16);
-            this.Acc += parseInt(_MemoryManager.read(address), 16);
+            this.Acc += parseInt(_MemoryManager.read(_CurrentPCB, address), 16);
             this.PC++;
         };
         Cpu.prototype.loadXWithConstant = function () {
             this.PC++;
-            this.Xreg = parseInt(_MemoryManager.read(this.PC), 16);
+            this.Xreg = parseInt(_MemoryManager.read(_CurrentPCB, this.PC), 16);
             this.PC++;
         };
         Cpu.prototype.loadXFromMemory = function () {
             this.PC++;
-            var addrString = _MemoryManager.read(this.PC);
+            var addrString = _MemoryManager.read(_CurrentPCB, this.PC);
             this.PC++;
-            addrString = _MemoryManager.read(this.PC) + addrString;
+            addrString = _MemoryManager.read(_CurrentPCB, this.PC) + addrString;
             var address = parseInt(addrString, 16);
-            this.Xreg = parseInt(_MemoryManager.read(address), 16);
+            this.Xreg = parseInt(_MemoryManager.read(_CurrentPCB, address), 16);
             this.PC++;
         };
         Cpu.prototype.loadYWithConstant = function () {
             this.PC++;
-            this.Yreg = parseInt(_MemoryManager.read(this.PC), 16);
+            this.Yreg = parseInt(_MemoryManager.read(_CurrentPCB, this.PC), 16);
             this.PC++;
         };
         Cpu.prototype.loadYFromMemory = function () {
             this.PC++;
-            var addrString = _MemoryManager.read(this.PC);
+            var addrString = _MemoryManager.read(_CurrentPCB, this.PC);
             this.PC++;
-            addrString = _MemoryManager.read(this.PC) + addrString;
+            addrString = _MemoryManager.read(_CurrentPCB, this.PC) + addrString;
             var address = parseInt(addrString, 16);
-            this.Yreg = parseInt(_MemoryManager.read(address), 16);
+            this.Yreg = parseInt(_MemoryManager.read(_CurrentPCB, address), 16);
             this.PC++;
         };
         Cpu.prototype.compareByteToX = function () {
             this.PC++;
-            var addrString = _MemoryManager.read(this.PC);
+            var addrString = _MemoryManager.read(_CurrentPCB, this.PC);
             this.PC++;
-            addrString = _MemoryManager.read(this.PC) + addrString;
+            addrString = _MemoryManager.read(_CurrentPCB, this.PC) + addrString;
             var address = parseInt(addrString, 16);
-            if (parseInt(_MemoryManager.read(address), 16) === this.Xreg)
+            if (parseInt(_MemoryManager.read(_CurrentPCB, address), 16) === this.Xreg)
                 this.Zflag = 1;
             else
                 this.Zflag = 0;
@@ -186,7 +186,7 @@ var TSOS;
         Cpu.prototype.branch = function () {
             this.PC++;
             if (this.Zflag === 0) {
-                var numBytes = parseInt(_MemoryManager.read(this.PC), 16);
+                var numBytes = parseInt(_MemoryManager.read(_CurrentPCB, this.PC), 16);
                 this.PC++;
                 var newPC = this.PC + numBytes;
                 if (newPC > _SegmentSize - 1) {
@@ -205,16 +205,16 @@ var TSOS;
         };
         Cpu.prototype.incrementByte = function () {
             this.PC++;
-            var addrString = _MemoryManager.read(this.PC);
+            var addrString = _MemoryManager.read(_CurrentPCB, this.PC);
             this.PC++;
-            addrString = _MemoryManager.read(this.PC) + addrString;
+            addrString = _MemoryManager.read(_CurrentPCB, this.PC) + addrString;
             var address = parseInt(addrString, 16);
-            var val = parseInt(_MemoryManager.read(address), 16);
+            var val = parseInt(_MemoryManager.read(_CurrentPCB, address), 16);
             val++;
             var hex = val.toString().toUpperCase();
             if (hex.length < 2)
                 hex = "0" + hex; // Format hex for display
-            _MemoryManager.write(address, hex);
+            _MemoryManager.write(_CurrentPCB, address, hex);
             this.PC++;
         };
         Cpu.prototype.sysCall = function () {
@@ -225,17 +225,19 @@ var TSOS;
             else if (this.Xreg === 2) {
                 var address = this.Yreg;
                 var str = "";
-                var code = parseInt(_MemoryManager.read(address), 16);
+                var code = parseInt(_MemoryManager.read(_CurrentPCB, address), 16);
                 while (code !== 0) {
                     str += String.fromCharCode(code);
                     address++;
-                    code = parseInt(_MemoryManager.read(address), 16);
+                    code = parseInt(_MemoryManager.read(_CurrentPCB, address), 16);
                 }
                 _StdOut.putText(str);
             }
         };
         Cpu.prototype.breakProgram = function () {
             this.PC++;
+            _MemoryManager.deallocateMemory(_CurrentPCB.baseRegister);
+            _ProcessManager.removeFromResident(_CurrentPCB.pid);
             this.isExecuting = false;
         };
         Cpu.prototype.updatePCB = function (pcb) {

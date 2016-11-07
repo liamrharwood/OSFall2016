@@ -382,9 +382,9 @@ var TSOS;
         };
         Shell.prototype.shellRun = function (args) {
             if (args.length > 0) {
-                if (_CurrentPCB.pid === parseInt(args[0])) {
-                    _CPU.isExecuting = true;
-                    _CPU.PC = 0;
+                var pcb = _ProcessManager.getPCB(parseInt(args[0]));
+                if (pcb) {
+                    _ProcessManager.runProcess(pcb);
                 }
                 else {
                     _StdOut.putText("Specified PID does not exist.");

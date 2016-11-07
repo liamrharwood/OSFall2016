@@ -51,12 +51,20 @@ module TSOS {
             }
         }
 
-        public read(address : number): string {
-            return _Memory.memArr[address];
+        public read(pcb : TSOS.PCB, address : number): string {
+            return _Memory.memArr[pcb.baseRegister + address];
         }
 
-        public write(address : number, value: string): void {
-            _Memory.memArr[address] = value;
+        public write(pcb : TSOS.PCB, address : number, value: string): void {
+            _Memory.memArr[pcb.baseRegister + address] = value;
+        }
+
+        public deallocateMemory(base : number) {
+            var limit = base + _SegmentSize - 1;
+            for(var i=base; i <= limit; i++) {
+                _Memory.memArr[i] = "00";
+            }
+            Control.updateMemoryDisplay();
         }
 
         public clearAllMemory(): void {

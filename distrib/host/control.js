@@ -103,8 +103,10 @@ var TSOS;
                 tableHTML += "<tr><td>0x" + rowAddress + "</td>";
                 for (var j = 0; j < 8; j++) {
                     tableHTML += "<td";
-                    if (_CPU.PC === i * 8 + j)
-                        tableHTML += ' style="background-color: green;"';
+                    if (_CurrentPCB) {
+                        if (_CPU.PC + _CurrentPCB.baseRegister === i * 8 + j)
+                            tableHTML += ' style="background-color: green;"';
+                    }
                     tableHTML += ">" + _Memory.memArr[i * 8 + j] + "</td>";
                 }
                 tableHTML += "</tr>";
