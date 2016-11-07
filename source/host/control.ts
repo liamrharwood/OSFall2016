@@ -76,16 +76,22 @@ module TSOS {
             // TODO in the future: Optionally update a log database or some streaming service.
         }
 
-        public static updatePCBDisplay(): void {
-            var tableHTML = "<tr>";
-            tableHTML += "<td>" + _CurrentPCB.instruction + "</td>"
-            tableHTML += "<td>" + _CurrentPCB.PC + "</td>"
-            tableHTML += "<td>" + _CurrentPCB.Acc + "</td>"
-            tableHTML += "<td>" + _CurrentPCB.Xreg + "</td>"
-            tableHTML += "<td>" + _CurrentPCB.Yreg + "</td>"
-            tableHTML += "<td>" + _CurrentPCB.Zflag + "</td>"
-            tableHTML += "</tr>";
-            document.getElementById("PCBTableInfo").innerHTML = tableHTML;
+        public static updateProcessDisplay(): void {
+            var tableHTML = "";
+            var pcbs = _ProcessManager.residentList;
+            for(var i=0; i < pcbs.length; i++) {
+                tableHTML += "<tr>";
+                tableHTML += "<td>" + pcbs[i].pid + "</td>";
+                tableHTML += "<td>" + pcbs[i].instruction + "</td>";
+                tableHTML += "<td>" + pcbs[i].PC + "</td>";
+                tableHTML += "<td>" + pcbs[i].Acc + "</td>";
+                tableHTML += "<td>" + pcbs[i].Xreg + "</td>";
+                tableHTML += "<td>" + pcbs[i].Yreg + "</td>";
+                tableHTML += "<td>" + pcbs[i].Zflag + "</td>";
+                tableHTML += "<td>" + pcbs[i].processState + "</td>";
+                tableHTML += "</tr>";
+            }
+            document.getElementById("ProcessTableInfo").innerHTML = tableHTML;
         }
 
         public static updateCPUDisplay(): void {

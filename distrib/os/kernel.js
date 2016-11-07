@@ -30,7 +30,8 @@ var TSOS;
             _Console.init();
             // Initialize the memory manager.
             _MemoryManager = new TSOS.MemoryManager();
-            _MemoryManager.init();
+            // Initialize the process manager.
+            _ProcessManager = new TSOS.ProcessManager();
             // Initialize standard input and output to the _Console.
             _StdIn = _Console;
             _StdOut = _Console;

@@ -33,7 +33,9 @@ module TSOS {
 
             // Initialize the memory manager.
             _MemoryManager = new MemoryManager();
-            _MemoryManager.init();
+            
+            // Initialize the process manager.
+            _ProcessManager = new ProcessManager();
 
             // Initialize standard input and output to the _Console.
             _StdIn  = _Console;

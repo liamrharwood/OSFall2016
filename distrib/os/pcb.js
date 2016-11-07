@@ -14,7 +14,7 @@ var TSOS;
             if (instruction === void 0) { instruction = ""; }
             if (baseRegister === void 0) { baseRegister = -1; }
             if (limitRegister === void 0) { limitRegister = -1; }
-            if (processState === void 0) { processState = _ProcessStates.New; }
+            if (processState === void 0) { processState = _ProcessStates.new; }
             this.PC = PC;
             this.Acc = Acc;
             this.Xreg = Xreg;

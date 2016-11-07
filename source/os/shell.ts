@@ -444,12 +444,8 @@ module TSOS {
             }
 
             if(isValid) {
-                // _MemoryManager.clearAllMemory(); // Temporary, since we only need one process for iProject 2
-                _MemoryManager.loadUserCode(codeArr);
                 var pcb = new PCB();
-                _CurrentPCB = pcb;
-                _StdOut.putText("Program loaded. PID: " + pcb.pid);
-                Control.updatePCBDisplay();
+                _MemoryManager.loadProgram(codeArr, pcb);
             } else {
                 _StdOut.putText("Invalid program input.");
             }

@@ -50,13 +50,14 @@ var _KernelInputQueue: any = null;  // Is this better? I don't like uninitialize
 var _KernelBuffers: any[] = null;   // when clearly 'any' is not what we want. There is likely a better way, but what is it?
 
 var _MemoryManager: TSOS.MemoryManager;
+var _ProcessManager: TSOS.ProcessManager;
 var _CurrentPCB: TSOS.PCB; // Keeps track of PCB associated with currently executing process
 
 var _ProcessStates = {
-	New : 0,
-	Ready : 1,
-	Running : 2,
-	Terminated : 3
+	"new" : "New",
+	"ready" : "Ready",
+	"running" : "Running",
+	"terminated" : "Terminated"
 }
 
 var _SingleStepMode: boolean = false; 

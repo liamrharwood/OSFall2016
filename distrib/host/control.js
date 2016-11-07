@@ -64,16 +64,22 @@ var TSOS;
             this.updateHostTaskBar();
             // TODO in the future: Optionally update a log database or some streaming service.
         };
-        Control.updatePCBDisplay = function () {
-            var tableHTML = "<tr>";
-            tableHTML += "<td>" + _CurrentPCB.instruction + "</td>";
-            tableHTML += "<td>" + _CurrentPCB.PC + "</td>";
-            tableHTML += "<td>" + _CurrentPCB.Acc + "</td>";
-            tableHTML += "<td>" + _CurrentPCB.Xreg + "</td>";
-            tableHTML += "<td>" + _CurrentPCB.Yreg + "</td>";
-            tableHTML += "<td>" + _CurrentPCB.Zflag + "</td>";
-            tableHTML += "</tr>";
-            document.getElementById("PCBTableInfo").innerHTML = tableHTML;
+        Control.updateProcessDisplay = function () {
+            var tableHTML = "";
+            var pcbs = _ProcessManager.residentList;
+            for (var i = 0; i < pcbs.length; i++) {
+                tableHTML += "<tr>";
+                tableHTML += "<td>" + pcbs[i].pid + "</td>";
+                tableHTML += "<td>" + pcbs[i].instruction + "</td>";
+                tableHTML += "<td>" + pcbs[i].PC + "</td>";
+                tableHTML += "<td>" + pcbs[i].Acc + "</td>";
+                tableHTML += "<td>" + pcbs[i].Xreg + "</td>";
+                tableHTML += "<td>" + pcbs[i].Yreg + "</td>";
+                tableHTML += "<td>" + pcbs[i].Zflag + "</td>";
+                tableHTML += "<td>" + pcbs[i].processState + "</td>";
+                tableHTML += "</tr>";
+            }
+            document.getElementById("ProcessTableInfo").innerHTML = tableHTML;
         };
         Control.updateCPUDisplay = function () {
             var tableHTML = "<tr>";

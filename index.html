@@ -20,6 +20,7 @@
 
    <!-- Virtual OS Routines: Make sure Kernel code is last, since it needs those above it. -->
    <script type="text/javascript" src="distrib/os/pcb.js"></script>
+   <script type="text/javascript" src="distrib/os/processManager.js"></script>
    <script type="text/javascript" src="distrib/os/memoryManager.js"></script>
    <script type="text/javascript" src="distrib/os/interrupt.js"></script>
    <script type="text/javascript" src="distrib/os/canvastext.js"></script>
@@ -120,22 +121,24 @@
       </label>
      </div>
 
-     <div id="divPCBDisplay">
+     <div id="divProcessDisplay">
      <label style="color: white;">
-        PCB
-        <div id="divPCBTable">
-        <table id="PCBTable">
+        Processes
+        <div id="divProcessTable">
+        <table id="ProcessTable">
           <thead>
             <tr>
+              <th>PID</th>
               <th>Instr</th>
               <th>PC</th>
               <th>Acc</th>
               <th>X</th>
               <th>Y</th>
               <th>Z</th>
+              <th>State</th>
             </tr>
           </thead>
-          <tbody id="PCBTableInfo">
+          <tbody id="ProcessTableInfo">
             
           </tbody>
         </table>

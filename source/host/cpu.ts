@@ -45,7 +45,7 @@ module TSOS {
             // Do the real work here. Be sure to set this.isExecuting appropriately.
 
             Control.updateCPUDisplay();
-            Control.updatePCBDisplay();
+            Control.updateProcessDisplay();
             Control.updateMemoryDisplay();
 
             // Execute instructions

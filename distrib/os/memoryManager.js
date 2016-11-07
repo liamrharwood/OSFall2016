@@ -5,15 +5,40 @@
 var TSOS;
 (function (TSOS) {
     var MemoryManager = (function () {
-        function MemoryManager() {
+        function MemoryManager(isFreePartition) {
+            if (isFreePartition === void 0) { isFreePartition = [true, true, true]; }
+            this.isFreePartition = isFreePartition;
         }
-        MemoryManager.prototype.init = function () {
-        };
-        MemoryManager.prototype.loadUserCode = function (userCode) {
-            for (var i = 0; i < userCode.length; i++) {
-                _Memory.memArr[i] = userCode[i];
+        MemoryManager.prototype.loadProgram = function (userCode, pcb) {
+            for (var i = 0; i < this.isFreePartition.length; i++) {
+                // Look for free partition
+                if (this.isFreePartition[i]) {
+                    // Set base and limit registers
+                    var base = i * _SegmentSize;
+                    var limit = base + _SegmentSize - 1;
+                    pcb.baseRegister = base;
+                    pcb.limitRegister = limit;
+                    // Fill partition with user code
+                    for (var j = base; j <= limit; j++) {
+                        if (userCode.length > 0) {
+                            _Memory.memArr[j] = userCode.shift();
+                        }
+                        else {
+                            break;
+                        }
+                    }
+                    _ProcessManager.residentList.push(pcb);
+                    TSOS.Control.updateProcessDisplay();
+                    _StdOut.putText("Program loaded. PID: " + pcb.pid);
+                    this.isFreePartition[i] = false;
+                    TSOS.Control.updateMemoryDisplay();
+                    break;
+                }
+                // Give error if there are no free partitions
+                if (i >= 2) {
+                    _StdOut.putText("There are no free memory partitions.");
+                }
             }
-            TSOS.Control.updateMemoryDisplay();
         };
         MemoryManager.prototype.read = function (address) {
             return _Memory.memArr[address];

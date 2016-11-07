@@ -46,7 +46,7 @@ var TSOS;
             // TODO: Accumulate CPU usage and profiling statistics here.
             // Do the real work here. Be sure to set this.isExecuting appropriately.
             TSOS.Control.updateCPUDisplay();
-            TSOS.Control.updatePCBDisplay();
+            TSOS.Control.updateProcessDisplay();
             TSOS.Control.updateMemoryDisplay();
             // Execute instructions
             this.executeProgram(_CurrentPCB);

@@ -38,12 +38,13 @@ var _KernelInterruptQueue; // Initializing this to null (which I would normally 
 var _KernelInputQueue = null; // Is this better? I don't like uninitialized variables. But I also don't like using the type specifier 'any'
 var _KernelBuffers = null; // when clearly 'any' is not what we want. There is likely a better way, but what is it?
 var _MemoryManager;
+var _ProcessManager;
 var _CurrentPCB; // Keeps track of PCB associated with currently executing process
 var _ProcessStates = {
-    New: 0,
-    Ready: 1,
-    Running: 2,
-    Terminated: 3
+    "new": "New",
+    "ready": "Ready",
+    "running": "Running",
+    "terminated": "Terminated"
 };
 var _SingleStepMode = false;
 // Standard input and output

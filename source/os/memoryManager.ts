@@ -8,18 +8,43 @@ module TSOS {
 
     export class MemoryManager {
 
-        constructor() {
+        constructor(public isFreePartition : boolean[] = [true, true, true]) {
 
         }
 
-        public init(): void {
-        }
+        public loadProgram(userCode : string[], pcb : TSOS.PCB): void {
+        	for(var i=0; i < this.isFreePartition.length; i++) {
+                // Look for free partition
+        		if(this.isFreePartition[i]) {
+                    // Set base and limit registers
+                    var base = i * _SegmentSize;
+                    var limit = base + _SegmentSize - 1;
+                    pcb.baseRegister = base;
+                    pcb.limitRegister = limit;
 
-        public loadUserCode(userCode : string[]): void {
-        	for(var i=0; i < userCode.length; i++) {
-        		_Memory.memArr[i] = userCode[i];
+                    // Fill partition with user code
+                    for(var j=base; j <= limit; j++) {
+                        if(userCode.length > 0) {
+                            _Memory.memArr[j] = userCode.shift();
+                        }
+                        else {
+                            break;
+                        }
+                    }
+                    _ProcessManager.residentList.push(pcb);
+                    Control.updateProcessDisplay();
+                    _StdOut.putText("Program loaded. PID: " + pcb.pid);
+
+                    this.isFreePartition[i] = false;
+                    Control.updateMemoryDisplay();
+                    break;
+                }
+
+                // Give error if there are no free partitions
+                if(i >= 2) {
+                    _StdOut.putText("There are no free memory partitions.");
+                }
         	}
-        	Control.updateMemoryDisplay();
         }
 
         public read(address : number): string {
