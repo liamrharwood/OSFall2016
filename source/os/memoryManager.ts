@@ -52,11 +52,21 @@ module TSOS {
         }
 
         public read(pcb : TSOS.PCB, address : number): string {
-            return _Memory.memArr[pcb.baseRegister + address];
+            if(address >= 0 && address < _SegmentSize) {
+                return _Memory.memArr[pcb.baseRegister + address];
+            } else {
+                _StdOut("Memory access violation. Process terminated. (PID " + pcb.pid + ")");
+                _ProcessManager.terminateProcess(pcb);
+            }
         }
 
         public write(pcb : TSOS.PCB, address : number, value: string): void {
-            _Memory.memArr[pcb.baseRegister + address] = value;
+            if(address >= 0 && address < _SegmentSize) {
+                _Memory.memArr[pcb.baseRegister + address] = value;
+            } else {
+                _StdOut.putText("Memory access violation. Process terminated. (PID " + pcb.pid + ")");
+                _ProcessManager.terminateProcess(pcb);
+            }
         }
 
         public deallocateMemory(base : number) {

@@ -103,6 +103,7 @@ module TSOS {
                     break;
                 default:
                     _StdOut.putText("ERROR: Invalid op code.");
+                    _ProcessManager.terminateProcess(pcb);
 
             }
 

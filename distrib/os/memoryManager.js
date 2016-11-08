@@ -46,10 +46,22 @@ var TSOS;
             }
         };
         MemoryManager.prototype.read = function (pcb, address) {
-            return _Memory.memArr[pcb.baseRegister + address];
+            if (address >= 0 && address < _SegmentSize) {
+                return _Memory.memArr[pcb.baseRegister + address];
+            }
+            else {
+                _StdOut("Memory access violation. Process terminated. (PID " + pcb.pid + ")");
+                _ProcessManager.terminateProcess(pcb);
+            }
         };
         MemoryManager.prototype.write = function (pcb, address, value) {
-            _Memory.memArr[pcb.baseRegister + address] = value;
+            if (address >= 0 && address < _SegmentSize) {
+                _Memory.memArr[pcb.baseRegister + address] = value;
+            }
+            else {
+                _StdOut.putText("Memory access violation. Process terminated. (PID " + pcb.pid + ")");
+                _ProcessManager.terminateProcess(pcb);
+            }
         };
         MemoryManager.prototype.deallocateMemory = function (base) {
             var limit = base + _SegmentSize - 1;
