@@ -26,10 +26,15 @@ module TSOS {
 
         public contextSwitch() : void {
             this.switchOutOldProcess();
+            var logText = "Context switch: PID " + _CurrentPCB.pid;
 
             this.counter = 0;
 
+
             this.switchInNewProcess();
+            logText += " to PID " + _CurrentPCB.pid;
+
+            _Kernel.krnTrace(logText);
         }
 
         public switchOutOldProcess() {

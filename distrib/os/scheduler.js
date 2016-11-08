@@ -22,8 +22,11 @@ var TSOS;
         };
         Scheduler.prototype.contextSwitch = function () {
             this.switchOutOldProcess();
+            var logText = "Context switch: PID " + _CurrentPCB.pid;
             this.counter = 0;
             this.switchInNewProcess();
+            logText += " to PID " + _CurrentPCB.pid;
+            _Kernel.krnTrace(logText);
         };
         Scheduler.prototype.switchOutOldProcess = function () {
             _CurrentPCB.processState = _ProcessStates.ready;
