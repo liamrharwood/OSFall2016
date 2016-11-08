@@ -76,8 +76,15 @@ var TSOS;
             // runall
             sc = new TSOS.ShellCommand(this.shellRunall, "runall", "- Runs all programs in memory.");
             this.commandList[this.commandList.length] = sc;
+            // quantum
+            sc = new TSOS.ShellCommand(this.shellQuantum, "quantum", "<int> - Sets the Round Robin quantum in clock ticks.");
+            this.commandList[this.commandList.length] = sc;
             // ps  - list the running processes and their IDs
-            // kill <id> - kills the specified process id.
+            sc = new TSOS.ShellCommand(this.shellPs, "ps", "- Displays the PIDs of all active processes.");
+            this.commandList[this.commandList.length] = sc;
+            // kill <pid> - kills the specified process id.
+            sc = new TSOS.ShellCommand(this.shellKill, "kill", "<pid> - Kills an active process.");
+            this.commandList[this.commandList.length] = sc;
             //
             // Display the initial prompt.
             this.putPrompt();
@@ -270,6 +277,15 @@ var TSOS;
                     case "runall":
                         _StdOut.putText("Runall runs all processes in memory.");
                         break;
+                    case "quantum":
+                        _StdOut.putText("Quantum sets the Round Robin quantum in clock ticks.");
+                        break;
+                    case "ps":
+                        _StdOut.putText("Ps displays the PIDs of all active processes.");
+                        break;
+                    case "kill":
+                        _StdOut.putText("Kill kills an active process.");
+                        break;
                     // TODO: Make descriptive MANual page entries for the the rest of the shell commands here.
                     default:
                         _StdOut.putText("No manual entry for " + args[0] + ".");
@@ -411,6 +427,20 @@ var TSOS;
         Shell.prototype.shellClearmem = function (args) {
             _MemoryManager.clearAllMemory();
             _StdOut.putText("Memory cleared.");
+        };
+        Shell.prototype.shellQuantum = function (args) {
+            if (args.length > 0) {
+                var quantum = parseInt(args[0]);
+                _Scheduler.rrQuantum = quantum;
+                _StdOut.putText("Round Robin quantum set to " + quantum + " clock ticks.");
+            }
+            else {
+                _StdOut.putText("Please specify a quantum.");
+            }
+        };
+        Shell.prototype.shellPs = function (args) {
+        };
+        Shell.prototype.shellKill = function (args) {
         };
         return Shell;
     }());

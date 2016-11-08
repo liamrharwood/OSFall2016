@@ -133,9 +133,24 @@ module TSOS {
                                   "- Runs all programs in memory.");
             this.commandList[this.commandList.length] = sc;
 
-            // ps  - list the running processes and their IDs
-            // kill <id> - kills the specified process id.
+            // quantum
+            sc = new ShellCommand(this.shellQuantum,
+                                  "quantum",
+                                  "<int> - Sets the Round Robin quantum in clock ticks.");
+            this.commandList[this.commandList.length] = sc;
 
+            // ps  - list the running processes and their IDs
+            sc = new ShellCommand(this.shellPs,
+                                  "ps",
+                                  "- Displays the PIDs of all active processes.");
+            this.commandList[this.commandList.length] = sc;
+            
+            // kill <pid> - kills the specified process id.
+            sc = new ShellCommand(this.shellKill,
+                                  "kill",
+                                  "<pid> - Kills an active process.");
+            this.commandList[this.commandList.length] = sc;
+            
             //
             // Display the initial prompt.
             this.putPrompt();
@@ -339,6 +354,15 @@ module TSOS {
                     case "runall":
                         _StdOut.putText("Runall runs all processes in memory.");
                         break;
+                    case "quantum":
+                        _StdOut.putText("Quantum sets the Round Robin quantum in clock ticks.");
+                        break;
+                    case "ps":
+                        _StdOut.putText("Ps displays the PIDs of all active processes.");
+                        break;
+                    case "kill":
+                        _StdOut.putText("Kill kills an active process.");
+                        break;
                     // TODO: Make descriptive MANual page entries for the the rest of the shell commands here.
                     default:
                         _StdOut.putText("No manual entry for " + args[0] + ".");
@@ -486,6 +510,24 @@ module TSOS {
         public shellClearmem(args) {
             _MemoryManager.clearAllMemory();
             _StdOut.putText("Memory cleared.");
+        }
+
+        public shellQuantum(args) {
+            if(args.length > 0) {
+                var quantum : number = parseInt(args[0]);
+                _Scheduler.rrQuantum = quantum;
+                _StdOut.putText("Round Robin quantum set to " + quantum + " clock ticks.")
+            } else {
+                _StdOut.putText("Please specify a quantum.")
+            }
+        }
+
+        public shellPs(args) {
+
+        }
+
+        public shellKill(args) {
+            
         }
 
     }
