@@ -16,6 +16,16 @@ var TSOS;
             _CPU.updateCPU();
             _CPU.isExecuting = true;
         };
+        ProcessManager.prototype.terminateProcess = function (pcb) {
+            _MemoryManager.deallocateMemory(pcb.baseRegister);
+            _ProcessManager.removeFromResident(pcb.pid);
+            if (this.readyQueue.isEmpty()) {
+                _CPU.isExecuting = false;
+            }
+            else if (_CurrentPCB.pid === pcb.pid) {
+                _Scheduler.switchInNewProcess();
+            }
+        };
         ProcessManager.prototype.runAll = function () {
             for (var i = 0; i < this.residentList.length; i++) {
                 var pcb = this.residentList[i];

@@ -19,6 +19,18 @@ module TSOS {
             _CPU.isExecuting = true;
         }
 
+        public terminateProcess(pcb : TSOS.PCB) : void {        
+            _MemoryManager.deallocateMemory(pcb.baseRegister);
+            _ProcessManager.removeFromResident(pcb.pid);
+
+            if(this.readyQueue.isEmpty()) {
+                _CPU.isExecuting = false;
+            } else if(_CurrentPCB.pid === pcb.pid){
+                _Scheduler.switchInNewProcess();
+            }
+            
+        }
+
         public runAll() : void {
             for (var i=0; i < this.residentList.length; i++) {
                 var pcb = this.residentList[i];

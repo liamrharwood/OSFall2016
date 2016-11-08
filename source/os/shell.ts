@@ -537,7 +537,16 @@ module TSOS {
         }
 
         public shellKill(args) {
-
+            if(args.length > 0) {
+                var pcb = _ProcessManager.getPCB(parseInt(args[0]));
+                if(pcb) {
+                    _ProcessManager.terminateProcess(pcb);
+                } else {
+                    _StdOut.putText("Specified PID does not exist.");
+                }
+            } else {
+                _StdOut.putText("Please specify a PID.");
+            }
         }
 
     }
