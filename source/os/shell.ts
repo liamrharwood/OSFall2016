@@ -127,6 +127,12 @@ module TSOS {
                                   "- Clears all memory partitions.");
             this.commandList[this.commandList.length] = sc;
 
+            // runall
+            sc = new ShellCommand(this.shellRunall,
+                                  "runall",
+                                  "- Runs all programs in memory.");
+            this.commandList[this.commandList.length] = sc;
+
             // ps  - list the running processes and their IDs
             // kill <id> - kills the specified process id.
 
@@ -330,6 +336,9 @@ module TSOS {
                     case "clearmem":
                         _StdOut.putText("Clearmem clears all memory partitions.");
                         break;
+                    case "runall":
+                        _StdOut.putText("Runall runs all processes in memory.");
+                        break;
                     // TODO: Make descriptive MANual page entries for the the rest of the shell commands here.
                     default:
                         _StdOut.putText("No manual entry for " + args[0] + ".");
@@ -463,6 +472,14 @@ module TSOS {
                 }
             } else {
                 _StdOut.putText("Please specify a PID.")
+            }
+        }
+
+        public shellRunall(args) {
+            if(_ProcessManager.residentList.length > 0) {
+                _ProcessManager.runAll();
+            } else {
+                _StdOut.putText("There are no loaded programs");
             }
         }
 

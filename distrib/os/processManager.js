@@ -13,7 +13,7 @@ var TSOS;
         }
         ProcessManager.prototype.runProcess = function (pcb) {
             _CurrentPCB = pcb;
-            _CPU.PC = pcb.PC;
+            _CPU.updateCPU();
             _CPU.isExecuting = true;
         };
         ProcessManager.prototype.runAll = function () {
@@ -24,6 +24,8 @@ var TSOS;
                     this.readyQueue.enqueue(pcb);
                 }
             }
+            _CurrentPCB = this.readyQueue.dequeue();
+            _CPU.updateCPU();
             _CPU.isExecuting = true;
         };
         ProcessManager.prototype.getPCB = function (pid) {
@@ -43,9 +45,6 @@ var TSOS;
                     break;
                 }
             }
-        };
-        ProcessManager.prototype.contextSwitch = function (pcb) {
-            _CurrentPCB = pcb;
         };
         return ProcessManager;
     }());

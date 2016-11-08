@@ -15,7 +15,7 @@ module TSOS {
 
         public runProcess(pcb : TSOS.PCB) : void {
             _CurrentPCB = pcb;
-            _CPU.PC = pcb.PC;
+            _CPU.updateCPU();
             _CPU.isExecuting = true;
         }
 
@@ -27,6 +27,8 @@ module TSOS {
                     this.readyQueue.enqueue(pcb);
                 }
             }
+            _CurrentPCB = this.readyQueue.dequeue();
+            _CPU.updateCPU();
             _CPU.isExecuting = true;
         }
 
@@ -48,10 +50,6 @@ module TSOS {
                     break;
                 }
             }
-        }
-
-        public contextSwitch(pcb : TSOS.PCB) : void {
-            _CurrentPCB = pcb;
         }
     }
 }

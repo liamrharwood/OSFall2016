@@ -218,6 +218,7 @@ var TSOS;
             this.PC++;
         };
         Cpu.prototype.sysCall = function () {
+            console.log("sysCall");
             this.PC++;
             if (this.Xreg === 1) {
                 _StdOut.putText(this.Yreg.toString());
@@ -231,6 +232,7 @@ var TSOS;
                     address++;
                     code = parseInt(_MemoryManager.read(_CurrentPCB, address), 16);
                 }
+                console.log(str);
                 _StdOut.putText(str);
             }
         };
@@ -242,7 +244,7 @@ var TSOS;
                 this.isExecuting = false;
             }
             else {
-                _Scheduler.contextSwitch();
+                _Scheduler.switchInNewProcess();
             }
         };
         Cpu.prototype.updatePCB = function (pcb) {
@@ -252,6 +254,14 @@ var TSOS;
             pcb.Xreg = this.Xreg;
             pcb.Yreg = this.Yreg;
             pcb.Zflag = this.Zflag;
+        };
+        Cpu.prototype.updateCPU = function () {
+            this.instruction = _CurrentPCB.instruction;
+            this.Acc = _CurrentPCB.Acc;
+            this.PC = _CurrentPCB.PC;
+            this.Xreg = _CurrentPCB.Xreg;
+            this.Yreg = _CurrentPCB.Yreg;
+            this.Zflag = _CurrentPCB.Zflag;
         };
         return Cpu;
     }());

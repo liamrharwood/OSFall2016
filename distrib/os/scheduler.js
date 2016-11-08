@@ -21,12 +21,19 @@ var TSOS;
             }
         };
         Scheduler.prototype.contextSwitch = function () {
+            this.switchOutOldProcess();
+            this.counter = 0;
+            this.switchInNewProcess();
+        };
+        Scheduler.prototype.switchOutOldProcess = function () {
             _CurrentPCB.processState = _ProcessStates.ready;
             _ProcessManager.readyQueue.enqueue(_CurrentPCB);
             TSOS.Control.updateProcessDisplay();
-            this.counter = 0;
+        };
+        Scheduler.prototype.switchInNewProcess = function () {
             _CurrentPCB = _ProcessManager.readyQueue.dequeue();
             _CurrentPCB.processState = _ProcessStates.running;
+            _CPU.updateCPU();
             TSOS.Control.updateProcessDisplay();
         };
         return Scheduler;

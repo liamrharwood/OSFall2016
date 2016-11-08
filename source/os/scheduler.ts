@@ -25,14 +25,23 @@ module TSOS {
         }
 
         public contextSwitch() : void {
-            _CurrentPCB.processState = _ProcessStates.ready;
-            _ProcessManager.readyQueue.enqueue(_CurrentPCB);
-            Control.updateProcessDisplay();
+            this.switchOutOldProcess();
 
             this.counter = 0;
 
+            this.switchInNewProcess();
+        }
+
+        public switchOutOldProcess() {
+            _CurrentPCB.processState = _ProcessStates.ready;
+            _ProcessManager.readyQueue.enqueue(_CurrentPCB);
+            Control.updateProcessDisplay();
+        }
+
+        public switchInNewProcess() {
             _CurrentPCB = _ProcessManager.readyQueue.dequeue();
             _CurrentPCB.processState = _ProcessStates.running;
+            _CPU.updateCPU();
             Control.updateProcessDisplay();
         }
     }

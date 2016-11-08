@@ -235,10 +235,11 @@ module TSOS {
         }
 
         public sysCall() {
+            console.log("sysCall");
             this.PC++;
             if(this.Xreg === 1) {
                 _StdOut.putText(this.Yreg.toString());
-            } else if(this. Xreg === 2) {
+            } else if(this.Xreg === 2) {
                 var address: number = this.Yreg;
                 var str: string = "";
                 var code: number = parseInt(_MemoryManager.read(_CurrentPCB, address), 16);
@@ -247,6 +248,7 @@ module TSOS {
                     address++;
                     code = parseInt(_MemoryManager.read(_CurrentPCB, address), 16);
                 }
+                console.log(str);
                 _StdOut.putText(str);
             }
         }
@@ -259,7 +261,7 @@ module TSOS {
             if(_ProcessManager.readyQueue.isEmpty()) {
                 this.isExecuting = false;
             } else {
-                _Scheduler.contextSwitch();
+                _Scheduler.switchInNewProcess();
             }
         }
 
@@ -270,6 +272,15 @@ module TSOS {
             pcb.Xreg = this.Xreg;
             pcb.Yreg = this.Yreg;
             pcb.Zflag = this.Zflag;
+        }
+
+        public updateCPU() {
+            this.instruction = _CurrentPCB.instruction;
+            this.Acc = _CurrentPCB.Acc;
+            this.PC = _CurrentPCB.PC;
+            this.Xreg = _CurrentPCB.Xreg;
+            this.Yreg = _CurrentPCB.Yreg;
+            this.Zflag = _CurrentPCB.Zflag;
         }
 
 

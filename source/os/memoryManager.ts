@@ -64,10 +64,16 @@ module TSOS {
             for(var i=base; i <= limit; i++) {
                 _Memory.memArr[i] = "00";
             }
+
+            this.isFreePartition[base / _SegmentSize] = true;
+
             Control.updateMemoryDisplay();
         }
 
         public clearAllMemory(): void {
+            for(var i=0; i < this.isFreePartition.length; i++) {
+                this.isFreePartition[i] = true;
+            }
             _Memory.clearAll();
         }
     }
