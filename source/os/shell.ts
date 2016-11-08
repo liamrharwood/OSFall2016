@@ -523,11 +523,21 @@ module TSOS {
         }
 
         public shellPs(args) {
-
+            if(_CPU.isExecuting) {
+                var displayTxt = "The PIDs of currently running processes are: ";
+                displayTxt += _CurrentPCB.pid;
+                for(var i=0; i < _ProcessManager.readyQueue.getSize(); i++) {
+                    displayTxt += ", ";
+                    displayTxt += _ProcessManager.readyQueue.q[i].pid;
+                }
+                _StdOut.putText(displayTxt);
+            } else {
+                _StdOut.putText("No processes are currently running.")
+            }
         }
 
         public shellKill(args) {
-            
+
         }
 
     }
