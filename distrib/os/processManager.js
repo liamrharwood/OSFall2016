@@ -17,16 +17,18 @@ var TSOS;
             _CPU.isExecuting = true;
         };
         ProcessManager.prototype.terminateProcess = function (pcb) {
+            // Clear memory segment and remove PCB from resident list        
             _MemoryManager.deallocateMemory(pcb.baseRegister);
             _ProcessManager.removeFromResident(pcb.pid);
             if (this.readyQueue.isEmpty()) {
                 _CPU.isExecuting = false;
             }
             else if (_CurrentPCB.pid === pcb.pid) {
-                _Scheduler.switchInNewProcess();
+                _Scheduler.switchInNewProcess(); // We don't want a full context switch here, there's nothing being put back in the ready queue
             }
         };
         ProcessManager.prototype.runAll = function () {
+            // Fill the ready queue with new processes
             for (var i = 0; i < this.residentList.length; i++) {
                 var pcb = this.residentList[i];
                 if (pcb.processState === _ProcessStates.new) {
@@ -34,11 +36,13 @@ var TSOS;
                     this.readyQueue.enqueue(pcb);
                 }
             }
+            // Let the CPU know what's going on, and begin execution
             _CurrentPCB = this.readyQueue.dequeue();
             _CPU.updateCPU();
             _CPU.isExecuting = true;
         };
         ProcessManager.prototype.getPCB = function (pid) {
+            // Find the pcb with specified pid
             for (var i = 0; i < this.residentList.length; i++) {
                 if (this.residentList[i].pid === pid) {
                     return this.residentList[i];
@@ -48,6 +52,7 @@ var TSOS;
             return null;
         };
         ProcessManager.prototype.removeFromResident = function (pid) {
+            // Find the pcb with specified pid
             for (var i = 0; i < this.residentList.length; i++) {
                 if (this.residentList[i].pid === pid) {
                     this.residentList.splice(i, 1);

@@ -52,6 +52,7 @@ module TSOS {
         }
 
         public read(pcb : TSOS.PCB, address : number): string {
+            // Check memory bounds
             if(address >= 0 && address < _SegmentSize) {
                 return _Memory.memArr[pcb.baseRegister + address];
             } else {
@@ -61,6 +62,7 @@ module TSOS {
         }
 
         public write(pcb : TSOS.PCB, address : number, value: string): void {
+            // Check memory bounds
             if(address >= 0 && address < _SegmentSize) {
                 _Memory.memArr[pcb.baseRegister + address] = value;
             } else {
@@ -70,11 +72,13 @@ module TSOS {
         }
 
         public deallocateMemory(base : number) {
+            // Clear a segment of memory from base register to limit register
             var limit = base + _SegmentSize - 1;
             for(var i=base; i <= limit; i++) {
                 _Memory.memArr[i] = "00";
             }
 
+            // Update the list of free partitions to show that one is clear
             this.isFreePartition[base / _SegmentSize] = true;
 
             Control.updateMemoryDisplay();

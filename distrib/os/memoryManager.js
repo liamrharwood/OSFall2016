@@ -46,6 +46,7 @@ var TSOS;
             }
         };
         MemoryManager.prototype.read = function (pcb, address) {
+            // Check memory bounds
             if (address >= 0 && address < _SegmentSize) {
                 return _Memory.memArr[pcb.baseRegister + address];
             }
@@ -55,6 +56,7 @@ var TSOS;
             }
         };
         MemoryManager.prototype.write = function (pcb, address, value) {
+            // Check memory bounds
             if (address >= 0 && address < _SegmentSize) {
                 _Memory.memArr[pcb.baseRegister + address] = value;
             }
@@ -64,10 +66,12 @@ var TSOS;
             }
         };
         MemoryManager.prototype.deallocateMemory = function (base) {
+            // Clear a segment of memory from base register to limit register
             var limit = base + _SegmentSize - 1;
             for (var i = base; i <= limit; i++) {
                 _Memory.memArr[i] = "00";
             }
+            // Update the list of free partitions to show that one is clear
             this.isFreePartition[base / _SegmentSize] = true;
             TSOS.Control.updateMemoryDisplay();
         };
