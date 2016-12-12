@@ -50,6 +50,12 @@ module TSOS {
             _krnKeyboardDriver.driverEntry();                    // Call the driverEntry() initialization routine.
             this.krnTrace(_krnKeyboardDriver.status);
 
+            // Load the File System Device Driver
+            this.krnTrace("Loading the file system device driver.");
+            _krnFsDriver = new DeviceDriverFs();     // Construct it.
+            _krnFsDriver.driverEntry();                    // Call the driverEntry() initialization routine.
+            this.krnTrace(_krnFsDriver.status);
+
             //
             // ... more?
             //
@@ -135,6 +141,9 @@ module TSOS {
                 case KEYBOARD_IRQ:
                     _krnKeyboardDriver.isr(params);   // Kernel mode device driver
                     _StdIn.handleInput();
+                    break;
+                case FILE_SYSTEM_IRQ:
+                    _krnFsDriver.isr(params);
                     break;
                 case CONTEXT_SWITCH_IRQ:
                     _Scheduler.contextSwitch();

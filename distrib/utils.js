@@ -30,6 +30,9 @@ var TSOS;
                 ampm: ampm
             };
         };
+        Utils.tsb = function (t, s, b) {
+            return t + "," + s + "," + b;
+        };
         Utils.trim = function (str) {
             // Use a regular expression to remove leading and trailing spaces.
             return str.replace(/^\s+ | \s+$/g, "");

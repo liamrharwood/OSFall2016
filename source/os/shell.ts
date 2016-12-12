@@ -150,6 +150,12 @@ module TSOS {
                                   "kill",
                                   "<pid> - Kills an active process.");
             this.commandList[this.commandList.length] = sc;
+
+            // format - formats the disk
+            sc = new ShellCommand(this.shellFormat,
+                                  "format",
+                                  "- Formats the disk");
+            this.commandList[this.commandList.length] = sc;
             
             //
             // Display the initial prompt.
@@ -547,6 +553,11 @@ module TSOS {
             } else {
                 _StdOut.putText("Please specify a PID.");
             }
+        }
+
+        public shellFormat(args) {
+            var params = ["format"];
+            _KernelInterruptQueue.enqueue(new Interrupt(FILE_SYSTEM_IRQ, params));
         }
 
     }

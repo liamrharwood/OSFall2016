@@ -85,6 +85,9 @@ var TSOS;
             // kill <pid> - kills the specified process id.
             sc = new TSOS.ShellCommand(this.shellKill, "kill", "<pid> - Kills an active process.");
             this.commandList[this.commandList.length] = sc;
+            // format - formats the disk
+            sc = new TSOS.ShellCommand(this.shellFormat, "format", "- Formats the disk");
+            this.commandList[this.commandList.length] = sc;
             //
             // Display the initial prompt.
             this.putPrompt();
@@ -465,6 +468,10 @@ var TSOS;
             else {
                 _StdOut.putText("Please specify a PID.");
             }
+        };
+        Shell.prototype.shellFormat = function (args) {
+            var params = ["format"];
+            _KernelInterruptQueue.enqueue(new TSOS.Interrupt(FILE_SYSTEM_IRQ, params));
         };
         return Shell;
     }());

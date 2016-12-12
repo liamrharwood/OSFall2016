@@ -12,16 +12,18 @@ var TSOS;
             this.numTracks = numTracks;
             this.numSectors = numSectors;
             this.numBlocks = numBlocks;
-            this.storage = sessionStorage; // Use HTML5 session storage for disk
+            this.storage = sessionStorage;
         }
         Disk.prototype.initAllTSB = function () {
+            this.storage.clear();
             for (var t = 0; t < this.numTracks; t++) {
                 for (var s = 0; s < this.numSectors; s++) {
-                    for (var b = 0; b < this.numTracks; b++) {
-                        this.storage[t][s][b] = "";
+                    for (var b = 0; b < this.numBlocks; b++) {
+                        this.storage.setItem(TSOS.Utils.tsb(t, s, b), "");
                     }
                 }
             }
+            console.log(sessionStorage);
         };
         return Disk;
     }());
