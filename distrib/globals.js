@@ -48,6 +48,7 @@ var _ProcessStates = {
     "running": "Running",
     "terminated": "Terminated"
 };
+var _Disk;
 var _SingleStepMode = false;
 // Standard input and output
 var _StdIn; // Same "to null or not to null" issue as above.

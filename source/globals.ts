@@ -63,6 +63,8 @@ var _ProcessStates = {
 	"terminated" : "Terminated"
 }
 
+var _Disk : TSOS.Disk;
+
 var _SingleStepMode: boolean = false; 
 
 // Standard input and output
