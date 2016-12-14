@@ -5,7 +5,7 @@
 var TSOS;
 (function (TSOS) {
     var PCB = (function () {
-        function PCB(PC, Acc, Xreg, Yreg, Zflag, instruction, baseRegister, limitRegister, processState) {
+        function PCB(PC, Acc, Xreg, Yreg, Zflag, instruction, baseRegister, limitRegister, processState, priority) {
             if (PC === void 0) { PC = 0; }
             if (Acc === void 0) { Acc = 0; }
             if (Xreg === void 0) { Xreg = 0; }
@@ -15,6 +15,7 @@ var TSOS;
             if (baseRegister === void 0) { baseRegister = -1; }
             if (limitRegister === void 0) { limitRegister = -1; }
             if (processState === void 0) { processState = _ProcessStates.new; }
+            if (priority === void 0) { priority = 0; }
             this.PC = PC;
             this.Acc = Acc;
             this.Xreg = Xreg;
@@ -24,6 +25,7 @@ var TSOS;
             this.baseRegister = baseRegister;
             this.limitRegister = limitRegister;
             this.processState = processState;
+            this.priority = priority;
             this.pid = PCB.pidCount;
             PCB.pidCount++; // Keeps running count of PIDs as they're created
         }

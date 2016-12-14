@@ -24,6 +24,9 @@ module TSOS {
                 case "fcfs":
                     this.scheduleFCFS();
                     break;
+                case "priority":
+                    this.schedulePriority();
+                    break;
             }
         }
 
@@ -37,6 +40,21 @@ module TSOS {
             if(this.counter > A_REALLY_BIG_NUMBER) { // Fakin' it 
                 _KernelInterruptQueue.enqueue(new Interrupt(CONTEXT_SWITCH_IRQ, 0)); // Create an interrupt for context switch
             }
+        }
+
+        public schedulePriority() : void {
+            // Sort the ready queue by priority (lowest wins)            
+            _ProcessManager.readyQueue.q.sort(function(a, b) {
+                // If a has higher priority (lower int), a comes first
+                if (a.priority < b.priority) {
+                    return -1;
+                }
+                // If b has higher priority (lower int), b comes first
+                if (b.priority < a.priority) {
+                    return 1;
+                }
+                return 0;
+            });
         }
 
         // This is executed upon a context switch software interrupt

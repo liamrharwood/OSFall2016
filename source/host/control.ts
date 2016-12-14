@@ -109,6 +109,7 @@ module TSOS {
                 tableHTML += "<td>" + pcbs[i].Yreg + "</td>";
                 tableHTML += "<td>" + pcbs[i].Zflag + "</td>";
                 tableHTML += "<td>" + pcbs[i].processState + "</td>";
+                tableHTML += "<td>" + pcbs[i].priority + "</td>";
                 tableHTML += "</tr>";
             }
             document.getElementById("ProcessTableInfo").innerHTML = tableHTML;
@@ -154,7 +155,7 @@ module TSOS {
             document.getElementById("divTaskBar").innerHTML = "Status: " + _SystemStatus + "  ---  " + date.month  + "/" 
                                                                                                      + date.day    + "/" 
                                                                                                      + date.year   + " " 
-                                                                                                     + date.hour   + ":" 
+                                                                                                     + date.hour   + ":"
                                                                                                      + date.minute + " " 
                                                                                                      + date.ampm;
         }

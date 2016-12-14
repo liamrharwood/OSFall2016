@@ -20,7 +20,10 @@ var TSOS;
                 hour -= 12;
                 ampm = "pm";
             }
-            var minute = date.getMinutes();
+            var minute = date.getMinutes().toString();
+            if (minute.length < 2) {
+                minute = "0" + minute;
+            }
             return {
                 month: month,
                 day: day,

@@ -112,7 +112,7 @@ module TSOS {
             // load
             sc = new ShellCommand(this.shellLoad,
                                   "load",
-                                  "- Validates the user code.");
+                                  "[priority]- Loads user program.");
             this.commandList[this.commandList.length] = sc;
 
             // run
@@ -391,7 +391,7 @@ module TSOS {
                         _StdOut.putText("BSOD simulates trapping a kernel error.");
                         break;
                     case "load":
-                        _StdOut.putText("Load checks to see if user code is valid.");
+                        _StdOut.putText("Load loads a user program into memory.");
                         break;
                     case "run":
                         _StdOut.putText("Run runs the process specified by PID.");
@@ -548,6 +548,8 @@ module TSOS {
 
             if(isValid) {
                 var pcb = new PCB();
+                if(args.length > 0)
+                    pcb.priority = args[0];
                 _MemoryManager.loadProgram(codeArr, pcb);
             } else {
                 _StdOut.putText("Invalid program input.");

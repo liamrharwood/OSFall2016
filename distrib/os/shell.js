@@ -65,7 +65,7 @@ var TSOS;
             sc = new TSOS.ShellCommand(this.shellBsod, "bsod", "- Blow it all to kingdom come.");
             this.commandList[this.commandList.length] = sc;
             // load
-            sc = new TSOS.ShellCommand(this.shellLoad, "load", "- Validates the user code.");
+            sc = new TSOS.ShellCommand(this.shellLoad, "load", "[priority]- Loads user program.");
             this.commandList[this.commandList.length] = sc;
             // run
             sc = new TSOS.ShellCommand(this.shellRun, "run", "<pid> - Runs the specified process.");
@@ -290,7 +290,7 @@ var TSOS;
                         _StdOut.putText("BSOD simulates trapping a kernel error.");
                         break;
                     case "load":
-                        _StdOut.putText("Load checks to see if user code is valid.");
+                        _StdOut.putText("Load loads a user program into memory.");
                         break;
                     case "run":
                         _StdOut.putText("Run runs the process specified by PID.");
@@ -441,6 +441,8 @@ var TSOS;
             }
             if (isValid) {
                 var pcb = new TSOS.PCB();
+                if (args.length > 0)
+                    pcb.priority = args[0];
                 _MemoryManager.loadProgram(codeArr, pcb);
             }
             else {

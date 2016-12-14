@@ -98,6 +98,7 @@ var TSOS;
                 tableHTML += "<td>" + pcbs[i].Yreg + "</td>";
                 tableHTML += "<td>" + pcbs[i].Zflag + "</td>";
                 tableHTML += "<td>" + pcbs[i].processState + "</td>";
+                tableHTML += "<td>" + pcbs[i].priority + "</td>";
                 tableHTML += "</tr>";
             }
             document.getElementById("ProcessTableInfo").innerHTML = tableHTML;

@@ -19,7 +19,8 @@ module TSOS {
                     public instruction: string = "",
                     public baseRegister : number = -1,
                     public limitRegister : number = -1,
-                    public processState : string = _ProcessStates.new) {
+                    public processState : string = _ProcessStates.new,
+                    public priority : number = 0) {
         	this.pid = PCB.pidCount;
         	PCB.pidCount++; // Keeps running count of PIDs as they're created
         }

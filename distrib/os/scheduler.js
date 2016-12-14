@@ -23,6 +23,9 @@ var TSOS;
                 case "fcfs":
                     this.scheduleFCFS();
                     break;
+                case "priority":
+                    this.schedulePriority();
+                    break;
             }
         };
         Scheduler.prototype.scheduleRoundRobin = function () {
@@ -34,6 +37,20 @@ var TSOS;
             if (this.counter > A_REALLY_BIG_NUMBER) {
                 _KernelInterruptQueue.enqueue(new TSOS.Interrupt(CONTEXT_SWITCH_IRQ, 0)); // Create an interrupt for context switch
             }
+        };
+        Scheduler.prototype.schedulePriority = function () {
+            // Sort the ready queue by priority (lowest wins)            
+            _ProcessManager.readyQueue.q.sort(function (a, b) {
+                // If a has higher priority (lower int), a comes first
+                if (a.priority < b.priority) {
+                    return -1;
+                }
+                // If b has higher priority (lower int), b comes first
+                if (b.priority < a.priority) {
+                    return 1;
+                }
+                return 0;
+            });
         };
         // This is executed upon a context switch software interrupt
         Scheduler.prototype.contextSwitch = function () {
