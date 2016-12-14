@@ -34,6 +34,7 @@ module TSOS {
         public isrFs(params) {
             var operation = params[0];
             var filename = params[1];
+            var data = params[2];
 
             switch(operation) {
                 case "format":
@@ -44,6 +45,9 @@ module TSOS {
                     break;
                 case "ls":
                     this.listFiles();
+                    break;
+                case "write":
+                    this.writeFile(filename, data);
                     break;
 
             }
@@ -170,6 +174,10 @@ module TSOS {
             }
             
 
+        }
+
+        public writeFile(filename, data) {
+            console.log(data);
         }
 
         public listFiles() {

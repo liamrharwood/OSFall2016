@@ -500,6 +500,31 @@ var TSOS;
             }
         };
         Shell.prototype.shellWrite = function (args) {
+            if (args.length < 1) {
+                _StdOut.putText("Please specify a filename.");
+            }
+            else if (args.length === 1) {
+                _StdOut.putText("Please specify the data to write.");
+            }
+            else {
+                var firstWord = args[1];
+                var lastWord = args[args.length - 1];
+                if (firstWord[0] === '"' && lastWord[lastWord.length - 1] === '"') {
+                    var filename = args[0];
+                    var data = "";
+                    for (var i = 1; i < args.length; i++) {
+                        if (i !== 1)
+                            data += " ";
+                        data += args[i];
+                    }
+                    data = data.substring(1, data.length - 1); // Get rid of quotes
+                    var params = ["write", filename, data];
+                    _KernelInterruptQueue.enqueue(new TSOS.Interrupt(FILE_SYSTEM_IRQ, params));
+                }
+                else {
+                    _StdOut.putText("Please surrond the data with quotation marks.");
+                }
+            }
         };
         Shell.prototype.shellRead = function (args) {
         };

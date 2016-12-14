@@ -34,6 +34,7 @@ var TSOS;
         DeviceDriverFs.prototype.isrFs = function (params) {
             var operation = params[0];
             var filename = params[1];
+            var data = params[2];
             switch (operation) {
                 case "format":
                     _Disk.initAllTSB();
@@ -43,6 +44,9 @@ var TSOS;
                     break;
                 case "ls":
                     this.listFiles();
+                    break;
+                case "write":
+                    this.writeFile(filename, data);
                     break;
             }
         };
@@ -154,6 +158,9 @@ var TSOS;
                     _OsShell.putPrompt();
                 }
             }
+        };
+        DeviceDriverFs.prototype.writeFile = function (filename, data) {
+            console.log(data);
         };
         DeviceDriverFs.prototype.listFiles = function () {
             var noFiles = true;
