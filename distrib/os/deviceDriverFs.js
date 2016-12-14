@@ -113,7 +113,7 @@ var TSOS;
                     var data = _Disk.read(tsb).substring(4);
                     var existingName = TSOS.Utils.hexToString(data);
                     if (filename === existingName) {
-                        return true;
+                        return _Disk.read(tsb);
                     }
                 }
             }
@@ -160,7 +160,33 @@ var TSOS;
             }
         };
         DeviceDriverFs.prototype.writeFile = function (filename, data) {
-            console.log(data);
+            var dirBlock = this.fileExists(filename);
+            if (dirBlock) {
+                data = TSOS.Utils.stringToHex(data);
+                console.log(data);
+                var fileTsb = TSOS.Utils.tsb(dirBlock[1], dirBlock[2], dirBlock[3]);
+                var nextTsb = "";
+                var blockSize = _Disk.numBytes - 4; // Data size per block
+                while (data.length > 0) {
+                    var dataToWrite = data.substring(0, blockSize);
+                    data = data.substring(blockSize);
+                    console.log(data);
+                    if (data.length > 0) {
+                        var formatted = this.getNextFile();
+                        nextTsb = formatted[0] + formatted[2] + formatted[4]; // Get just digits
+                    }
+                    else {
+                        nextTsb = "fff";
+                    }
+                    var block = "1" + nextTsb + dataToWrite + EMPTY_FILE_DATA.substring(dataToWrite.length);
+                    _Disk.write(fileTsb, block);
+                    this.changeNextFile();
+                    fileTsb = TSOS.Utils.tsb(nextTsb[0], nextTsb[1], nextTsb[2]);
+                }
+            }
+            else {
+                _StdOut.putText("File " + filename + " does not exist.");
+            }
         };
         DeviceDriverFs.prototype.listFiles = function () {
             var noFiles = true;

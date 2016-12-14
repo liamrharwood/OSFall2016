@@ -82,6 +82,7 @@ h3 {
 #diskTable tbody tr td {
   border: 1px solid white;
   padding: 5px;
+  font-family: "Courier New", Courier, monospace;
 }
 
 #divMemoryDisplay {
