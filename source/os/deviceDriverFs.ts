@@ -102,7 +102,6 @@ module TSOS {
             for(var tsb in _Disk.storage) {
                 // If a block is not in use and not in the first track
                 if(_Disk.read(tsb)[0] === "0" && parseInt(tsb[0]) > 0) {
-                    // console.log("TSB " + tsb + " has a " + _Disk.read(tsb)[0]);
                     mbrArr[3] = tsb[0];
                     mbrArr[4] = tsb[2];
                     mbrArr[5] = tsb[4];
@@ -262,8 +261,7 @@ module TSOS {
                         nextTsb = "fff"; // If the file is ending, put "fff" for EOF
                     }
                     var block = "1" + nextTsb + dataToWrite + EMPTY_FILE_DATA.substring(dataToWrite.length); // Create block (In use bit, pointer, and data)
-                    // console.log("fileTsb: " + fileTsb + " nextTsb: " + nextTsb);
-                    // console.log("Writing to: " + fileTsb);
+
                     _Disk.write(fileTsb, block); // Write it
                     this.changeNextFile(); // Update MBR with next available block
                     fileTsb = Utils.tsb(nextTsb[0],nextTsb[1],nextTsb[2]); // Pointer for next block
