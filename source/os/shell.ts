@@ -572,7 +572,6 @@ module TSOS {
                 var filename = args[0];
                 var params = ["create", filename];
                 _KernelInterruptQueue.enqueue(new Interrupt(FILE_SYSTEM_IRQ, params));
-                _StdOut.putText("File created successfully.");
             } else {
                 _StdOut.putText("Please specify a filename.")
             }

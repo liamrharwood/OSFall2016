@@ -80,8 +80,10 @@ module TSOS {
             var tableHTML = "";
             for(var tsb in _Disk.storage) {
                 tableHTML += "<tr>";
-                tableHTML += "<td>" + tsb + "</td>";
-                tableHTML += "<td>" + _Disk.storage[tsb] + "</td>";
+                tableHTML += "<td"
+                if(_Disk.read(tsb)[0] === "1") tableHTML += ' style="background-color:green;"';
+                tableHTML += ">" + tsb + "</td>";
+                tableHTML += "<td>" + _Disk.read(tsb) + "</td>";
                 tableHTML += "</tr>";
             }
             document.getElementById("diskInfo").innerHTML = tableHTML;
