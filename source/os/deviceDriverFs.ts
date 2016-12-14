@@ -52,6 +52,9 @@ module TSOS {
                 case "delete":
                     this.deleteFile(filename);
                     break;
+                case "read":
+                    this.readFile(filename);
+                    break;
 
             }
         }
@@ -267,6 +270,35 @@ module TSOS {
                     fileTsb = Utils.tsb(nextTsb[0],nextTsb[1],nextTsb[2]); // Pointer for next block
                 }
                 _StdOut.putText("File write completed.");
+                _StdOut.advanceLine();
+                _OsShell.putPrompt();
+
+            } else {
+                _StdOut.putText("File " + filename + " does not exist.");
+                _StdOut.advanceLine();
+                _OsShell.putPrompt();
+            }
+        }
+
+        public readFile(filename) {
+            var dirTsb = this.fileExists(filename);
+            if(dirTsb) {
+                var dirTsb = this.fileExists(filename);
+                var dirBlock = _Disk.read(dirTsb);
+                var fileTsb = Utils.tsb(dirBlock[1],dirBlock[2],dirBlock[3]); // Find first file block
+
+                do {
+                    var fileBlock = _Disk.read(fileTsb);
+                    var data = fileBlock.substring(4); // Just the data portion
+
+                    data = Utils.hexToString(data); // Convert from hex
+
+                    _StdOut.putText(data);
+
+                    fileTsb = Utils.tsb(fileBlock[1],fileBlock[2],fileBlock[3]);
+
+                } while(fileTsb !== "f,f,f");
+
                 _StdOut.advanceLine();
                 _OsShell.putPrompt();
 
