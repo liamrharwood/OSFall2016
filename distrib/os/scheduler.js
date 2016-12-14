@@ -16,10 +16,22 @@ var TSOS;
         // This is run every clock pulse to determine if scheduling events need to be done
         Scheduler.prototype.schedule = function () {
             this.counter++;
-            this.scheduleRoundRobin(); // only one scheduling algorithm for now
+            switch (this.algorithm) {
+                case "rr":
+                    this.scheduleRoundRobin(); // only one scheduling algorithm for now
+                    break;
+                case "fcfs":
+                    this.scheduleFCFS();
+                    break;
+            }
         };
         Scheduler.prototype.scheduleRoundRobin = function () {
             if (this.counter > this.rrQuantum) {
+                _KernelInterruptQueue.enqueue(new TSOS.Interrupt(CONTEXT_SWITCH_IRQ, 0)); // Create an interrupt for context switch
+            }
+        };
+        Scheduler.prototype.scheduleFCFS = function () {
+            if (this.counter > A_REALLY_BIG_NUMBER) {
                 _KernelInterruptQueue.enqueue(new TSOS.Interrupt(CONTEXT_SWITCH_IRQ, 0)); // Create an interrupt for context switch
             }
         };

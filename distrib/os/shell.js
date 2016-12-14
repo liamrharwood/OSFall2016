@@ -591,6 +591,17 @@ var TSOS;
             }
         };
         Shell.prototype.shellSetschedule = function (args) {
+            if (args.length > 0) {
+                if (args[0] === "rr" || args[0] === "fcfs" || args[0] === "priority") {
+                    _Scheduler.algorithm = args[0];
+                }
+                else {
+                    _StdOut.putText("Please specify an algorithm: [rr, fcfs, priority].");
+                }
+            }
+            else {
+                _StdOut.putText("Please specify an algorithm: [rr, fcfs, priority].");
+            }
         };
         return Shell;
     }());

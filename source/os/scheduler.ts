@@ -17,11 +17,24 @@ module TSOS {
         // This is run every clock pulse to determine if scheduling events need to be done
         public schedule() : void {
             this.counter++;
-            this.scheduleRoundRobin(); // only one scheduling algorithm for now
+            switch(this.algorithm) {
+                case "rr":
+                    this.scheduleRoundRobin(); // only one scheduling algorithm for now
+                    break;
+                case "fcfs":
+                    this.scheduleFCFS();
+                    break;
+            }
         }
 
         public scheduleRoundRobin() : void {
             if(this.counter > this.rrQuantum) { // Time for new process!
+                _KernelInterruptQueue.enqueue(new Interrupt(CONTEXT_SWITCH_IRQ, 0)); // Create an interrupt for context switch
+            }
+        }
+
+        public scheduleFCFS() : void {
+            if(this.counter > A_REALLY_BIG_NUMBER) { // Fakin' it 
                 _KernelInterruptQueue.enqueue(new Interrupt(CONTEXT_SWITCH_IRQ, 0)); // Create an interrupt for context switch
             }
         }
