@@ -5,11 +5,13 @@
 var TSOS;
 (function (TSOS) {
     var Scheduler = (function () {
-        function Scheduler(rrQuantum, counter) {
+        function Scheduler(rrQuantum, counter, algorithm) {
             if (rrQuantum === void 0) { rrQuantum = 6; }
             if (counter === void 0) { counter = 0; }
+            if (algorithm === void 0) { algorithm = "rr"; }
             this.rrQuantum = rrQuantum;
             this.counter = counter;
+            this.algorithm = algorithm;
         }
         // This is run every clock pulse to determine if scheduling events need to be done
         Scheduler.prototype.schedule = function () {

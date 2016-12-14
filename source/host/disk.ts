@@ -9,12 +9,18 @@ module TSOS {
     export class Disk {
 
         public storage;
+        public isFormatted : boolean;
 
         constructor(public numTracks : number = 4,
                     public numSectors : number = 8,
                     public numBlocks : number = 8,
                     public numBytes : number = 64) {
             this.storage = sessionStorage;
+            if(this.storage.length > 0) {
+                this.isFormatted = true;
+            } else {
+                this.isFormatted = false;
+            }
         }
 
         public initAllTSB() {
@@ -35,6 +41,7 @@ module TSOS {
                     }
                 }
             }
+            this.isFormatted = true;
             Control.updateDiskDisplay();
         }
 

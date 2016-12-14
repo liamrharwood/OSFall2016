@@ -9,7 +9,8 @@ module TSOS {
     export class Scheduler {
 
         constructor(public rrQuantum : number = 6,
-                    public counter : number = 0) {
+                    public counter : number = 0,
+                    public algorithm : string = "rr") {
 
         }
         

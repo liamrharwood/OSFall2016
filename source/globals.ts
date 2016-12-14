@@ -23,6 +23,7 @@ const CONTEXT_SWITCH_IRQ: number = 2;
 const FILE_SYSTEM_IRQ: number = 3;
 
 const EMPTY_FILE_DATA : string = "000000000000000000000000000000000000000000000000000000000000"; // Empty data for file creation
+const A_REALLY_BIG_NUMBER : number = 10000000000000; // for FCFS (cheating)
 
 
 //

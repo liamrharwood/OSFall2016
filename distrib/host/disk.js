@@ -15,6 +15,12 @@ var TSOS;
             this.numBlocks = numBlocks;
             this.numBytes = numBytes;
             this.storage = sessionStorage;
+            if (this.storage.length > 0) {
+                this.isFormatted = true;
+            }
+            else {
+                this.isFormatted = false;
+            }
         }
         Disk.prototype.initAllTSB = function () {
             this.storage.clear();
@@ -35,6 +41,7 @@ var TSOS;
                     }
                 }
             }
+            this.isFormatted = true;
             TSOS.Control.updateDiskDisplay();
         };
         Disk.prototype.write = function (tsb, bytes) {

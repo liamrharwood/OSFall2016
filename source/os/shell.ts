@@ -187,6 +187,18 @@ module TSOS {
                                   "- Lists all the files in the directory.");
             this.commandList[this.commandList.length] = sc;
             
+            // getschedule - display the current scheduling algorithm
+            sc = new ShellCommand(this.shellGetschedule,
+                                  "getschedule",
+                                  "- Displays the current scheduling algorithm.");
+            this.commandList[this.commandList.length] = sc;
+
+            // setschedule - set the current scheduling algorithm
+            sc = new ShellCommand(this.shellSetschedule,
+                                  "setschedule",
+                                  "[rr, fcfs, priority] - Sets the current scheduling algorithm.");
+            this.commandList[this.commandList.length] = sc;
+
             //
             // Display the initial prompt.
             this.putPrompt();
@@ -399,6 +411,28 @@ module TSOS {
                     case "kill":
                         _StdOut.putText("Kill kills an active process.");
                         break;
+                    case "format":
+                        _StdOut.putText("Format formats the hard disk.");
+                        break;
+                    case "create":
+                        _StdOut.putText("Create creates a file.");
+                        break;
+                    case "write":
+                        _StdOut.putText("Write writes data to a file.");
+                        break;
+                    case "read":
+                        _StdOut.putText("Read displays data from a file.");
+                        break;
+                    case "delete":
+                        _StdOut.putText("Delete deletes a file.");
+                        break;
+                    case "getschedule":
+                        _StdOut.putText("Getschedule displays the current scheduling algorithm.");
+                        break;
+                    case "setschedule":
+                        _StdOut.putText("Setschedule sets the current scheduling algorithm.");
+                        break;
+                    
                     // TODO: Make descriptive MANual page entries for the the rest of the shell commands here.
                     default:
                         _StdOut.putText("No manual entry for " + args[0] + ".");
@@ -649,6 +683,24 @@ module TSOS {
         public shellLs(args) {
             var params = ["ls"];
             _KernelInterruptQueue.enqueue(new Interrupt(FILE_SYSTEM_IRQ, params));
+        }
+
+        public shellGetschedule(args) {
+            switch(_Scheduler.algorithm) {
+                case "rr":
+                    _StdOut.putText("Round Robin (quantum=" + _Scheduler.rrQuantum + ")");
+                    break;
+                case "fcfs":
+                    _StdOut.putText("First Come First Served");
+                    break;
+                case "priority":
+                    _StdOut.putText("Nonpreemptive Priority");
+                    break;
+            }
+        }
+
+        public shellSetschedule(args) {
+
         }
 
     }

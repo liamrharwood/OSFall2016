@@ -19,6 +19,7 @@ var KEYBOARD_IRQ = 1;
 var CONTEXT_SWITCH_IRQ = 2;
 var FILE_SYSTEM_IRQ = 3;
 var EMPTY_FILE_DATA = "000000000000000000000000000000000000000000000000000000000000"; // Empty data for file creation
+var A_REALLY_BIG_NUMBER = 10000000000000; // for FCFS (cheating)
 //
 // Global Variables
 // TODO: Make a global object and use that instead of the "_" naming convention in the global namespace.

@@ -36,26 +36,33 @@ module TSOS {
             var filename = params[1];
             var data = params[2];
 
-            switch(operation) {
-                case "format":
-                    _Disk.initAllTSB();
-                    break;
-                case "create":
-                    this.createFile(filename);
-                    break;
-                case "ls":
-                    this.listFiles();
-                    break;
-                case "write":
-                    this.writeFile(filename, data);
-                    break;
-                case "delete":
-                    this.deleteFile(filename);
-                    break;
-                case "read":
-                    this.readFile(filename);
-                    break;
+            if(operation === "format") {
+                _Disk.initAllTSB();
+            } else {
+                if(_Disk.isFormatted) {
+                    switch(operation) {
+                        case "create":
+                            this.createFile(filename);
+                            break;
+                        case "ls":
+                            this.listFiles();
+                            break;
+                        case "write":
+                            this.writeFile(filename, data);
+                            break;
+                        case "delete":
+                            this.deleteFile(filename);
+                            break;
+                        case "read":
+                            this.readFile(filename);
+                            break;
 
+                    }
+                } else {
+                    _StdOut.putText("The disk is not formatted. Use the format command.");
+                    _StdOut.advanceLine();
+                    _OsShell.putPrompt();
+                }
             }
         }
 
