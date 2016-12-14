@@ -76,6 +76,16 @@ module TSOS {
             // TODO in the future: Optionally update a log database or some streaming service.
         }
 
+        public static updateDiskDisplay() : void {
+            var tableHTML = "";
+            for(var tsb in _Disk.storage) {
+                tableHTML += "<tr>";
+                tableHTML += "<td>" + _Disk.storage[tsb] + "</td>";
+                tableHTML += "</tr>";
+            }
+            document.getElementById("diskInfo").innerHTML = tableHTML;
+        }
+
         public static updateProcessDisplay(): void {
             var tableHTML = "";
             var pcbs = _ProcessManager.residentList;

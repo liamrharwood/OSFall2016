@@ -64,6 +64,15 @@ var TSOS;
             this.updateHostTaskBar();
             // TODO in the future: Optionally update a log database or some streaming service.
         };
+        Control.updateDiskDisplay = function () {
+            var tableHTML = "";
+            for (var tsb in _Disk.storage) {
+                tableHTML += "<tr>";
+                tableHTML += "<td>" + _Disk.storage[tsb] + "</td>";
+                tableHTML += "</tr>";
+            }
+            document.getElementById("diskInfo").innerHTML = tableHTML;
+        };
         Control.updateProcessDisplay = function () {
             var tableHTML = "";
             var pcbs = _ProcessManager.residentList;

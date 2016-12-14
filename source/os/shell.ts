@@ -558,6 +558,7 @@ module TSOS {
         public shellFormat(args) {
             var params = ["format"];
             _KernelInterruptQueue.enqueue(new Interrupt(FILE_SYSTEM_IRQ, params));
+            _StdOut.putText("Disk formatted.")
         }
 
     }

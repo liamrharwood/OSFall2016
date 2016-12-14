@@ -472,6 +472,7 @@ var TSOS;
         Shell.prototype.shellFormat = function (args) {
             var params = ["format"];
             _KernelInterruptQueue.enqueue(new TSOS.Interrupt(FILE_SYSTEM_IRQ, params));
+            _StdOut.putText("Disk formatted.");
         };
         return Shell;
     }());

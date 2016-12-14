@@ -37,6 +37,7 @@ var TSOS;
             switch (operation) {
                 case "format":
                     _Disk.initAllTSB();
+                    break;
             }
         };
         return DeviceDriverFs;
