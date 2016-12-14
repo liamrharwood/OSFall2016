@@ -79,11 +79,18 @@ module TSOS {
         public static updateDiskDisplay() : void {
             var tableHTML = "";
             for(var tsb in _Disk.storage) {
+                var inUse = _Disk.read(tsb)[0] === "1";
                 tableHTML += "<tr>";
                 tableHTML += "<td"
-                if(_Disk.read(tsb)[0] === "1") tableHTML += ' style="background-color:green;"';
+                if(inUse) tableHTML += ' style="background-color:green;"';
                 tableHTML += ">" + tsb + "</td>";
-                tableHTML += "<td>" + _Disk.read(tsb) + "</td>";
+                if(inUse) {
+                    tableHTML += '<td><span style="color:red;">' + _Disk.read(tsb)[0] + '</span>';
+                    tableHTML += '<span style="color:blue;">' + _Disk.read(tsb).substring(1,4) + "</span>";
+                    tableHTML += '<span>' + _Disk.read(tsb).substring(4) + "</span></td>";
+                } else {
+                    tableHTML += "<td>" + _Disk.read(tsb) + "</td>";
+                }
                 tableHTML += "</tr>";
             }
             document.getElementById("diskInfo").innerHTML = tableHTML;

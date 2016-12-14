@@ -42,6 +42,9 @@ module TSOS {
                 case "create":
                     this.createFile(filename);
                     break;
+                case "ls":
+                    this.listFiles();
+                    break;
 
             }
         }
@@ -146,6 +149,27 @@ module TSOS {
                 }
             }
             
+
+        }
+
+        public listFiles() {
+            var noFiles = true;
+
+            for(var tsb in _Disk.storage) {
+                // If the file is in use and in the first track
+                if(_Disk.read(tsb)[0] === "1" && tsb[0] === "0") {
+                    var data = _Disk.read(tsb).substring(4);
+                    _StdOut.putText(Utils.hexToString(data));
+                    _StdOut.advanceLine();
+                    noFiles = false;
+                }
+            }
+
+            if(noFiles) {
+                _StdOut.putText("There are no files on disk.");
+                _StdOut.advanceLine();
+            }
+            _OsShell.putPrompt();
 
         }
 

@@ -45,6 +45,17 @@ module TSOS {
             return result;
         }
 
+        public static hexToString(hex) {
+            var result = "";
+            for(var i=0; i < hex.length; i += 2) {
+                if(hex[i] === "0" && hex[i+1] === "0")
+                    break;
+                var code = parseInt(hex.substr(i, 2), 16);
+                result += String.fromCharCode(code);
+            }
+            return result;
+        }
+
         public static trim(str): string {
             // Use a regular expression to remove leading and trailing spaces.
             return str.replace(/^\s+ | \s+$/g, "");

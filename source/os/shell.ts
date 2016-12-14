@@ -162,6 +162,30 @@ module TSOS {
                                   "create",
                                   "<filename> - Creates a new file.");
             this.commandList[this.commandList.length] = sc;
+
+            // write <filename> "data" - writes data to a file
+            sc = new ShellCommand(this.shellWrite,
+                                  "write",
+                                  '<filename> "data" - Writes data to an existing file.');
+            this.commandList[this.commandList.length] = sc;
+
+            // read <filename> - reads data from a file
+            sc = new ShellCommand(this.shellRead,
+                                  "read",
+                                  "<filename> - Reads data from a file.");
+            this.commandList[this.commandList.length] = sc;
+
+            // delete <filename> - deletes an existing file
+            sc = new ShellCommand(this.shellDelete,
+                                  "delete",
+                                  "<filename> - Deletes an existing file.");
+            this.commandList[this.commandList.length] = sc;
+
+            // ls - lists all the files in the directory
+            sc = new ShellCommand(this.shellLs,
+                                  "ls",
+                                  "- Lists all the files in the directory.");
+            this.commandList[this.commandList.length] = sc;
             
             //
             // Display the initial prompt.
@@ -575,6 +599,23 @@ module TSOS {
             } else {
                 _StdOut.putText("Please specify a filename.")
             }
+        }
+
+        public shellWrite(args) {
+
+        }
+
+        public shellRead(args) {
+            
+        }
+
+        public shellDelete(args) {
+            
+        }
+
+        public shellLs(args) {
+            var params = ["ls"];
+            _KernelInterruptQueue.enqueue(new Interrupt(FILE_SYSTEM_IRQ, params));
         }
 
     }

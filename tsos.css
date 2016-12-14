@@ -68,7 +68,7 @@ h3 {
 }
 
 #divDiskDisplay {
-  height: 500px;
+  height: 250px;
   width: 500px;
   overflow: scroll;
 }
@@ -85,7 +85,7 @@ h3 {
 }
 
 #divMemoryDisplay {
-  height: 500px;
+  height: 400px;
   width: 500px;
   overflow: scroll;
 }

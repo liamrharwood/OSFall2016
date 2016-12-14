@@ -91,6 +91,18 @@ var TSOS;
             // create <filename> - creates a new file
             sc = new TSOS.ShellCommand(this.shellCreate, "create", "<filename> - Creates a new file.");
             this.commandList[this.commandList.length] = sc;
+            // write <filename> "data" - writes data to a file
+            sc = new TSOS.ShellCommand(this.shellWrite, "write", '<filename> "data" - Writes data to an existing file.');
+            this.commandList[this.commandList.length] = sc;
+            // read <filename> - reads data from a file
+            sc = new TSOS.ShellCommand(this.shellRead, "read", "<filename> - Reads data from a file.");
+            this.commandList[this.commandList.length] = sc;
+            // delete <filename> - deletes an existing file
+            sc = new TSOS.ShellCommand(this.shellDelete, "delete", "<filename> - Deletes an existing file.");
+            this.commandList[this.commandList.length] = sc;
+            // ls - lists all the files in the directory
+            sc = new TSOS.ShellCommand(this.shellLs, "ls", "- Lists all the files in the directory.");
+            this.commandList[this.commandList.length] = sc;
             //
             // Display the initial prompt.
             this.putPrompt();
@@ -486,6 +498,16 @@ var TSOS;
             else {
                 _StdOut.putText("Please specify a filename.");
             }
+        };
+        Shell.prototype.shellWrite = function (args) {
+        };
+        Shell.prototype.shellRead = function (args) {
+        };
+        Shell.prototype.shellDelete = function (args) {
+        };
+        Shell.prototype.shellLs = function (args) {
+            var params = ["ls"];
+            _KernelInterruptQueue.enqueue(new TSOS.Interrupt(FILE_SYSTEM_IRQ, params));
         };
         return Shell;
     }());
