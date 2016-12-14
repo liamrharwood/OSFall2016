@@ -178,31 +178,44 @@ module TSOS {
         }
 
         public writeFile(filename, data) {
-            var dirBlock = this.fileExists(filename);
+            var dirBlock = this.fileExists(filename); // Get directory block
             if(dirBlock) {
                 data = Utils.stringToHex(data);
-                console.log(data);
-                var fileTsb = Utils.tsb(dirBlock[1],dirBlock[2],dirBlock[3]);
+
+                var fileTsb = Utils.tsb(dirBlock[1],dirBlock[2],dirBlock[3]); // Find first file block
                 var nextTsb = "";
                 var blockSize = _Disk.numBytes - 4; // Data size per block
 
                 while(data.length > 0) {
                     var dataToWrite = data.substring(0, blockSize);
-                    data = data.substring(blockSize);
-                    console.log(data);
+                    data = data.substring(blockSize); // Remove the data that will be written
+
                     if(data.length > 0) {
-                        var formatted = this.getNextFile();                       
-                        nextTsb = formatted[0] + formatted[2] + formatted[4]; // Get just digits
+                        var formatted = this.getNextFile();
+                        if(formatted === "f,f,f") {
+                            nextTsb = "fff";
+                            _StdOut.putText("No more room on disk, file partially written.");
+                            _StdOut.advanceLine();
+                            data = "";
+                        } else {                       
+                            nextTsb = formatted[0] + formatted[2] + formatted[4];
+                        } // Get the digits of the next available block
                     } else {
-                        nextTsb = "fff";
+                        nextTsb = "fff"; // If the file is ending, put "fff" for EOF
                     }
-                    var block = "1" + nextTsb + dataToWrite + EMPTY_FILE_DATA.substring(dataToWrite.length);
-                    _Disk.write(fileTsb, block);
-                    this.changeNextFile();
-                    fileTsb = Utils.tsb(nextTsb[0],nextTsb[1],nextTsb[2]);
+                    var block = "1" + nextTsb + dataToWrite + EMPTY_FILE_DATA.substring(dataToWrite.length); // Create block (In use bit, pointer, and data)
+                    _Disk.write(fileTsb, block); // Write it
+                    this.changeNextFile(); // Update MBR with next available block
+                    fileTsb = Utils.tsb(nextTsb[0],nextTsb[1],nextTsb[2]); // Pointer for next block
                 }
+                _StdOut.putText("File write completed.");
+                _StdOut.advanceLine();
+                _OsShell.putPrompt();
+
             } else {
                 _StdOut.putText("File " + filename + " does not exist.");
+                _StdOut.advanceLine();
+                _OsShell.putPrompt();
             }
         }
 
