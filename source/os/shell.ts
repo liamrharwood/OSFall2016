@@ -631,7 +631,13 @@ module TSOS {
         }
 
         public shellDelete(args) {
-            
+            if(args.length > 0) {
+                var filename = args[0];
+                var params = ["delete", filename];
+                _KernelInterruptQueue.enqueue(new Interrupt(FILE_SYSTEM_IRQ, params));
+            } else {
+                _StdOut.putText("Please specify a filename.")
+            }
         }
 
         public shellLs(args) {

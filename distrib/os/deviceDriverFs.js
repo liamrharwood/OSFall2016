@@ -48,6 +48,9 @@ var TSOS;
                 case "write":
                     this.writeFile(filename, data);
                     break;
+                case "delete":
+                    this.deleteFile(filename);
+                    break;
             }
         };
         DeviceDriverFs.prototype.getNextDir = function () {
@@ -89,6 +92,7 @@ var TSOS;
             for (var tsb in _Disk.storage) {
                 // If a block is not in use and not in the first track
                 if (_Disk.read(tsb)[0] === "0" && parseInt(tsb[0]) > 0) {
+                    // console.log("TSB " + tsb + " has a " + _Disk.read(tsb)[0]);
                     mbrArr[3] = tsb[0];
                     mbrArr[4] = tsb[2];
                     mbrArr[5] = tsb[4];
@@ -113,11 +117,11 @@ var TSOS;
                     var data = _Disk.read(tsb).substring(4);
                     var existingName = TSOS.Utils.hexToString(data);
                     if (filename === existingName) {
-                        return _Disk.read(tsb);
+                        return tsb;
                     }
                 }
             }
-            return false;
+            return undefined;
         };
         DeviceDriverFs.prototype.createFile = function (filename) {
             var dirTsb = this.getNextDir();
@@ -159,9 +163,53 @@ var TSOS;
                 }
             }
         };
+        DeviceDriverFs.prototype.deleteFile = function (filename) {
+            var dirTsb = this.fileExists(filename);
+            if (dirTsb) {
+                var dirBlock = _Disk.read(dirTsb);
+                var fileTsb = TSOS.Utils.tsb(dirBlock[1], dirBlock[2], dirBlock[3]); // Find first file block
+                _Disk.write(dirTsb, "0000" + EMPTY_FILE_DATA);
+                do {
+                    var fileBlock = _Disk.read(fileTsb);
+                    _Disk.write(fileTsb, "0000" + EMPTY_FILE_DATA);
+                    fileTsb = TSOS.Utils.tsb(fileBlock[1], fileBlock[2], fileBlock[3]);
+                } while (fileTsb !== "f,f,f");
+                this.changeNextDir();
+                this.changeNextFile();
+                _StdOut.putText("File deleted.");
+                _StdOut.advanceLine();
+                _OsShell.putPrompt();
+            }
+            else {
+                _StdOut.putText("File " + filename + " does not exist.");
+                _StdOut.advanceLine();
+                _OsShell.putPrompt();
+            }
+        };
+        // This function does not delete directory entry (for overwriting)
+        DeviceDriverFs.prototype.deleteFileData = function (filename) {
+            var dirTsb = this.fileExists(filename);
+            var dirBlock = _Disk.read(dirTsb);
+            var fileTsb = TSOS.Utils.tsb(dirBlock[1], dirBlock[2], dirBlock[3]); // Find first file block
+            var isFirst = true;
+            do {
+                var fileBlock = _Disk.read(fileTsb);
+                if (isFirst) {
+                    _Disk.write(fileTsb, "1fff" + EMPTY_FILE_DATA);
+                    isFirst = false;
+                }
+                else {
+                    _Disk.write(fileTsb, "0000" + EMPTY_FILE_DATA);
+                }
+                fileTsb = TSOS.Utils.tsb(fileBlock[1], fileBlock[2], fileBlock[3]);
+            } while (fileTsb !== "f,f,f");
+            this.changeNextFile();
+        };
         DeviceDriverFs.prototype.writeFile = function (filename, data) {
-            var dirBlock = this.fileExists(filename); // Get directory block
-            if (dirBlock) {
+            var dirTsb = this.fileExists(filename); // Get directory block
+            if (dirTsb) {
+                this.deleteFileData(filename); // Overwrite by deleting data first (but not completely deleting)
+                var dirBlock = _Disk.read(dirTsb);
                 data = TSOS.Utils.stringToHex(data);
                 var fileTsb = TSOS.Utils.tsb(dirBlock[1], dirBlock[2], dirBlock[3]); // Find first file block
                 var nextTsb = "";
@@ -185,6 +233,8 @@ var TSOS;
                         nextTsb = "fff"; // If the file is ending, put "fff" for EOF
                     }
                     var block = "1" + nextTsb + dataToWrite + EMPTY_FILE_DATA.substring(dataToWrite.length); // Create block (In use bit, pointer, and data)
+                    // console.log("fileTsb: " + fileTsb + " nextTsb: " + nextTsb);
+                    // console.log("Writing to: " + fileTsb);
                     _Disk.write(fileTsb, block); // Write it
                     this.changeNextFile(); // Update MBR with next available block
                     fileTsb = TSOS.Utils.tsb(nextTsb[0], nextTsb[1], nextTsb[2]); // Pointer for next block

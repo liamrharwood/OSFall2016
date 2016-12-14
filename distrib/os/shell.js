@@ -529,6 +529,14 @@ var TSOS;
         Shell.prototype.shellRead = function (args) {
         };
         Shell.prototype.shellDelete = function (args) {
+            if (args.length > 0) {
+                var filename = args[0];
+                var params = ["delete", filename];
+                _KernelInterruptQueue.enqueue(new TSOS.Interrupt(FILE_SYSTEM_IRQ, params));
+            }
+            else {
+                _StdOut.putText("Please specify a filename.");
+            }
         };
         Shell.prototype.shellLs = function (args) {
             var params = ["ls"];
