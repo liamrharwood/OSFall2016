@@ -73,7 +73,7 @@ var TSOS;
         };
         DeviceDriverFs.prototype.getNextFile = function () {
             var mbr = _Disk.read("0,0,0");
-            return TSOS.Utils.tsb(mbr[3], mbr[4], mbr[5]); // Return key for next available file block
+            return TSOS.Utils.tsb(mbr[3], mbr[4], mbr[5]); // Return TSB for next available file block
         };
         DeviceDriverFs.prototype.changeNextFile = function () {
             var mbr = _Disk.read("0,0,0");
@@ -102,27 +102,34 @@ var TSOS;
         DeviceDriverFs.prototype.createFile = function (filename) {
             var dirTsb = this.getNextDir();
             var fileTsb = this.getNextFile();
-            var dirBlock = "1" + fileTsb[0] + fileTsb[2] + fileTsb[4]; // In use, T, S, B
-            var nameHex = TSOS.Utils.stringToHex(filename); // Get hex for name string
-            var spaceLeft = _Disk.numBytes - dirBlock.length - nameHex.length; // Find how much space is left after name
-            if (spaceLeft >= 0) {
-                dirBlock += nameHex;
-                for (var i = 0; i < spaceLeft; i++) {
-                    dirBlock += "0";
-                }
-                var fileBlock = "1fff" + EMPTY_FILE_DATA; // In use, fff to indicate end of file, empty data
-                _Disk.write(dirTsb, dirBlock);
-                _Disk.write(fileTsb, fileBlock);
-                this.changeNextDir();
-                this.changeNextFile();
-                _StdOut.putText("File created successfully.");
+            if (dirTsb === "f,f,f" || fileTsb === "f,f,f") {
+                _StdOut.putText("There is no room on disk. Please delete something.");
                 _StdOut.advanceLine();
                 _OsShell.putPrompt();
             }
             else {
-                _StdOut.putText("Filename is too long.");
-                _StdOut.advanceLine();
-                _OsShell.putPrompt();
+                var dirBlock = "1" + fileTsb[0] + fileTsb[2] + fileTsb[4]; // In use, T, S, B
+                var nameHex = TSOS.Utils.stringToHex(filename); // Get hex for name string
+                var spaceLeft = _Disk.numBytes - dirBlock.length - nameHex.length; // Find how much space is left after name
+                if (spaceLeft >= 0) {
+                    dirBlock += nameHex;
+                    for (var i = 0; i < spaceLeft; i++) {
+                        dirBlock += "0";
+                    }
+                    var fileBlock = "1fff" + EMPTY_FILE_DATA; // In use, fff to indicate end of file, empty data
+                    _Disk.write(dirTsb, dirBlock);
+                    _Disk.write(fileTsb, fileBlock);
+                    this.changeNextDir();
+                    this.changeNextFile();
+                    _StdOut.putText("File created successfully.");
+                    _StdOut.advanceLine();
+                    _OsShell.putPrompt();
+                }
+                else {
+                    _StdOut.putText("Filename is too long.");
+                    _StdOut.advanceLine();
+                    _OsShell.putPrompt();
+                }
             }
         };
         return DeviceDriverFs;
