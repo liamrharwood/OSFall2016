@@ -102,11 +102,31 @@ var TSOS;
                 _Disk.write("0,0,0", mbrArr.join(""));
             }
         };
+        DeviceDriverFs.prototype.fileExists = function (filename) {
+            for (var tsb in _Disk.storage) {
+                // If the block is in use and in the first track
+                if (_Disk.read(tsb)[0] === "1" && tsb[0] === "0") {
+                    var data = _Disk.read(tsb).substring(4);
+                    var existingName = TSOS.Utils.hexToString(data);
+                    if (filename === existingName) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        };
         DeviceDriverFs.prototype.createFile = function (filename) {
             var dirTsb = this.getNextDir();
             var fileTsb = this.getNextFile();
             if (dirTsb === "f,f,f" || fileTsb === "f,f,f") {
                 _StdOut.putText("There is no room on disk. Please delete something.");
+                _StdOut.advanceLine();
+                _OsShell.putPrompt();
+            }
+            else if (this.fileExists(filename)) {
+                _StdOut.putText("A file with that name already exists.");
+                _StdOut.advanceLine();
+                _StdOut.putText("Please choose a different name.");
                 _StdOut.advanceLine();
                 _OsShell.putPrompt();
             }
@@ -138,7 +158,7 @@ var TSOS;
         DeviceDriverFs.prototype.listFiles = function () {
             var noFiles = true;
             for (var tsb in _Disk.storage) {
-                // If the file is in use and in the first track
+                // If the block is in use and in the first track
                 if (_Disk.read(tsb)[0] === "1" && tsb[0] === "0") {
                     var data = _Disk.read(tsb).substring(4);
                     _StdOut.putText(TSOS.Utils.hexToString(data));

@@ -114,6 +114,20 @@ module TSOS {
             }
         }
 
+        public fileExists(filename) {
+            for(var tsb in _Disk.storage) {
+                // If the block is in use and in the first track
+                if(_Disk.read(tsb)[0] === "1" && tsb[0] === "0") {
+                    var data = _Disk.read(tsb).substring(4);
+                    var existingName = Utils.hexToString(data);
+                    if(filename === existingName) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
         public createFile(filename) {
             var dirTsb = this.getNextDir();
             var fileTsb = this.getNextFile();
@@ -121,7 +135,13 @@ module TSOS {
             if(dirTsb === "f,f,f" || fileTsb === "f,f,f") { // Make sure there is room on disk
                 _StdOut.putText("There is no room on disk. Please delete something.");
                 _StdOut.advanceLine();
-                _OsShell.putPrompt();  
+                _OsShell.putPrompt();
+            } else if(this.fileExists(filename)) {
+                _StdOut.putText("A file with that name already exists.");
+                _StdOut.advanceLine();
+                _StdOut.putText("Please choose a different name.");
+                _StdOut.advanceLine();
+                _OsShell.putPrompt();
             } else {
                 var dirBlock = "1" + fileTsb[0] + fileTsb[2] + fileTsb[4]; // In use, T, S, B
 
@@ -156,7 +176,7 @@ module TSOS {
             var noFiles = true;
 
             for(var tsb in _Disk.storage) {
-                // If the file is in use and in the first track
+                // If the block is in use and in the first track
                 if(_Disk.read(tsb)[0] === "1" && tsb[0] === "0") {
                     var data = _Disk.read(tsb).substring(4);
                     _StdOut.putText(Utils.hexToString(data));
