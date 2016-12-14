@@ -33,6 +33,13 @@ var TSOS;
         Utils.tsb = function (t, s, b) {
             return t + "," + s + "," + b;
         };
+        Utils.stringToHex = function (str) {
+            var result = "";
+            for (var i = 0; i < str.length; i++) {
+                result += str.charCodeAt(i).toString(16);
+            }
+            return result;
+        };
         Utils.trim = function (str) {
             // Use a regular expression to remove leading and trailing spaces.
             return str.replace(/^\s+ | \s+$/g, "");

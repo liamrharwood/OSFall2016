@@ -35,11 +35,17 @@ module TSOS {
                     }
                 }
             }
-            console.log(sessionStorage);
             Control.updateDiskDisplay();
         }
 
-        public 
+        public write(tsb, bytes) {
+            this.storage.setItem(tsb, bytes);
+            Control.updateDiskDisplay();
+        }
+
+        public read(tsb) {
+            return this.storage.getItem(tsb);
+        }
 
     }
 }

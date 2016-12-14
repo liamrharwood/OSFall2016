@@ -37,6 +37,14 @@ module TSOS {
             return t + "," + s + "," + b;
         }
 
+        public static stringToHex(str) {
+            var result = "";
+            for(var i = 0; i < str.length; i++) {
+                result += str.charCodeAt(i).toString(16);
+            }    
+            return result;
+        }
+
         public static trim(str): string {
             // Use a regular expression to remove leading and trailing spaces.
             return str.replace(/^\s+ | \s+$/g, "");

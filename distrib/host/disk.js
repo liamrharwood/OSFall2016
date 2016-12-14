@@ -35,8 +35,14 @@ var TSOS;
                     }
                 }
             }
-            console.log(sessionStorage);
             TSOS.Control.updateDiskDisplay();
+        };
+        Disk.prototype.write = function (tsb, bytes) {
+            this.storage.setItem(tsb, bytes);
+            TSOS.Control.updateDiskDisplay();
+        };
+        Disk.prototype.read = function (tsb) {
+            return this.storage.getItem(tsb);
         };
         return Disk;
     }());

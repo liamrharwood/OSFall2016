@@ -80,6 +80,7 @@ module TSOS {
             var tableHTML = "";
             for(var tsb in _Disk.storage) {
                 tableHTML += "<tr>";
+                tableHTML += "<td>" + tsb + "</td>";
                 tableHTML += "<td>" + _Disk.storage[tsb] + "</td>";
                 tableHTML += "</tr>";
             }

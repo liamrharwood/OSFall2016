@@ -18,6 +18,7 @@ var TIMER_IRQ = 0; // Pages 23 (timer), 9 (interrupts), and 561 (interrupt prior
 var KEYBOARD_IRQ = 1;
 var CONTEXT_SWITCH_IRQ = 2;
 var FILE_SYSTEM_IRQ = 3;
+var EMPTY_FILE_DATA = "000000000000000000000000000000000000000000000000000000000000"; // Empty data for file creation
 //
 // Global Variables
 // TODO: Make a global object and use that instead of the "_" naming convention in the global namespace.

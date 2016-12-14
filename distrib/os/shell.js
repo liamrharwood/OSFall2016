@@ -88,6 +88,9 @@ var TSOS;
             // format - formats the disk
             sc = new TSOS.ShellCommand(this.shellFormat, "format", "- Formats the disk");
             this.commandList[this.commandList.length] = sc;
+            // create <filename> - creates a new file
+            sc = new TSOS.ShellCommand(this.shellCreate, "create", "<filename> - Creates a new file.");
+            this.commandList[this.commandList.length] = sc;
             //
             // Display the initial prompt.
             this.putPrompt();
@@ -472,7 +475,18 @@ var TSOS;
         Shell.prototype.shellFormat = function (args) {
             var params = ["format"];
             _KernelInterruptQueue.enqueue(new TSOS.Interrupt(FILE_SYSTEM_IRQ, params));
-            _StdOut.putText("Disk formatted.");
+            _StdOut.putText("Disk formatted successfully.");
+        };
+        Shell.prototype.shellCreate = function (args) {
+            if (args.length > 0) {
+                var filename = args[0];
+                var params = ["create", filename];
+                _KernelInterruptQueue.enqueue(new TSOS.Interrupt(FILE_SYSTEM_IRQ, params));
+                _StdOut.putText("File created successfully.");
+            }
+            else {
+                _StdOut.putText("Please specify a filename.");
+            }
         };
         return Shell;
     }());
