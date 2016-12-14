@@ -174,6 +174,7 @@ module TSOS {
             _Memory.init();
 
             _Disk = new Disk();
+            this.updateDiskDisplay();
 
             // ... then set the host clock pulse ...
             _hardwareClockID = setInterval(Devices.hostClockPulse, CPU_CLOCK_INTERVAL);

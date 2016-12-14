@@ -151,6 +151,7 @@ var TSOS;
             _Memory = new TSOS.Memory();
             _Memory.init();
             _Disk = new TSOS.Disk();
+            this.updateDiskDisplay();
             // ... then set the host clock pulse ...
             _hardwareClockID = setInterval(TSOS.Devices.hostClockPulse, CPU_CLOCK_INTERVAL);
             // .. and call the OS Kernel Bootstrap routine.
