@@ -111,6 +111,7 @@ module TSOS {
         }
 
         public changeNextFile() {
+            console.log("Updating MBR!");
             var mbr = _Disk.read("0,0,0");
             var mbrArr = mbr.split("");
             
@@ -118,6 +119,8 @@ module TSOS {
             for(var tsb in _Disk.storage) {
                 // If a block is not in use and not in the first track
                 if(_Disk.read(tsb)[0] === "0" && parseInt(tsb[0]) > 0) {
+                    console.log("Found next empty file at: " + tsb);
+                    console.log("Contents of " +tsb+ ": " +_Disk.read(tsb));
                     mbrArr[3] = tsb[0];
                     mbrArr[4] = tsb[2];
                     mbrArr[5] = tsb[4];
@@ -279,6 +282,8 @@ module TSOS {
                     var block = "1" + nextTsb + dataToWrite + EMPTY_FILE_DATA.substring(dataToWrite.length); // Create block (In use bit, pointer, and data)
 
                     _Disk.write(fileTsb, block); // Write it
+                    if(nextTsb !== "fff")
+                        _Disk.write(Utils.tsb(nextTsb[0],nextTsb[1],nextTsb[2]), "1fff" + EMPTY_FILE_DATA); // Reserve space for next block
                     this.changeNextFile(); // Update MBR with next available block
                     fileTsb = Utils.tsb(nextTsb[0],nextTsb[1],nextTsb[2]); // Pointer for next block
                 }
@@ -344,9 +349,9 @@ module TSOS {
         }
 
         public rollOut(pid, code) {
-            console.log("Rollout PID: " + pid);
             var pcb = _ProcessManager.getPCB(pid);
 
+            // If the program was in memory, deallocate the memory it used
             if(pcb.baseRegister !== -1) {
                 _MemoryManager.deallocateMemory(pcb.baseRegister);
             }
@@ -354,10 +359,10 @@ module TSOS {
             var swapTsb = this.getNextFile();
             pcb.swapTsb = swapTsb;
 
-            _Disk.write(swapTsb, "1fff" + EMPTY_FILE_DATA);
+            _Disk.write(swapTsb, "1fff" + EMPTY_FILE_DATA); // Reserve space           
             this.changeNextFile();
-
-            var nextTsb = "";
+            
+            var nextTsb = "";          
             var blockSize = _Disk.numBytes - 4; // Data size per block
 
             while(code.length > 0) {
@@ -377,16 +382,19 @@ module TSOS {
                 } else {
                     nextTsb = "fff"; // If the file is ending, put "fff" for EOF
                 }
+
                 var block = "1" + nextTsb + codeToWrite + EMPTY_FILE_DATA.substring(codeToWrite.length); // Create block (In use bit, pointer, and data)
 
                 _Disk.write(swapTsb, block); // Write it
+                if(nextTsb !== "fff")
+                    _Disk.write(Utils.tsb(nextTsb[0],nextTsb[1],nextTsb[2]), "1fff" + EMPTY_FILE_DATA); // Reserve space for next block
                 this.changeNextFile(); // Update MBR with next available block
+
                 swapTsb = Utils.tsb(nextTsb[0],nextTsb[1],nextTsb[2]); // Pointer for next block
             }
         }
 
         public rollIn(pid) {
-            console.log("Rollin PID: " + pid);
             var pcb = _ProcessManager.getPCB(pid);
             var swapTsb = pcb.swapTsb;
             var codeToSwap = "";
@@ -402,9 +410,9 @@ module TSOS {
 
             } while(swapTsb !== "f,f,f");
 
-            console.log(codeToSwap);
             _MemoryManager.loadProgramFromDisk(codeToSwap, pcb);
             pcb.swapTsb = "f,f,f";
+            this.changeNextFile();
         }
 
     }

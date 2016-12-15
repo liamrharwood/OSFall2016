@@ -104,12 +104,15 @@ var TSOS;
             return TSOS.Utils.tsb(mbr[3], mbr[4], mbr[5]); // Return TSB for next available file block
         };
         DeviceDriverFs.prototype.changeNextFile = function () {
+            console.log("Updating MBR!");
             var mbr = _Disk.read("0,0,0");
             var mbrArr = mbr.split("");
             var found = false;
             for (var tsb in _Disk.storage) {
                 // If a block is not in use and not in the first track
                 if (_Disk.read(tsb)[0] === "0" && parseInt(tsb[0]) > 0) {
+                    console.log("Found next empty file at: " + tsb);
+                    console.log("Contents of " + tsb + ": " + _Disk.read(tsb));
                     mbrArr[3] = tsb[0];
                     mbrArr[4] = tsb[2];
                     mbrArr[5] = tsb[4];
@@ -251,6 +254,8 @@ var TSOS;
                     }
                     var block = "1" + nextTsb + dataToWrite + EMPTY_FILE_DATA.substring(dataToWrite.length); // Create block (In use bit, pointer, and data)
                     _Disk.write(fileTsb, block); // Write it
+                    if (nextTsb !== "fff")
+                        _Disk.write(TSOS.Utils.tsb(nextTsb[0], nextTsb[1], nextTsb[2]), "1fff" + EMPTY_FILE_DATA); // Reserve space for next block
                     this.changeNextFile(); // Update MBR with next available block
                     fileTsb = TSOS.Utils.tsb(nextTsb[0], nextTsb[1], nextTsb[2]); // Pointer for next block
                 }
@@ -304,14 +309,14 @@ var TSOS;
             _OsShell.putPrompt();
         };
         DeviceDriverFs.prototype.rollOut = function (pid, code) {
-            console.log("Rollout PID: " + pid);
             var pcb = _ProcessManager.getPCB(pid);
+            // If the program was in memory, deallocate the memory it used
             if (pcb.baseRegister !== -1) {
                 _MemoryManager.deallocateMemory(pcb.baseRegister);
             }
             var swapTsb = this.getNextFile();
             pcb.swapTsb = swapTsb;
-            _Disk.write(swapTsb, "1fff" + EMPTY_FILE_DATA);
+            _Disk.write(swapTsb, "1fff" + EMPTY_FILE_DATA); // Reserve space           
             this.changeNextFile();
             var nextTsb = "";
             var blockSize = _Disk.numBytes - 4; // Data size per block
@@ -335,12 +340,13 @@ var TSOS;
                 }
                 var block = "1" + nextTsb + codeToWrite + EMPTY_FILE_DATA.substring(codeToWrite.length); // Create block (In use bit, pointer, and data)
                 _Disk.write(swapTsb, block); // Write it
+                if (nextTsb !== "fff")
+                    _Disk.write(TSOS.Utils.tsb(nextTsb[0], nextTsb[1], nextTsb[2]), "1fff" + EMPTY_FILE_DATA); // Reserve space for next block
                 this.changeNextFile(); // Update MBR with next available block
                 swapTsb = TSOS.Utils.tsb(nextTsb[0], nextTsb[1], nextTsb[2]); // Pointer for next block
             }
         };
         DeviceDriverFs.prototype.rollIn = function (pid) {
-            console.log("Rollin PID: " + pid);
             var pcb = _ProcessManager.getPCB(pid);
             var swapTsb = pcb.swapTsb;
             var codeToSwap = "";
@@ -351,9 +357,9 @@ var TSOS;
                 _Disk.write(swapTsb, "0000" + EMPTY_FILE_DATA);
                 swapTsb = TSOS.Utils.tsb(codeBlock[1], codeBlock[2], codeBlock[3]);
             } while (swapTsb !== "f,f,f");
-            console.log(codeToSwap);
             _MemoryManager.loadProgramFromDisk(codeToSwap, pcb);
             pcb.swapTsb = "f,f,f";
+            this.changeNextFile();
         };
         return DeviceDriverFs;
     }(TSOS.DeviceDriver));

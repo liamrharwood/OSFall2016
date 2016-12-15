@@ -29,8 +29,6 @@ var TSOS;
                             }
                         }
                         _ProcessManager.residentList.push(pcb);
-                        TSOS.Control.updateProcessDisplay();
-                        _StdOut.putText("Program loaded. PID: " + pcb.pid);
                         this.isFreePartition[i] = false;
                         TSOS.Control.updateMemoryDisplay();
                         break;
@@ -41,6 +39,8 @@ var TSOS;
                         _krnFsDriver.rollOut(pcb.pid, userCode.join(""));
                     }
                 }
+                TSOS.Control.updateProcessDisplay();
+                _StdOut.putText("Program loaded. PID: " + pcb.pid);
             }
             else {
                 _StdOut.putText("Program is too big. Maximum size allowed: " + _SegmentSize + " bytes");

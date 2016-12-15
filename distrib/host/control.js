@@ -99,6 +99,7 @@ var TSOS;
                 tableHTML += "<td>" + pcbs[i].Zflag + "</td>";
                 tableHTML += "<td>" + pcbs[i].processState + "</td>";
                 tableHTML += "<td>" + pcbs[i].priority + "</td>";
+                tableHTML += "<td>" + (pcbs[i].swapTsb === "f,f,f" ? "Memory" : "Disk") + "</td>";
                 tableHTML += "</tr>";
             }
             document.getElementById("ProcessTableInfo").innerHTML = tableHTML;
