@@ -56,6 +56,12 @@ var TSOS;
                         case "read":
                             this.readFile(filename);
                             break;
+                        case "rollout":
+                            this.rollOut(filename, data);
+                            break;
+                        case "rollin":
+                            this.rollIn(filename);
+                            break;
                     }
                 }
                 else {
@@ -296,6 +302,58 @@ var TSOS;
                 _StdOut.advanceLine();
             }
             _OsShell.putPrompt();
+        };
+        DeviceDriverFs.prototype.rollOut = function (pid, code) {
+            console.log("Rollout PID: " + pid);
+            var pcb = _ProcessManager.getPCB(pid);
+            if (pcb.baseRegister !== -1) {
+                _MemoryManager.deallocateMemory(pcb.baseRegister);
+            }
+            var swapTsb = this.getNextFile();
+            pcb.swapTsb = swapTsb;
+            _Disk.write(swapTsb, "1fff" + EMPTY_FILE_DATA);
+            this.changeNextFile();
+            var nextTsb = "";
+            var blockSize = _Disk.numBytes - 4; // Data size per block
+            while (code.length > 0) {
+                var codeToWrite = code.substring(0, blockSize);
+                code = code.substring(blockSize); // Remove the data that will be written
+                if (code.length > 0) {
+                    var formatted = this.getNextFile();
+                    if (formatted === "f,f,f") {
+                        nextTsb = "fff";
+                        _StdOut.putText("No more room on disk, program partially written.");
+                        _StdOut.advanceLine();
+                        code = "";
+                    }
+                    else {
+                        nextTsb = formatted[0] + formatted[2] + formatted[4];
+                    } // Get the digits of the next available block
+                }
+                else {
+                    nextTsb = "fff"; // If the file is ending, put "fff" for EOF
+                }
+                var block = "1" + nextTsb + codeToWrite + EMPTY_FILE_DATA.substring(codeToWrite.length); // Create block (In use bit, pointer, and data)
+                _Disk.write(swapTsb, block); // Write it
+                this.changeNextFile(); // Update MBR with next available block
+                swapTsb = TSOS.Utils.tsb(nextTsb[0], nextTsb[1], nextTsb[2]); // Pointer for next block
+            }
+        };
+        DeviceDriverFs.prototype.rollIn = function (pid) {
+            console.log("Rollin PID: " + pid);
+            var pcb = _ProcessManager.getPCB(pid);
+            var swapTsb = pcb.swapTsb;
+            var codeToSwap = "";
+            do {
+                var codeBlock = _Disk.read(swapTsb);
+                var code = codeBlock.substring(4); // Just the data portion
+                codeToSwap += code;
+                _Disk.write(swapTsb, "0000" + EMPTY_FILE_DATA);
+                swapTsb = TSOS.Utils.tsb(codeBlock[1], codeBlock[2], codeBlock[3]);
+            } while (swapTsb !== "f,f,f");
+            console.log(codeToSwap);
+            _MemoryManager.loadProgramFromDisk(codeToSwap, pcb);
+            pcb.swapTsb = "f,f,f";
         };
         return DeviceDriverFs;
     }(TSOS.DeviceDriver));

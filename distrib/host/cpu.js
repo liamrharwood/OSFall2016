@@ -101,6 +101,7 @@ var TSOS;
                     break;
                 default:
                     _StdOut.putText("ERROR: Invalid op code.");
+                    console.log("INVALID OP CODE: " + this.instruction + "at PC " + this.PC);
                     _ProcessManager.terminateProcess(pcb);
             }
             this.updatePCB(pcb);
@@ -219,7 +220,6 @@ var TSOS;
             this.PC++;
         };
         Cpu.prototype.sysCall = function () {
-            console.log("sysCall");
             this.PC++;
             if (this.Xreg === 1) {
                 _StdOut.putText(this.Yreg.toString());

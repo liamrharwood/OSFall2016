@@ -103,6 +103,7 @@ module TSOS {
                     break;
                 default:
                     _StdOut.putText("ERROR: Invalid op code.");
+                    console.log("INVALID OP CODE: " + this.instruction + "at PC " + this.PC);
                     _ProcessManager.terminateProcess(pcb);
 
             }
@@ -236,7 +237,6 @@ module TSOS {
         }
 
         public sysCall() {
-            console.log("sysCall");
             this.PC++;
             if(this.Xreg === 1) {
                 _StdOut.putText(this.Yreg.toString());

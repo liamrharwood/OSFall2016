@@ -20,7 +20,8 @@ module TSOS {
                     public baseRegister : number = -1,
                     public limitRegister : number = -1,
                     public processState : string = _ProcessStates.new,
-                    public priority : number = 0) {
+                    public priority : number = 0,
+                    public swapTsb : string = "f,f,f") { // "f,f,f" indicate the program is in memory
         	this.pid = PCB.pidCount;
         	PCB.pidCount++; // Keeps running count of PIDs as they're created
         }

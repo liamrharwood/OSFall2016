@@ -35,14 +35,40 @@ var TSOS;
                         TSOS.Control.updateMemoryDisplay();
                         break;
                     }
-                    // Give error if there are no free partitions
+                    // Start swapping if there are no free partitions
                     if (i >= 2) {
-                        _StdOut.putText("There are no free memory partitions.");
+                        _ProcessManager.residentList.push(pcb);
+                        _krnFsDriver.rollOut(pcb.pid, userCode.join(""));
                     }
                 }
             }
             else {
                 _StdOut.putText("Program is too big. Maximum size allowed: " + _SegmentSize + " bytes");
+            }
+        };
+        MemoryManager.prototype.loadProgramFromDisk = function (code, pcb) {
+            for (var i = 0; i < this.isFreePartition.length; i++) {
+                // Look for free partition
+                if (this.isFreePartition[i]) {
+                    // Set base and limit registers
+                    var base = i * _SegmentSize;
+                    var limit = base + _SegmentSize - 1;
+                    pcb.baseRegister = base;
+                    pcb.limitRegister = limit;
+                    var codeArr = code.split("");
+                    // Fill partition with user code
+                    for (var j = base; j <= limit; j++) {
+                        if (codeArr.length > 0) {
+                            _Memory.memArr[j] = "" + codeArr.shift() + codeArr.shift();
+                        }
+                        else {
+                            break;
+                        }
+                    }
+                    this.isFreePartition[i] = false;
+                    TSOS.Control.updateMemoryDisplay();
+                    break;
+                }
             }
         };
         MemoryManager.prototype.read = function (pcb, address) {
@@ -80,6 +106,14 @@ var TSOS;
                 this.isFreePartition[i] = true;
             }
             _Memory.clearAll();
+        };
+        MemoryManager.prototype.getCodeFromMemory = function (base) {
+            var limit = base + _SegmentSize - 1;
+            var codeStr = "";
+            for (var i = base; i <= limit; i++) {
+                codeStr += _Memory.memArr[i];
+            }
+            return codeStr;
         };
         return MemoryManager;
     }());
