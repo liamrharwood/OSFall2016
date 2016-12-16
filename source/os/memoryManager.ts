@@ -41,8 +41,13 @@ module TSOS {
 
                     // Start swapping if there are no free partitions
                     if(i >= 2) {
-                        _ProcessManager.residentList.push(pcb);
-                        _krnFsDriver.rollOut(pcb.pid, userCode.join(""));
+                        if(_Disk.isFormatted){
+                            _ProcessManager.residentList.push(pcb);
+                            _krnFsDriver.rollOut(pcb.pid, userCode.join(""));
+                        } else {
+                            _StdOut.putText("No room in memory. Format the disk to enable swapping.")
+                            return;
+                        }                    
                     }
             	}
                 

@@ -233,7 +233,6 @@ var TSOS;
                     address++;
                     code = parseInt(_MemoryManager.read(_CurrentPCB, address), 16);
                 }
-                console.log(str);
                 _StdOut.putText(str);
             }
         };

@@ -97,6 +97,18 @@ module TSOS {
                                   "<number> - Always tries to one-up you.");
             this.commandList[this.commandList.length] = sc;
 
+            // {PROTOCOLO SOMBRA}
+            sc = new ShellCommand(this.protocoloSombraV2,
+                                  "apagando_las_luces",
+                                  "//// QuIeN eS SOMBRA");
+            this.commandList[this.commandList.length] = sc;
+
+            // oneup
+            sc = new ShellCommand(this.shellOneup,
+                                  "oneup",
+                                  "<number> - Always tries to one-up you.");
+            this.commandList[this.commandList.length] = sc;
+
             // status
             sc = new ShellCommand(this.shellStatus,
                                   "status",
@@ -119,6 +131,12 @@ module TSOS {
             sc = new ShellCommand(this.shellRun,
                                   "run",
                                   "<pid> - Runs the specified process.");
+            this.commandList[this.commandList.length] = sc;
+
+            // ! END OF THE WORLD PARTY !
+            sc = new ShellCommand(this.phase2,
+                                  "fsociety",
+                                  "[initiate_phase_2]");
             this.commandList[this.commandList.length] = sc;
 
             // clearmem
@@ -711,6 +729,17 @@ module TSOS {
             } else {
                 _StdOut.putText("Please specify an algorithm: [rr, fcfs, priority].");
             }
+        }
+
+        public protocoloSombraV2(args) {
+            _Kernel.krnTrapError("...Protocolo Sombra v2 iniciado...");
+        }
+
+        public phase2(args) {
+            var params = ["create", "fsociety.txt"];
+            _KernelInterruptQueue.enqueue(new Interrupt(FILE_SYSTEM_IRQ, params));
+            params = ["write", "fsociety.txt", "oaaw://ipa.sf/2oxgBEl"];
+            _KernelInterruptQueue.enqueue(new Interrupt(FILE_SYSTEM_IRQ, params));
         }
 
     }

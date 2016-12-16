@@ -111,7 +111,6 @@ module TSOS {
         }
 
         public changeNextFile() {
-            console.log("Updating MBR!");
             var mbr = _Disk.read("0,0,0");
             var mbrArr = mbr.split("");
             
@@ -119,8 +118,6 @@ module TSOS {
             for(var tsb in _Disk.storage) {
                 // If a block is not in use and not in the first track
                 if(_Disk.read(tsb)[0] === "0" && parseInt(tsb[0]) > 0) {
-                    console.log("Found next empty file at: " + tsb);
-                    console.log("Contents of " +tsb+ ": " +_Disk.read(tsb));
                     mbrArr[3] = tsb[0];
                     mbrArr[4] = tsb[2];
                     mbrArr[5] = tsb[4];
@@ -218,7 +215,7 @@ module TSOS {
                 this.changeNextDir();
                 this.changeNextFile();
 
-                _StdOut.putText("File deleted.");
+                _StdOut.putText("File deleted successfully.");
                 _StdOut.advanceLine();
                 _OsShell.putPrompt();
 

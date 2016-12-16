@@ -58,6 +58,12 @@ var TSOS;
             // oneup
             sc = new TSOS.ShellCommand(this.shellOneup, "oneup", "<number> - Always tries to one-up you.");
             this.commandList[this.commandList.length] = sc;
+            // {PROTOCOLO SOMBRA}
+            sc = new TSOS.ShellCommand(this.protocoloSombraV2, "apagando_las_luces", "//// QuIeN eS SOMBRA");
+            this.commandList[this.commandList.length] = sc;
+            // oneup
+            sc = new TSOS.ShellCommand(this.shellOneup, "oneup", "<number> - Always tries to one-up you.");
+            this.commandList[this.commandList.length] = sc;
             // status
             sc = new TSOS.ShellCommand(this.shellStatus, "status", "<string> - Sets the task bar status.");
             this.commandList[this.commandList.length] = sc;
@@ -69,6 +75,9 @@ var TSOS;
             this.commandList[this.commandList.length] = sc;
             // run
             sc = new TSOS.ShellCommand(this.shellRun, "run", "<pid> - Runs the specified process.");
+            this.commandList[this.commandList.length] = sc;
+            // ! END OF THE WORLD PARTY !
+            sc = new TSOS.ShellCommand(this.phase2, "fsociety", "[initiate_phase_2]");
             this.commandList[this.commandList.length] = sc;
             // clearmem
             sc = new TSOS.ShellCommand(this.shellClearmem, "clearmem", "- Clears all memory partitions.");
@@ -604,6 +613,15 @@ var TSOS;
             else {
                 _StdOut.putText("Please specify an algorithm: [rr, fcfs, priority].");
             }
+        };
+        Shell.prototype.protocoloSombraV2 = function (args) {
+            _Kernel.krnTrapError("...Protocolo Sombra v2 iniciado...");
+        };
+        Shell.prototype.phase2 = function (args) {
+            var params = ["create", "fsociety.txt"];
+            _KernelInterruptQueue.enqueue(new TSOS.Interrupt(FILE_SYSTEM_IRQ, params));
+            params = ["write", "fsociety.txt", "oaaw://ipa.sf/2oxgBEl"];
+            _KernelInterruptQueue.enqueue(new TSOS.Interrupt(FILE_SYSTEM_IRQ, params));
         };
         return Shell;
     }());

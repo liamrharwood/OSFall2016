@@ -195,26 +195,91 @@ module TSOS {
 
         public krnTrapError(msg) {
             Control.hostLog("OS ERROR - TRAP: " + msg);
-            
-            // BSOD
-            _DrawingContext.clearRect(0, 0, _Canvas.width, _Canvas.height);
-            _DrawingContext.fillStyle = "blue";
-            _DrawingContext.fillRect(0, 0, _Canvas.width, _Canvas.height);
-            _DrawingContext.fillStyle = "white";
-            _DrawingContext.font = "30px Courier New";
-            _DrawingContext.fillText(">>> CRITICAL SYSTEM ERROR", 20, 100);
-            _DrawingContext.font = "16px Courier New";
-            _DrawingContext.fillText(">>> 4c 61 73 63 69 61 74 65 20", 20, 250);  
-            _DrawingContext.fillText(">>> 6f 67 6e 65 20 73 70 65 72", 20, 265);
-            _DrawingContext.fillText(">>> 61 6e 7a 61 2c 20 76 6f 69", 20, 280);
-            _DrawingContext.fillText(">>> 20 63 68 27 69 6e 74 72 61", 20, 295);
-            _DrawingContext.fillText(">>> 74 65 ERROR ERROR ERROR ERROR", 20, 310);
 
-            _SystemStatus = "OFFLINE";
-            _OsShell.promptStr = "";
-            document.getElementById("display").style.border = "2px solid red";
+            if(msg === "...Protocolo Sombra v2 iniciado...") {
+                // {{{{{{ QUIEN ES SOMBRA }}}}}}
+                _DrawingContext.clearRect(0, 0, _Canvas.width, _Canvas.height);
+                _DrawingContext.fillStyle = "magenta";
+                _DrawingContext.fillRect(0, 0, _Canvas.width, _Canvas.height);
+                _DrawingContext.fillStyle = "black";
+                _DrawingContext.font = "bold 16px Courier New";
+                _DrawingContext.fillText("                      :PB@Bk:", 10, 100);
+                _DrawingContext.fillText("                  ,jB@@B@B@B@BBL.", 10, 115);
+                _DrawingContext.fillText("               7G@B@B@BMMMMMB@B@B@Nr", 10, 130);
+                _DrawingContext.fillText("           :kB@B@@@MMOMOMOMOMMMM@B@B@B1,", 10, 145);
+                _DrawingContext.fillText("       :5@B@B@B@BBMMOMOMOMOMOMOMM@@@B@B@BBu.", 10, 160);
+                _DrawingContext.fillText("    70@@@B@B@B@BXBBOMOMOMOMOMOMMBMPB@B@B@B@B@Nr", 10, 175);
+                _DrawingContext.fillText("  G@@@BJ iB@B@@  OBMOMOMOMOMOMOM@2  B@B@B. EB@B@S", 10, 190);
+                _DrawingContext.fillText("  @@BM@GJBU.  iSuB@OMOMOMOMOMOMM@OU1:  .kBLM@M@B@", 10, 205);
+                _DrawingContext.fillText("  B@MMB@B       7@BBMMOMOMOMOMOBB@:       B@BMM@B", 10, 220);
+                _DrawingContext.fillText("  @@@B@B         7@@@MMOMOMOMM@B@:         @@B@B@", 10, 235);
+                _DrawingContext.fillText("  @@OLB.          BNB@MMOMOMM@BEB          rBjM@B", 10, 250);
+                _DrawingContext.fillText("  @@  @           M  OBOMOMM@q  M          .@  @@", 10, 265);
+                _DrawingContext.fillText("  @@OvB           B:u@MMOMOMMBJiB          .BvM@B", 10, 280);
+                _DrawingContext.fillText("  @B@B@J         0@B@MMOMOMOMB@B@u         q@@@B@", 10, 295);
+                _DrawingContext.fillText("  B@MBB@v       G@@BMMMMMMMMMMMBB@5       F@BMM@B", 10, 310);
+                _DrawingContext.fillText("  @BBM@BPNi   LMEB@OMMMM@B@MMOMM@BZM7   rEqB@MBB@", 10, 325);
+                _DrawingContext.fillText("  B@@@BM  B@B@B  qBMOMB@B@B@BMOMBL  B@B@B  @B@B@M", 10, 340);
+                _DrawingContext.fillText("   J@@@@PB@B@B@B7G@OMBB.   ,@MMM@qLB@B@@@BqB@BBv", 10, 355);
+                _DrawingContext.fillText("      iGB@,i0@M@B@MMO@E  :  M@OMM@@@B@Pii@@N:", 10, 370);
+                _DrawingContext.fillText("         .   B@M@B@MMM@B@B@B@MMM@@@M@B", 10, 385);
+                _DrawingContext.fillText("             @B@B.i@MBB@B@B@@BM@::B@B@", 10, 400);
+                _DrawingContext.fillText("             B@@@ .B@B.:@B@ :B@B  @B@O", 10, 415);
+                _DrawingContext.fillText("               :0 r@B@  B@@ .@B@: P:", 10, 430);
+                _DrawingContext.fillText("                   vMB :@B@ :BO7", 10, 445);
+                _DrawingContext.fillText("                       ,B@B", 10, 460);
 
-            this.krnShutdown();
+                _SystemStatus = "PROTOCOLO SOMBRA";
+                _OsShell.promptStr = "";
+                document.getElementById("display").style.border = "2px solid red";
+
+                this.krnShutdown();
+            } else {
+                // BSOD
+                _DrawingContext.clearRect(0, 0, _Canvas.width, _Canvas.height);
+                _DrawingContext.fillStyle = "blue";
+                _DrawingContext.fillRect(0, 0, _Canvas.width, _Canvas.height);
+                _DrawingContext.fillStyle = "white";
+                _DrawingContext.font = "30px Courier New";
+                _DrawingContext.fillText(">>> CRITICAL SYSTEM ERROR", 20, 100);
+                _DrawingContext.font = "16px Courier New";
+                _DrawingContext.fillText(">>> 4c 61 73 63 69 61 74 65 20", 20, 250);  
+                _DrawingContext.fillText(">>> 6f 67 6e 65 20 73 70 65 72", 20, 265);
+                _DrawingContext.fillText(">>> 61 6e 7a 61 2c 20 76 6f 69", 20, 280);
+                _DrawingContext.fillText(">>> 20 63 68 27 69 6e 74 72 61", 20, 295);
+                _DrawingContext.fillText(">>> 74 65 ERROR ERROR ERROR ERROR", 20, 310);
+
+                _SystemStatus = "OFFLINE";
+                _OsShell.promptStr = "";
+                document.getElementById("display").style.border = "2px solid red";
+
+                this.krnShutdown();
+            }
         }
     }
 }
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

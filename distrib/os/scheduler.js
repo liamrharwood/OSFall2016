@@ -62,7 +62,6 @@ var TSOS;
             _Kernel.krnTrace(logText); // Send a message to the log saying what we're switching from/to
         };
         Scheduler.prototype.switchOutOldProcess = function () {
-            //console.log("Switch out PID: " + _CurrentPCB.pid);
             _CurrentPCB.processState = _ProcessStates.ready;
             _ProcessManager.readyQueue.enqueue(_CurrentPCB); // Put the current process back in ready queue
             if (_ProcessManager.readyQueue.q[0].swapTsb !== "f,f,f") {
@@ -72,7 +71,6 @@ var TSOS;
         };
         Scheduler.prototype.switchInNewProcess = function () {
             _CurrentPCB = _ProcessManager.readyQueue.dequeue(); // Put the new process in the CPU
-            //console.log("Switch in PID: " + _CurrentPCB.pid);
             if (_CurrentPCB.swapTsb !== "f,f,f") {
                 _krnFsDriver.rollIn(_CurrentPCB.pid);
             }
